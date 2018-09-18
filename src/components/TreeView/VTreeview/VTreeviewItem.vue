@@ -3,12 +3,15 @@
     <span class="toggle-icon" :class="{ 'empty-toggle': !isFolder }" :key="open">
       <i v-if="isFolder" :class="{'fas fa-caret-down' : this.open, 'fas fa-caret-right' : !this.open}" ></i>
     </span>
-    <span class="tree-icon" :class="{ 'empty-toggle': !icon }" :key="icon">
-      <i v-if="icon" class="far" :class="icon" ></i>
-    </span>
+
     <input type="radio" name="rad" v-model="checked" :id="model.id" :value="model.id">
     <label v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
     <input v-show="edit" ref="title" class="tree-text" v-model="model.name" :placeholder="model.name" key="input" @blur="blur" @keyup.enter="blur">
+
+    <span class="tree-icon" :class="{ 'empty-toggle': !icon }" :key="icon">
+      <i v-if="icon" class="far" :class="icon" ></i>
+    </span>
+
     <div class="tree-children">
       <ul v-show="open" v-if="isFolder">
         <v-treeview-item v-for="child in model.children" :key="child.id"
@@ -152,5 +155,10 @@ ul label:before {
 .searched-text {
   font-style: italic;
   color: #cc0000;
+}
+
+.tree-icon {
+  font-size: 0.6em;
+  color: red;
 }
 </style>

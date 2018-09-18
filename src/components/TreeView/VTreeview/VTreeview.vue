@@ -43,18 +43,21 @@ export default {
         },
         {
           type: "r",
-          icon: "far fa-user",
-          valid_children: ["Basic", "Top-up"]
+          name: "Root",
+          icon: "",
+          valid_children: ["m", "o"]
         },
         {
           type: "m",
+          name: "Mandatory",
           icon: "fa fa-asterisk",
-          valid_children: ["Basic", "Top-up"]
+          valid_children: ["m", "o"]
         },
         {
           type: "o",
+          name: "Optional",
           icon: "",
-          valid_children: ["Basic", "Top-up"]
+          valid_children: ["o"]
         },
         {
           type: "FMM_SIBLING",
@@ -97,7 +100,7 @@ export default {
       typeRule.valid_children.map(function(type, key) {
         var childType = this.getTypeRule(type);
         var item = {
-          title: "Create " + type,
+          title: "Create " + childType.name,
           icon: childType.icon,
           type: childType
         };
@@ -108,20 +111,21 @@ export default {
       this.contextItems.push({ title: "Remove", icon: "far fa-trash-alt" });
     },
     contextSelected(title) {
-      command = title
+      let command = title
+      console.log(command)
       switch (command) {
-        case "Create Basic":
+        case "Create Mandatory":
           var node = {
-            text: "New Basic Plan",
-            type: "Basic",
+            name: "New Mandatory Feature",
+            type: "m",
             children: []
           };
           this.selectedNode.addNode(node);
           break;
-        case "Create Top-up":
+        case "Create Optional":
           var node = {
-            text: "New Top-up",
-            type: "Top-up",
+            name: "New Optional Feature",
+            type: "o",
             children: []
           };
           this.selectedNode.addNode(node);
