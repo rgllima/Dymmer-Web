@@ -23,10 +23,13 @@
 import Tree from './Tree.vue'
 import Navbar from './Navbar/Navbar.vue'
 
+import HiddenCard from './HiddenCard/HiddenCard.vue'
+
 export default {
   components: {
     Tree,
-    Navbar
+    Navbar,
+    HiddenCard
   }
 }
 </script>

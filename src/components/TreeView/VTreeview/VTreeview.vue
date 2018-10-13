@@ -18,7 +18,7 @@ export default {
     'value',
     'openAll',
     'editName',
-    'searchText'
+    'searchText',
   ],
   name: 'v-treeview',
   data() {
@@ -44,19 +44,19 @@ export default {
         {
           type: "r",
           name: "Root",
-          icon: "",
+          icon: "fas fa-paste",
           valid_children: ["m", "o"]
         },
         {
           type: "m",
           name: "Mandatory",
-          icon: "fa fa-asterisk",
+          icon: "fas fa-circle",
           valid_children: ["m", "o"]
         },
         {
           type: "o",
           name: "Optional",
-          icon: "",
+          icon: "far fa-circle",
           valid_children: ["o"]
         },
         {
@@ -109,6 +109,8 @@ export default {
 
       this.contextItems.push({ title: "Rename", icon: "far fa-edit" });
       this.contextItems.push({ title: "Remove", icon: "far fa-trash-alt" });
+      this.contextItems.push({ title: "Create Feature Above", icon: "fas fa-caret-up" }); //Rever
+      this.contextItems.push({ title: "Create Feature Below", icon: "fas fa-caret-down" }); //Rever
     },
     contextSelected(title) {
       let command = title
@@ -145,8 +147,8 @@ export default {
         e.preventDefault()
         this.mouseEvent = {
           button: e.button,
-          pageX: e.layerX,
-          pageY: e.layerY
+          pageX: e.clientX,
+          pageY: e.clientY
         }
       }
     }

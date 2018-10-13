@@ -33,7 +33,7 @@ export default {
       if (this.mouseEvent.button === 2) {
         this.showContext = false;
         this.menuStyle = {
-          left: this.mouseEvent.pageX + "px",
+          left: this.mouseEvent.pageX  + "px",
           top: this.mouseEvent.pageY + "px",
           border: "2px solid #ddd",
           padding: "5px 10px",
