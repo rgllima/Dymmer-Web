@@ -1,0 +1,550 @@
+{
+  "feature_model": {
+    "name": "Toko",
+    "description": "Tugas RPL Lanjut",
+    "creator": "Mawar Dkk. (Bukan Nama Sebenarnya)",
+    "address": "Jl. Bunga Mawar 1/2",
+    "email": "mawar@bunga.com",
+    "phone": "",
+    "website": "",
+    "organization": "Bunga Bunga Di Dinding",
+    "department": "Software Engineering",
+    "date": "",
+    "reference": "Course Assignment",
+    "feature_tree": [{
+      "id": "_r",
+      "type": "r",
+      "name": "Toko ElektroMIK",
+      "children": [{
+          "id": "_r_1",
+          "type": "m",
+          "name": "Pemesanan",
+          "children": [{
+              "id": "_r_1_20",
+              "type": "m",
+              "name": "Validasi",
+              "children": [
+
+              ]
+            },
+            {
+              "id": "_r_1_27",
+              "type": "m",
+              "name": "Pembayaran",
+              "children": [{
+                  "id": "_r_1_27_28",
+                  "type": "m",
+                  "name": "Invoice",
+                  "children": [
+
+                  ]
+                },
+                {
+                  "id": "_r_1_27_33",
+                  "type": "m",
+                  "name": "AlatPembayaran",
+                  "children": [{
+                    "id": "_r_1_27_33_49",
+                    "type": "g",
+                    "multiplicity": "1,",
+                    "name": "",
+                    "children": [{
+                        "id": "_r_1_27_33_49_50",
+                        "type": "",
+                        "name": "CreditCard",
+                        "children": [
+
+                        ]
+                      },
+                      {
+                        "id": "_r_1_27_33_49_51",
+                        "type": "",
+                        "name": "DebitCard",
+                        "children": [
+
+                        ]
+                      },
+                      {
+                        "id": "_r_1_27_33_49_52",
+                        "type": "",
+                        "name": "BankTransfer",
+                        "children": [
+
+                        ]
+                      },
+                      {
+                        "id": "_r_1_27_33_49_53",
+                        "type": "",
+                        "name": "PayPal",
+                        "children": [
+
+                        ]
+                      }
+                    ]
+                  }]
+                }
+              ]
+            },
+            {
+              "id": "_r_1_79",
+              "type": "o",
+              "name": "RiwayatPemesanan",
+              "children": [
+
+              ]
+            },
+            {
+              "id": "_r_1_59",
+              "type": "m",
+              "name": "KeranjangBelanja",
+              "children": [
+
+              ]
+            }
+          ]
+        },
+        {
+          "id": "_r_2",
+          "type": "m",
+          "name": "Katalog",
+          "children": [{
+              "id": "_r_2_21",
+              "type": "o",
+              "name": "Ulasan",
+              "children": [{
+                "id": "_r_2_21_82",
+                "type": "g",
+                "multiplicity": "1,",
+                "name": "",
+                "children": [{
+                    "id": "_r_2_21_82_83",
+                    "type": "",
+                    "name": "Teks",
+                    "children": [
+
+                    ]
+                  },
+                  {
+                    "id": "_r_2_21_82_84",
+                    "type": "",
+                    "name": "NilaiRating",
+                    "children": [
+
+                    ]
+                  }
+                ]
+              }]
+            },
+            {
+              "id": "_r_2_22",
+              "type": "o",
+              "name": "Rekomendasi",
+              "children": [
+
+              ]
+            },
+            {
+              "id": "_r_2_23",
+              "type": "o",
+              "name": "Perbandingan",
+              "children": [
+
+              ]
+            },
+            {
+              "id": "_r_2_76",
+              "type": "m",
+              "name": "Pencarian",
+              "children": [
+
+              ]
+            },
+            {
+              "id": "_r_2_78",
+              "type": "m",
+              "name": "DaftarBarang",
+              "children": [
+
+              ]
+            }
+          ]
+        },
+        {
+          "id": "_r_39",
+          "type": "m",
+          "name": "Laporan",
+          "children": [{
+              "id": "_r_39_54",
+              "type": "m",
+              "name": "Penjualan",
+              "children": [{
+                  "id": "_r_39_54_55",
+                  "type": "g",
+                  "multiplicity": "1,",
+                  "name": "",
+                  "children": [{
+                      "id": "_r_39_54_55_56",
+                      "type": "",
+                      "name": "Mingguan",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_39_54_55_57",
+                      "type": "",
+                      "name": "Bulanan",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_39_54_55_58",
+                      "type": "",
+                      "name": "Tahunan",
+                      "children": [
+
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "_r_39_54_57",
+                  "type": "o",
+                  "name": "Grafik",
+                  "children": [
+
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "_r_39_59",
+              "type": "o",
+              "name": "Gudang",
+              "children": [{
+                  "id": "_r_39_59_62",
+                  "type": "g",
+                  "multiplicity": "1,",
+                  "name": "",
+                  "children": [{
+                      "id": "_r_39_59_62_63",
+                      "type": "",
+                      "name": "Mingguan",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_39_59_62_64",
+                      "type": "",
+                      "name": "Bulanan",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_39_59_62_65",
+                      "type": "",
+                      "name": "Tahunan",
+                      "children": [
+
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "_r_39_59_58",
+                  "type": "o",
+                  "name": "Grafik",
+                  "children": [
+
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "_r_39_65",
+              "type": "o",
+              "name": "KeamananWeb",
+              "children": [{
+                  "id": "_r_39_65_60",
+                  "type": "g",
+                  "multiplicity": "1,",
+                  "name": "",
+                  "children": [{
+                      "id": "_r_39_65_60_61",
+                      "type": "",
+                      "name": "Mingguan",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_39_65_60_62",
+                      "type": "",
+                      "name": "Bulanan",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_39_65_60_63",
+                      "type": "",
+                      "name": "Tahunan",
+                      "children": [
+
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "_r_39_65_64",
+                  "type": "o",
+                  "name": "Grafik",
+                  "children": [
+
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "_r_47",
+          "type": "o",
+          "name": "TanyaJawab",
+          "children": [{
+              "id": "_r_47_48",
+              "type": "m",
+              "name": "ContentFiltering",
+              "children": [
+
+              ]
+            },
+            {
+              "id": "_r_47_66",
+              "type": "m",
+              "name": "BentukTanyaJawab",
+              "children": [{
+                "id": "_r_47_66_67",
+                "type": "g",
+                "multiplicity": "1,",
+                "name": "",
+                "children": [{
+                    "id": "_r_47_66_67_68",
+                    "type": "",
+                    "name": "Forum",
+                    "children": [
+
+                    ]
+                  },
+                  {
+                    "id": "_r_47_66_67_69",
+                    "type": "",
+                    "name": "RealTimeChat",
+                    "children": [
+
+                    ]
+                  }
+                ]
+              }]
+            }
+          ]
+        },
+        {
+          "id": "_r_54",
+          "type": "o",
+          "name": "Iklan",
+          "children": [{
+            "id": "_r_54_70",
+            "type": "g",
+            "multiplicity": "1,",
+            "name": "",
+            "children": [{
+                "id": "_r_54_70_71",
+                "type": "",
+                "name": "Banner",
+                "children": [{
+                  "id": "_r_54_70_71_72",
+                  "type": "g",
+                  "multiplicity": "1,1",
+                  "name": "",
+                  "children": [{
+                      "id": "_r_54_70_71_72_73",
+                      "type": "",
+                      "name": "Teks",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_54_70_71_72_74",
+                      "type": "",
+                      "name": "Gambar",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_54_70_71_72_75",
+                      "type": "",
+                      "name": "Video",
+                      "children": [
+
+                      ]
+                    }
+                  ]
+                }]
+              },
+              {
+                "id": "_r_54_70_76",
+                "type": "",
+                "name": "Email",
+                "children": [{
+                  "id": "_r_54_70_76_77",
+                  "type": "g",
+                  "multiplicity": "1,",
+                  "name": "",
+                  "children": [{
+                      "id": "_r_54_70_76_77_78",
+                      "type": "",
+                      "name": "Manual",
+                      "children": [
+
+                      ]
+                    },
+                    {
+                      "id": "_r_54_70_76_77_79",
+                      "type": "",
+                      "name": "Periodik",
+                      "children": [
+
+                      ]
+                    }
+                  ]
+                }]
+              }
+            ]
+          }]
+        },
+        {
+          "id": "_r_66",
+          "type": "m",
+          "name": "Pengiriman",
+          "children": [{
+              "id": "_r_66_67",
+              "type": "m",
+              "name": "Metode",
+              "children": [{
+                "id": "_r_66_67_68",
+                "type": "g",
+                "multiplicity": "1,",
+                "name": "",
+                "children": [{
+                    "id": "_r_66_67_68_69",
+                    "type": "",
+                    "name": "KirimViaPos",
+                    "children": [
+
+                    ]
+                  },
+                  {
+                    "id": "_r_66_67_68_71",
+                    "type": "",
+                    "name": "AmbilDiToko",
+                    "children": [
+
+                    ]
+                  }
+                ]
+              }]
+            },
+            {
+              "id": "_r_66_72",
+              "type": "m",
+              "name": "Status",
+              "children": [
+
+              ]
+            }
+          ]
+        },
+        {
+          "id": "_r_80",
+          "type": "m",
+          "name": "User",
+          "children": [{
+            "id": "_r_80_81",
+            "type": "m",
+            "name": "Registrasi",
+            "children": [
+
+            ]
+          }]
+        },
+        {
+          "id": "_r_51",
+          "type": "o",
+          "name": "MediaSosial",
+          "children": [{
+              "id": "_r_51_54",
+              "type": "m",
+              "name": "Share",
+              "children": [{
+                "id": "_r_51_54_55",
+                "type": "g",
+                "multiplicity": "1,",
+                "name": "",
+                "children": [{
+                    "id": "_r_51_54_55_56",
+                    "type": "",
+                    "name": "KeFacebook",
+                    "children": [
+
+                    ]
+                  },
+                  {
+                    "id": "_r_51_54_55_57",
+                    "type": "",
+                    "name": "KeTwitter",
+                    "children": [
+
+                    ]
+                  },
+                  {
+                    "id": "_r_51_54_55_58",
+                    "type": "",
+                    "name": "KeGooglePlus",
+                    "children": [
+
+                    ]
+                  }
+                ]
+              }]
+            },
+            {
+              "id": "_r_51_59",
+              "type": "o",
+              "name": "Pertemanan",
+              "children": [
+
+              ]
+            }
+          ]
+        },
+        {
+          "id": "_r_63",
+          "type": "o",
+          "name": "WebserviceAPI",
+          "children": [
+
+          ]
+        }
+      ],
+      "constraints": [{
+        "constraint_11": "~_r_2_22 or _r_1_79"
+      }]
+    }]
+  }
+}

@@ -36,8 +36,8 @@ export default {
             "r",
             "m",
             "o",
-            "FMM_SIBLING",
-            "FMM_PARENT",
+            "g",
+            "",
             "FMM_PARENT_IN_LAW"
           ]
         },
@@ -60,14 +60,15 @@ export default {
           valid_children: ["o"]
         },
         {
-          type: "FMM_SIBLING",
-          icon: "far fa-user",
-          valid_children: ["Basic", "Top-up"]
+          type: "g",
+          name: "Grouped",
+          icon: "fas fa-layer-group",
+          valid_children: [""]
         },
         {
-          type: "FMM_PARENT",
-          icon: "far fa-user",
-          valid_children: ["Basic", "Top-up"]
+          type: "",
+          icon: "fas fa-stop",
+          valid_children: []
         },
         {
           type: "FMM_PARENT_IN_LAW",

@@ -9,7 +9,8 @@
     </span>
 
     <input type="radio" name="rad" v-model="checked" :id="model.id" :value="model.id">
-    <label v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
+    <label v-if="!(model.type == 'g')" v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
+    <label v-if="model.type == 'g'" v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{[new String(model.multiplicity)]}}</label>
     <input v-show="edit" ref="title" class="tree-text" v-model="model.name" :placeholder="model.name" key="input" @blur="blur" @keyup.enter="blur">
 
     <div class="tree-children">
