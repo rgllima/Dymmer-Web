@@ -171,20 +171,25 @@
             
           </div>
 
-          <div id="button-test">
-            <input type="file" id="teste" ref="MyXMLFile" @change="teste">
-            <a class="button is-success" @click="sendXML">Save</a>
-          </div>
+          <div id="button-test" class="box">
+            <h2 class="title is-4">Import a Feature Model</h2>
 
-          <div class="control">
-            <h2>Exemplo de Feature:</h2>
-            <div class="select">
-              <select v-model="selected">
-                <option value="2" selected>Feature de Teste 1</option>
-                <option value="1">Feature de Teste 2</option>
-              </select>
+            <div class="file">
+              <label class="file-label">
+                <input class="file-input" type="file" name="xmlString" id="getXmlToString" ref="MyXMLFile" @change="getXmlToString">
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    Choose a XML file…
+                  </span>
+                </span>
+              </label>
             </div>
           </div>
+
+
 
       </div> <!--manage-tree-->
     </div>
@@ -206,13 +211,13 @@ import {
   } from '../services/featureModelMeasures'
 
 import ExampleFeatureModel from '../.././static/featureModelExample.json'
-import ExampleFeatureModel2 from '../.././static/featureModelExample2.json'
 
 export default {
   name: 'HelloWorld',
     data() {
       return {
-        files:[],
+        //files:[],
+        xmlData: null,
         openAll: true,
         feature_model: ExampleFeatureModel.feature_model,
         feature_statistics: {
@@ -246,19 +251,23 @@ export default {
         let inputs = document.getElementsByClassName('input')
         for (var i = 0; i < inputs.length; i++) inputs[i].disabled = true
       },
-      teste(ev) {
+      getXmlToString(ev) {
         const file = ev.target.files[0];
         const reader = new FileReader();
-
-        reader.onload = e =>  console.log(e.target.result)
+      
+        reader.onload = e =>  {
+          this.$http.
+            post('https://dymmer-server.herokuapp.com/xml/xml-to-json', 
+              {
+                xmlString: e.target.result
+              }
+            ).then(res => {
+              console.log(res.body)
+              this.feature_model = res.body
+              this.featureStatistics(res.body.feature_tree[0])
+            })
+        }
         reader.readAsText(file);
-      },
-      sendXML() {
-        // this.$http.post('http://4e20fa6f.ngrok.io/xml/xml-to-json', this.$refs.MyXMLFile.files[0],{
-        //    headers: {
-        //        'Content-Type': 'multipart/form-data'
-        //    }
-        // })
       },
       async featureStatistics(feature_tree) {
         this.feature_statistics.features = await numberOfFeatures(feature_tree) + 1
@@ -280,18 +289,6 @@ export default {
       //console.log(JSON.parse(JSON.stringify(this.feature_model.feature_tree[0])))
       this.featureStatistics(this.feature_model.feature_tree[0])
       //this.formatHTMLConstraints();
-    },
-    computed: {
-      selected: {
-        get() {
-          return null
-        },
-        set(feature) {
-          if(feature==1) this.feature_model = ExampleFeatureModel.feature_model
-          else this.feature_model = ExampleFeatureModel2.feature_model
-          this.featureStatistics(this.feature_model.feature_tree[0])
-        }
-      }
     }
   }
 
