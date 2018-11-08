@@ -13,13 +13,15 @@
         </div> <!--tree-view-->
 
         <div id="tree-constraints" class="box my-background-color">
-          <hidden-card>
+          <hidden-card active>
             <h3 class="title is-4 has-text-centered" slot="titleCard">Corss-Tree Constraints</h3>
-            <div slot="contentCard" v-if="feature_model.feature_tree[0].constraints">
-              <p v-for="(value, key) in feature_model.feature_tree[0].constraints" :key="key">{{Object.values(value).toString()}}</p>
-            </div>
-            <div slot="contentCard" v-if="!feature_model.feature_tree[0].constraints">
-              <p>No constraints</p>
+            <div slot="contentCard">
+              <div v-if="feature_model.constraints">
+                <p v-for="(value, key) in feature_model.constraints" :key="key">{{Object.values(value).toString()}}</p>
+              </div>
+              <div v-if="feature_model.constraints.length === 0">
+                <p>No constraints</p>
+              </div>
             </div>
           </hidden-card>
         </div> <!-- tree-constraints -->
@@ -210,7 +212,7 @@ import {
   numberGroupesXor
   } from '../services/featureModelMeasures'
 
-import ExampleFeatureModel from '../.././static/featureModelExample.json'
+import ExampleFeatureModel from '../.././static/featureModelExample2.json'
 
 export default {
   name: 'HelloWorld',
@@ -254,7 +256,7 @@ export default {
       getXmlToString(ev) {
         const file = ev.target.files[0];
         const reader = new FileReader();
-      
+
         reader.onload = e =>  {
           this.$http.
             post('https://dymmer-server.herokuapp.com/xml/xml-to-json', 
@@ -262,7 +264,7 @@ export default {
                 xmlString: e.target.result
               }
             ).then(res => {
-              console.log(res.body)
+              console.log(JSON.parse(JSON.stringify(res.body)))
               this.feature_model = res.body
               this.featureStatistics(res.body.feature_tree[0])
             })

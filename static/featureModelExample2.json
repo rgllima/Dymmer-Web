@@ -541,10 +541,10 @@
 
           ]
         }
-      ],
-      "constraints": [{
-        "constraint_11": "~_r_2_22 or _r_1_79"
-      }]
+      ]
+    }],
+    "constraints": [{
+      "constraint_11": "~_r_2_22 or _r_1_79"
     }]
   }
 }
