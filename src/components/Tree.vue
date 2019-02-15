@@ -9,7 +9,7 @@
             <div class="box-content" slot="contentCard">
               <v-treeview v-model="feature_model.feature_tree" :openAll="openAll"></v-treeview>
             </div>
-          </hidden-card>         
+          </hidden-card>
         </div> <!--tree-view-->
 
         <div id="tree-constraints" class="box my-background-color">
@@ -152,7 +152,7 @@
       </div> <!--tree-view-->
 
       <div id="manage-tree" class="column">
-          
+
           <div id="tree-statistics" class="box my-background-color">
             <hidden-card active>
               <h3 class="title is-4 has-text-centered" slot="titleCard">Feature Model Statistics</h3>
@@ -169,8 +169,8 @@
                 <div><label><i class="fa fa-asterisk"></i> CTC Clause Density: </label><span>0</span></div>
               </div>
             </hidden-card>
-            
-            
+
+
           </div>
 
           <div id="button-test" class="box">
@@ -203,9 +203,9 @@
 import VTreeview from './TreeView/VTreeview/VTreeview.vue'
 import HiddenCard from './HiddenCard/HiddenCard.vue'
 
-import { 
+import {
   numberOfFeatures,
-  numberOfMandatoryFeatures, 
+  numberOfMandatoryFeatures,
   numberOfOptionalFeatures,
   numberOfGroupedFeatures,
   numberGroupesOr,
@@ -259,7 +259,8 @@ export default {
 
         reader.onload = e =>  {
           this.$http.
-            post('https://dymmer-server.herokuapp.com/xml/xml-to-json', 
+            post('https://dymmer-server.herokuapp.com/xml/xml-to-json',
+            // post('http://localhost:3000/xml/xml-to-json',
               {
                 xmlString: e.target.result
               }

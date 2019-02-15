@@ -5,8 +5,12 @@ import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
 import 'bulma'
+import Buefy from 'buefy'
+
+import 'buefy/dist/buefy.css'
 
 Vue.use(VueResource)
+Vue.use(Buefy)
 
 Vue.config.productionTip = false
 
