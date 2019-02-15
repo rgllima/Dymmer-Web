@@ -5,11 +5,14 @@
 </template>
 
 <script>
-
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css?family=Raleway");
+#app {
+  font-family: "Raleway", sans-serif;
+}
 </style>

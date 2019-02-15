@@ -1,0 +1,566 @@
+{
+  "name": "Heidelberg Ion-Beam Therapy Center",
+  "description": "Software system of a complex medical device of radiotherapy.",
+  "creator": "Jefferson da Silva Barbosa",
+  "address": "",
+  "email": "jefferson.sb.es@gmail.com",
+  "phone": "",
+  "website": "",
+  "organization": "Universidade Federal do Ceará",
+  "department": "",
+  "date": "23-05-2015",
+  "reference": "",
+  "feature_tree": [
+    {
+      "id": "_r",
+      "type": "r",
+      "name": "DeviceControlUnit",
+      "children": [
+        {
+          "id": "_r_1",
+          "type": "m",
+          "name": "DCUMasterParameter",
+          "children": [
+            {
+              "id": "_r_1_2",
+              "type": "m",
+              "name": "MeasuringMode",
+              "children": [
+                {
+                  "id": "_r_1_2_3",
+                  "type": "g",
+                  "multiplicity": "1,1",
+                  "name": "",
+                  "children": [
+                    {
+                      "id": "_r_1_2_3_4",
+                      "type": "",
+                      "name": "Mode4",
+                      "children": []
+                    },
+                    {
+                      "id": "_r_1_2_3_5",
+                      "type": "",
+                      "name": "Mode3",
+                      "children": []
+                    },
+                    {
+                      "id": "_r_1_2_3_6",
+                      "type": "",
+                      "name": "Mode2",
+                      "children": []
+                    },
+                    {
+                      "id": "_r_1_2_3_7",
+                      "type": "",
+                      "name": "Mode1",
+                      "children": []
+                    },
+                    {
+                      "id": "_r_1_2_3_8",
+                      "type": "",
+                      "name": "Mode0",
+                      "children": []
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "_r_1_9",
+              "type": "o",
+              "name": "RtbTimingEn",
+              "children": []
+            },
+            {
+              "id": "_r_1_10",
+              "type": "o",
+              "name": "ErrorMonEn",
+              "children": []
+            },
+            {
+              "id": "_r_1_11",
+              "type": "m",
+              "name": "AddRtbDelayTime",
+              "children": []
+            },
+            {
+              "id": "_r_1_12",
+              "type": "m",
+              "name": "LowCurrentTimer",
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "_r_13",
+          "type": "m",
+          "name": "DCUTypeParameter",
+          "children": [
+            {
+              "id": "_r_13_14",
+              "type": "m",
+              "name": "Name",
+              "children": []
+            },
+            {
+              "id": "_r_13_15",
+              "type": "o",
+              "name": "DeviceControlParameter",
+              "children": [
+                {
+                  "id": "_r_13_15_16",
+                  "type": "o",
+                  "name": "RefValueTHoldMax",
+                  "children": []
+                },
+                {
+                  "id": "_r_13_15_17",
+                  "type": "m",
+                  "name": "TimeoutFeedback",
+                  "children": []
+                },
+                {
+                  "id": "_r_13_15_18",
+                  "type": "m",
+                  "name": "DelayTimeFeedback",
+                  "children": []
+                },
+                {
+                  "id": "_r_13_15_19",
+                  "type": "m",
+                  "name": "DelayTimeActivate",
+                  "children": []
+                },
+                {
+                  "id": "_r_13_15_20",
+                  "type": "o",
+                  "name": "BeamRequest",
+                  "children": []
+                },
+                {
+                  "id": "_r_13_15_21",
+                  "type": "o",
+                  "name": "EnableShutdown",
+                  "children": []
+                },
+                {
+                  "id": "_r_13_15_22",
+                  "type": "o",
+                  "name": "EnableSwitchOn",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "id": "_r_13_23",
+              "type": "m",
+              "name": "Checksum",
+              "children": []
+            },
+            {
+              "id": "_r_13_24",
+              "type": "m",
+              "name": "Version",
+              "children": []
+            },
+            {
+              "id": "_r_13_25",
+              "type": "o",
+              "name": "TimingMasterParameter",
+              "children": [
+                {
+                  "id": "_r_13_25_50",
+                  "type": "o",
+                  "name": "EnableGenRTBMasterClock",
+                  "children": []
+                },
+                {
+                  "id": "_r_13_25_51",
+                  "type": "o",
+                  "name": "EnableSyncSupplyFequence",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "_r_26",
+          "type": "m",
+          "name": "OperationMode",
+          "children": [
+            {
+              "id": "_r_26_27",
+              "type": "g",
+              "multiplicity": "1,1",
+              "name": "",
+              "children": [
+                {
+                  "id": "_r_26_27_28",
+                  "type": "",
+                  "name": "QualityAssurance",
+                  "children": []
+                },
+                {
+                  "id": "_r_26_27_29",
+                  "type": "",
+                  "name": "Adjustment",
+                  "children": []
+                },
+                {
+                  "id": "_r_26_27_30",
+                  "type": "",
+                  "name": "Experiment",
+                  "children": []
+                },
+                {
+                  "id": "_r_26_27_31",
+                  "type": "",
+                  "name": "Standby",
+                  "children": []
+                },
+                {
+                  "id": "_r_26_27_32",
+                  "type": "",
+                  "name": "Therapy",
+                  "children": []
+                },
+                {
+                  "id": "_r_26_27_33",
+                  "type": "",
+                  "name": "Manual",
+                  "children": []
+                },
+                {
+                  "id": "_r_26_27_34",
+                  "type": "",
+                  "name": "Idle",
+                  "children": []
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "_r_35",
+          "type": "m",
+          "name": "DeviceController",
+          "children": []
+        },
+        {
+          "id": "_r_36",
+          "type": "m",
+          "name": "Type",
+          "children": [
+            {
+              "id": "_r_36_37",
+              "type": "g",
+              "multiplicity": "1,1",
+              "name": "",
+              "children": [
+                {
+                  "id": "_r_36_37_38",
+                  "type": "",
+                  "name": "Z",
+                  "children": []
+                },
+                {
+                  "id": "_r_36_37_39",
+                  "type": "",
+                  "name": "SD",
+                  "children": []
+                },
+                {
+                  "id": "_r_36_37_40",
+                  "type": "",
+                  "name": "DeviceControl",
+                  "children": [
+                    {
+                      "id": "_r_36_37_40_41",
+                      "type": "g",
+                      "multiplicity": "1,1",
+                      "name": "",
+                      "children": [
+                        {
+                          "id": "_r_36_37_40_41_42",
+                          "type": "",
+                          "name": "Ramped",
+                          "children": [
+                            {
+                              "id": "_r_36_37_40_41_42_46",
+                              "type": "g",
+                              "multiplicity": "1,1",
+                              "name": "",
+                              "children": [
+                                {
+                                  "id": "_r_36_37_40_41_42_46_47",
+                                  "type": "",
+                                  "name": "RK",
+                                  "children": []
+                                },
+                                {
+                                  "id": "_r_36_37_40_41_42_46_48",
+                                  "type": "",
+                                  "name": "RB",
+                                  "children": []
+                                },
+                                {
+                                  "id": "_r_36_37_40_41_42_46_49",
+                                  "type": "",
+                                  "name": "R",
+                                  "children": []
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": "_r_36_37_40_41_43",
+                          "type": "",
+                          "name": "P",
+                          "children": []
+                        },
+                        {
+                          "id": "_r_36_37_40_41_44",
+                          "type": "",
+                          "name": "T",
+                          "children": []
+                        },
+                        {
+                          "id": "_r_36_37_40_41_45",
+                          "type": "",
+                          "name": "TS",
+                          "children": []
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "constraints": [
+    {
+      "constraint_1": "~_r_13_15 or _r_36_37_40"
+    },
+    {
+      "constraint_6": "_r_13_25 or ~_r_36_37_38"
+    },
+    {
+      "constraint_4": "~_r_13_15_16 or ~_r_36_37_40_41_42_46_47"
+    },
+    {
+      "constraint_5": "~_r_13_25 or _r_36_37_38"
+    },
+    {
+      "constraint_3": "_r_13_15 or ~_r_36_37_40"
+    }
+  ],
+  "contexts": [
+    {
+      "name": "operation-mode",
+      "resolutions": [
+        {
+          "feature_id": "_r_1",
+          "feature_name": "DCUMasterParameter",
+          "status": true
+        },
+        {
+          "feature_id": "_r_1_2",
+          "feature_name": "MeasuringMode",
+          "status": true
+        },
+        {
+          "feature_id": "_r_1_11",
+          "feature_name": "AddRtbDelayTime",
+          "status": true
+        },
+        {
+          "feature_id": "_r_1_12",
+          "feature_name": "LowCurrentTimer",
+          "status": true
+        },
+        {
+          "feature_id": "_r_13",
+          "feature_name": "DCUTypeParameter",
+          "status": true
+        },
+        {
+          "feature_id": "_r_13_14",
+          "feature_name": "Name",
+          "status": true
+        },
+        {
+          "feature_id": "_r_13_15",
+          "feature_name": "DeviceControlParameter",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_15_16",
+          "feature_name": "RefValueTHoldMax",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_15_17",
+          "feature_name": "TimeoutFeedback",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_15_18",
+          "feature_name": "DelayTimeFeedback",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_15_19",
+          "feature_name": "DelayTimeActivate",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_15_20",
+          "feature_name": "BeamRequest",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_15_21",
+          "feature_name": "EnableShutdown",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_15_22",
+          "feature_name": "EnableSwitchOn",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_23",
+          "feature_name": "Checksum",
+          "status": true
+        },
+        {
+          "feature_id": "_r_13_24",
+          "feature_name": "Version",
+          "status": true
+        },
+        {
+          "feature_id": "_r_26",
+          "feature_name": "OperationMode",
+          "status": true
+        },
+        {
+          "feature_id": "_r_35",
+          "feature_name": "DeviceController",
+          "status": true
+        },
+        {
+          "feature_id": "_r_36",
+          "feature_name": "Type",
+          "status": true
+        },
+        {
+          "feature_id": "_r_26_27_32",
+          "feature_name": "Therapy",
+          "status": true
+        },
+        {
+          "feature_id": "_r_13_25_51",
+          "feature_name": "EnableSyncSupplyFequence",
+          "status": true
+        },
+        {
+          "feature_id": "_r_26_27_28",
+          "feature_name": "QualityAssurance",
+          "status": false
+        },
+        {
+          "feature_id": "_r_26_27_29",
+          "feature_name": "Adjustment",
+          "status": false
+        },
+        {
+          "feature_id": "_r_26_27_30",
+          "feature_name": "Experiment",
+          "status": false
+        },
+        {
+          "feature_id": "_r_26_27_31",
+          "feature_name": "Standby",
+          "status": false
+        },
+        {
+          "feature_id": "_r_26_27_33",
+          "feature_name": "Manual",
+          "status": false
+        },
+        {
+          "feature_id": "_r_26_27_34",
+          "feature_name": "Idle",
+          "status": false
+        },
+        {
+          "feature_id": "_r_13_25",
+          "feature_name": "TimingMasterParameter",
+          "status": true
+        },
+        {
+          "feature_id": "_r_36_37_38",
+          "feature_name": "Z",
+          "status": true
+        },
+        {
+          "feature_id": "_r_36_37_39",
+          "feature_name": "SD",
+          "status": false
+        },
+        {
+          "feature_id": "_r_36_37_40",
+          "feature_name": "DeviceControl",
+          "status": false
+        },
+        {
+          "feature_id": "_r_36_37_40_41_42",
+          "feature_name": "Ramped",
+          "status": false
+        },
+        {
+          "feature_id": "_r_36_37_40_41_43",
+          "feature_name": "P",
+          "status": false
+        },
+        {
+          "feature_id": "_r_36_37_40_41_44",
+          "feature_name": "T",
+          "status": false
+        },
+        {
+          "feature_id": "_r_36_37_40_41_45",
+          "feature_name": "TS",
+          "status": false
+        },
+        {
+          "feature_id": "_r_36_37_40_41_42_46_47",
+          "feature_name": "RK",
+          "status": false
+        },
+        {
+          "feature_id": "_r_36_37_40_41_42_46_48",
+          "feature_name": "RB",
+          "status": false
+        },
+        {
+          "feature_id": "_r_36_37_40_41_42_46_49",
+          "feature_name": "R",
+          "status": false
+        }
+      ],
+      "constraints": [
+        {
+          "": "~_r_26_27_32 or _r_13_25_51"
+        }
+      ]
+    }
+  ]
+}

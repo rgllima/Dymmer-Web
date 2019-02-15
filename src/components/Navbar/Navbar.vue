@@ -1,8 +1,8 @@
 <template lang="html">
-  <nav class="navbar is-transparent card">
+  <nav class="navbar is-transparent" style="background-color: transparent">
     <div class="navbar-brand">
-      <a class="navbar-item" href="#">
-        <h1 class="is-size-3">DyMMer</h1>
+      <a class="navbar-item" @click="pushRouter('/')">
+        <h1 class="is-size-3 has-text-white">DyMMer</h1>
       </a>
       <div class="navbar-burger burger" data-target="navMenu" @click="showNav = !showNav" :class="{ 'is-active': showNav }">
         <span></span>
@@ -13,55 +13,32 @@
 
     <div id="navMenu" class="navbar-menu" :class="{ 'is-active': showNav }">
       <div class="navbar-start">
-        <a class="navbar-item" href="#">
-          Home
+        <a class="navbar-item has-text-white" @click="pushRouter('/project')">
+          The Project
         </a>
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link" href="#">
-            Docs
-          </a>
-          <div class="navbar-dropdown is-boxed">
-            <a class="navbar-item" href="#">
-              Overview
-            </a>
-            <a class="navbar-item" href="#">
-              Modifiers
-            </a>
-            <a class="navbar-item" href="#">
-              Columns
-            </a>
-            <a class="navbar-item" href="#">
-              Layout
-            </a>
-            <a class="navbar-item" href="#">
-              Form
-            </a>
-            <hr class="navbar-divider">
-            <a class="navbar-item" href="#">
-              Elements
-            </a>
-            <a class="navbar-item is-active" href="#">
-              Components
-            </a>
-          </div>
-        </div>
+        <a class="navbar-item has-text-white" @click="pushRouter('/docs')">
+          Documentation
+        </a>
+        <a class="navbar-item has-text-white" @click="pushRouter('/developers')">
+          Developers
+        </a>
       </div>
 
       <div class="navbar-end">
         <div class="navbar-item">
           <div class="field is-grouped">
-            <!-- <p class="control">
-              <a class="bd-tw-button button" data-social-network="Twitter" data-social-action="tweet" data-social-target="http://localhost:4000" target="_blank" href="https://twitter.com/intent/tweet?text=Bulma: a modern CSS framework based on Flexbox&amp;hashtags=bulmaio&amp;url=http://localhost:4000&amp;via=jgthms">
+            <p class="control">
+              <a class="button is-light is-outlined" @click="pushRouter('/dashboard')">
                 <span class="icon">
-                  <i class="fab fa-twitter"></i>
+                  <i class="fas fa-tachometer-alt"></i>
                 </span>
                 <span>
-                  Tweet
+                  Dashboard
                 </span>
               </a>
-            </p> -->
+            </p>
             <p class="control">
-              <a class="button is-dark" href="#">
+              <a class="button is-light is-outlined" target="_blank" href="https://github.com/dymmerufc">
                 <span class="icon">
                   <i class="fab fa-github"></i>
                 </span>
@@ -80,8 +57,13 @@ export default {
   data() {
     return {
       showNav: false
+    };
+  },
+  methods: {
+    pushRouter(route) {
+      this.$router.push(route)
     }
-  }
+  },
   // created() {
   //   document.addEventListener('DOMContentLoaded', () => {
   //
@@ -109,7 +91,7 @@ export default {
   //
   //   });
   // }
-}
+};
 </script>
 
 <style lang="css">
