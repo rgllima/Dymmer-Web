@@ -15,7 +15,7 @@
                 id="mysubtitle"
                 class="subtitle has-text-light"
               >The tool collects a large number of quality measures to support the maintainability evaluation of the features model, 40 measurements in total, uses specific measures for LPSD feature models.</p>
-              <div>
+              <div class="buttons">
                 <a class="button is-success" @click="openSignModal(false)">GET STARTED</a>
                 <a class="button is-outlined" @click="openSignModal(true)">SIGN IN</a>
               </div>
@@ -153,7 +153,7 @@ import * as engeneer from "@/assets/engeneer_animation.json";
 
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import SignIn from "@/pages/SignIn/SignIn";
+import SignIn from "@/views/SignIn/SignIn";
 
 export default {
   components: {
@@ -163,7 +163,7 @@ export default {
   },
   data() {
     return {
-      engeneerAnimation: { animationData: engeneer }
+      engeneerAnimation: { animationData: engeneer.default }
     };
   },
   methods: {
