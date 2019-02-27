@@ -15,7 +15,7 @@
         <div id="tree-constraints" class="box my-background-color">
           <hidden-card active>
             <h3 class="title is-4 has-text-centered" slot="titleCard">Corss-Tree Constraints</h3>
-            <div slot="contentCard">
+            <div slot="contentCard" v-if="feature_model.length > 0">
               <div v-if="feature_model.constraints">
                 <p v-for="(value, key) in feature_model.constraints" :key="key">{{Object.values(value).toString()}}</p>
               </div>
@@ -212,7 +212,7 @@ import {
   numberGroupesXor
   } from '../services/featureModelMeasures'
 
-import ExampleFeatureModel from '../.././static/featureModelExample2.json'
+// import ExampleFeatureModel from '../.././static/featureModelExample2.json'
 
 export default {
   name: 'HelloWorld',
@@ -221,7 +221,7 @@ export default {
         //files:[],
         xmlData: null,
         openAll: true,
-        feature_model: ExampleFeatureModel.feature_model,
+        feature_model: [],
         feature_statistics: {
           features: 0,
           mandatory: 0,
@@ -290,7 +290,7 @@ export default {
       //console.log(JSON.parse(JSON.stringify(ExampleFeatureModel)))
       //console.log(this.feature_model.feature_tree[0].constraints)
       //console.log(JSON.parse(JSON.stringify(this.feature_model.feature_tree[0])))
-      this.featureStatistics(this.feature_model.feature_tree[0])
+      // this.featureStatistics(this.feature_model.feature_tree[0])
       //this.formatHTMLConstraints();
     }
   }

@@ -44,13 +44,20 @@
                     <div class="field">
                       <div class="control has-text-white">
                         <label for="email">Email</label>
-                        <input id="dymmer-input" class="input" type="text" placeholder="Your Email">
+                        <input
+                          v-model="user.email"
+                          id="dymmer-input"
+                          class="input"
+                          type="text"
+                          placeholder="Your Email"
+                        >
                       </div>
                     </div>
                     <div class="field">
                       <div class="control has-text-white">
                         <label for="password">Password</label>
                         <input
+                         v-model="user.password"
                           id="dymmer-input"
                           class="input"
                           type="password"
@@ -59,7 +66,12 @@
                       </div>
                     </div>
                     <div class="buttons" style="margin-top: 20px;">
-                      <a class="button is-success is-rounded" style="font-size: 0.75rem">Sign In</a>
+                      <a
+                        ref="signinButton"
+                        class="button is-success is-rounded"
+                        style="font-size: 0.75rem"
+                        @click="signIn"
+                      >Sign In</a>
                       <a
                         style="font-size: 0.75rem; color: #8e99a8;text-decoration: underline;"
                         @click="show = false"
@@ -73,19 +85,32 @@
                     <div class="field">
                       <div class="control has-text-white">
                         <label for="name">Your Name</label>
-                        <input id="dymmer-input" class="input" type="text" placeholder="Your Name">
+                        <input
+                          v-model="user.name"
+                          id="dymmer-input"
+                          class="input"
+                          type="text"
+                          placeholder="Your Name"
+                        >
                       </div>
                     </div>
                     <div class="field">
                       <div class="control has-text-white">
                         <label for="email">Email</label>
-                        <input id="dymmer-input" class="input" type="text" placeholder="Your Email">
+                        <input
+                          v-model="user.email"
+                          id="dymmer-input"
+                          class="input"
+                          type="text"
+                          placeholder="Your Email"
+                        >
                       </div>
                     </div>
                     <div class="field">
                       <div class="control has-text-white">
                         <label for="password">Password</label>
                         <input
+                          v-model="user.password"
                           id="dymmer-input"
                           class="input"
                           type="password"
@@ -100,7 +125,12 @@
                       </b-checkbox>
                     </div>
                     <div class="buttons" style="margin-top: 20px;">
-                      <a class="button is-success is-rounded" style="font-size: 0.75rem">Sign Up</a>
+                      <a
+                        ref="signupButton"
+                        class="button is-success is-rounded"
+                        style="font-size: 0.75rem"
+                        @click="signUp"
+                      >Sign Up</a>
                       <a
                         style="font-size: 0.75rem; color: #8e99a8;text-decoration: underline;"
                         @click="show = true"
@@ -122,8 +152,70 @@ export default {
   props: ['hasAccount'],
   data() {
     return {
-      show: this.hasAccount
+      show: this.hasAccount,
+      user: {
+        name: '',
+        email: '',
+        password: ''
+      }
     };
+  },
+  methods: {
+    async signIn() {
+      if (!this.user.email)
+        return;
+      if(!this.user.password)
+        return;
+
+      this.$refs.signinButton.classList.add("is-loading");
+      await this.$store.dispatch("authentication/signIn", this.user)
+
+      if(this.error) {
+        this.$toast.open({
+          message: `${this.error}`,
+          type: 'is-danger'
+        })
+        this.$store.commit('authentication/setError', null)
+        this.$refs.signinButton.classList.remove("is-loading")
+      } else {
+        this.$toast.open({
+          message: `Success`,
+          type: 'is-success'
+        })
+        this.$emit("close")
+        this.$router.push('/dashboard')
+      }
+    },
+    async signUp() {
+      if (!this.user.name)
+        return;
+      if (!this.user.email)
+        return;
+      if(!this.user.password)
+        return;
+
+      this.$refs.signupButton.classList.add("is-loading");
+      await this.$store.dispatch("authentication/signUp", this.user)
+
+      if(this.error) {
+        this.$toast.open({
+          message: `${this.error}`,
+          type: 'is-danger'
+        })
+        this.$store.commit('authentication/setError', null)
+        this.$refs.signinButton.classList.remove("is-loading")
+      } else {
+        this.$toast.open({
+          message: `Success`,
+          type: 'is-success'
+        })
+      }
+    }
+  },
+  computed: {
+    error() {
+      return this.$store.state.authentication.error;
+    }
   }
 };
 </script>
@@ -222,7 +314,8 @@ export default {
   .fade-leave-active {
     transition: opacity 0.5s;
   }
-  .fade-enter, .fade-leave-to {
+  .fade-enter,
+  .fade-leave-to {
     opacity: 0;
   }
 }
