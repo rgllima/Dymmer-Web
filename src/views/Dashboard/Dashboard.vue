@@ -66,7 +66,7 @@
                   General
                 </p>
                 <ul class="menu-list">
-                  <li><a class="is-active">Home</a></li>
+                  <li><a class="is-active" @click="pushRouter('/home')">Home</a></li>
                   <li><a>Customers</a></li>
                 </ul>
                 <p class="menu-label">
@@ -124,7 +124,7 @@ export default {
     }
   },
   mounted() {
-    this.$router.push("/home");
+    //this.$router.push("/home");
   }
 };
 </script>

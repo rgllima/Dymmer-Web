@@ -1,5 +1,5 @@
 <template>
-  <li class="tree-node" >
+  <li class="tree-node">
     <span class="toggle-icon" :class="{ 'empty-toggle': !isFolder }" :key="open">
       <i v-if="isFolder" :class="{'fas fa-caret-down' : this.open, 'fas fa-caret-right' : !this.open}" ></i>
     </span>
@@ -126,14 +126,14 @@ ul .tree-node {
 }
 
 ul .tree-node :hover:before {
-  background: rgba(190, 235, 255, 0.3);
+  background: rgba(129, 100, 207, 0.1);
 }
 
 ul .tree-node input[type='radio'] {
   display: none;
 }
 ul .tree-node input[type='radio']:checked + label:before {
-  background: rgba(83, 215, 220, 0.3);
+  background: rgba(121, 87, 213, 0.25);
 }
 
 ul label {
@@ -159,6 +159,7 @@ ul label:before {
 }
 
 .tree-icon {
-  font-size: 0.6em;
+  font-size: 0.7em;
+  margin-right: 10px;
 }
 </style>

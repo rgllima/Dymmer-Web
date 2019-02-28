@@ -39,8 +39,13 @@ const router = new Router({
       children: [
         {
           path: "/home",
-          name: "home",
+          name: "Home",
           component: () => import("@/views/Dashboard/Childs/Home")
+        },
+        {
+          path: "/show-feature-model",
+          name: "ShowFeatureModel",
+          component: () => import("@/views/Dashboard/Childs/ShowFeatureModel")
         }
       ]
     }
