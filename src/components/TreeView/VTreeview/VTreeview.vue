@@ -5,7 +5,7 @@
         :model="item" :treeRules="treeRules" :openAll="openAll" :searchText="searchText"
         @selected="selected" @openTree="openTree"></v-treeview-item>
     </ul>
-    <v-context :show="showContext" :contextItems="contextItems" :mouseEvent="mouseEvent" @contextSelected="contextSelected" ></v-context>
+    <v-context v-if="hasContext" :show="showContext" :contextItems="contextItems" :mouseEvent="mouseEvent" @contextSelected="contextSelected" ></v-context>
   </div>
 </template>
 
@@ -17,6 +17,7 @@ export default {
   props: [
     'value',
     'openAll',
+    'hasContext',
     'editName',
     'searchText',
   ],
