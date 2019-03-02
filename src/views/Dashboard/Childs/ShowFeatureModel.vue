@@ -2,38 +2,58 @@
   <div id="show-feature-model-page">
     <div class="tile is-ancestor">
       <div class="tile is-parent">
-        <div class="tile is-child is-vertical">
-          <h1 class="has-text-centered is-size-5">Feature Diagram</h1>
+        <div class="tile is-child is-vertical" style="max-width: 500px; overflow: hidden;">
+          <!-- <h1 class="has-text-centered is-size-5">Feature Diagram</h1> -->
           <div class="box">
+            <h1 class="has-text-centered is-size-5">Feature Diagram</h1>
+            <br>
             <v-treeview v-model="featureModel.feature_tree" :openAll="openAll" :hasContext="false"></v-treeview>
           </div>
         </div>
-        <div class="tile is-child is-vertical" style="padding: 0 10px">
-          <h1 class="has-text-centered is-size-5">Manage Feature Model</h1>
-          <div class="tile">
-            <div class="tile is-child" style="padding: 0 5px">
-              <a href="#" class="box">
-                <img src="../../../assets/protractor.svg" alt="settings">
-                <br>
-                <p class="has-text-centered">Apply Quality Measures</p>
+        <div class="tile is-child is-vertical " style="padding: 0 10px">
+          <b-collapse class="card">
+            <div slot="trigger" slot-scope="props" class="card-header" style="width: 100%">
+              <p class="card-header-title" style="justify-content: center;">Manage Feature Model</p>
+              <a class="card-header-icon">
+                <b-icon pack="fas" :icon="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></b-icon>
               </a>
             </div>
-            <div class="tile is-child" style="padding: 0 5px">
-              <a href="#" class="box">
-                <img src="../../../assets/wireframe.svg" alt="settings">
-                <br>
-                <p class="has-text-centered">Feature Model Configuration</p>
-              </a>
+            <div class="card-content manage-feature">
+              <div class="content">
+                <div class="tile">
+                  <div class="tile is-child" style="padding: 0 5px">
+                    <a href="#" class="box">
+                      <img src="../../../assets/protractor.svg" alt="settings">
+                      <br>
+                      <p class="has-text-centered">Apply Measures</p>
+                    </a>
+                  </div>
+                  <div class="tile is-child" style="padding: 0 5px">
+                    <a href="#" class="box">
+                      <img src="../../../assets/wireframe.svg" alt="settings">
+                      <br>
+                      <p class="has-text-centered">Feature Configuration</p>
+                    </a>
+                  </div>
+                  <div class="tile is-child" style="padding: 0 5px">
+                    <a href="#" class="box">
+                      <img src="../../../assets/edit-tools.svg" alt="settings">
+                      <br>
+                      <p class="has-text-centered">Edit Model</p>
+                    </a>
+                  </div>
+                  <div class="tile is-child" style="padding: 0 5px">
+                    <a href="#" class="box">
+                      <img src="../../../assets/import.svg" alt="settings">
+                      <br>
+                      <p class="has-text-centered">Import Model</p>
+                    </a>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="tile is-child" style="padding: 0 5px">
-              <a href="#" class="box">
-                <img src="../../../assets/edit-tools.svg" alt="settings">
-                <br>
-                <p class="has-text-centered">Edit Feature Model</p>
-              </a>
-            </div>
-          </div>
-          <div class="tile is-vertical" style="margin-top: 20px; padding: 0 5px;">
+          </b-collapse>
+          <div class="tile is-vertical" style="margin-top: 20px;">
             <div class="tile is-child">
               <b-collapse class="card" :open="false">
                 <div slot="trigger" slot-scope="props" class="card-header" style="width: 100%">
@@ -160,8 +180,25 @@ export default {
 <style lang="scss" scoped>
 #show-feature-model-page {
   padding: 20px;
+
   p {
     margin: 0;
+  }
+
+  a {
+    height: 100%;
+  }
+
+  .manage-feature {
+    p {
+      font-size: 0.8rem;
+    }
+  }
+
+  img {
+    width: 70px;
+    display: block;
+    margin: 0 auto;
   }
 }
 </style>

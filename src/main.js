@@ -4,6 +4,7 @@ import router from "./router";
 import store from "./store";
 import VueResource from "vue-resource";
 // import "bulma";
+import '@/assets/css/reset.css'
 import Buefy from "buefy";
 import "buefy/dist/buefy.css";
 import VTreeView from "@/components/TreeView/VTreeview/VTreeview";
