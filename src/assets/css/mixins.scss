@@ -1,0 +1,70 @@
+//    MIXINS   \\
+
+// Linear gradient (https://bit.ly/2QDED74)
+@mixin linear-gradient($from, $to) {
+    background: $to;
+    background: -moz-linear-gradient(top, $from 0%, $to 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$from), color-stop(100%,$to));
+    background: -webkit-linear-gradient(top, $from 0%,$to 100%);
+    background: -o-linear-gradient(top, $from 0%,$to 100%);
+    background: linear-gradient(to bottom, $from 0%,$to 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=#{$from}, endColorstr=#{$to})
+}
+
+// Transform (https://bit.ly/2D9mA6a)
+@mixin transform($transforms) {
+    -moz-transform: $transforms;
+    -o-transform: $transforms;
+    -ms-transform: $transforms;
+    -webkit-transform: $transforms;
+    transform: $transforms;
+}
+
+// Media queries (me)
+@mixin phone { // Valid for small tablets also
+    @media (min-width: 300px) and (max-width: 768px){
+        @content;
+    }
+}
+// Media queries (me)
+@mixin tablet {
+    @media (min-width: 769px) and (max-width: 1279px){
+        @content;
+    }
+}
+
+// Box shadow (me)
+@mixin box-shadow($left, $top, $blur, $color, $inset: false) {
+    @if $inset {
+        -webkit-box-shadow:inset $left $top $blur $color;
+        -moz-box-shadow:inset $left $top $blur $color;
+        box-shadow:inset $left $top $blur $color;
+    } @else {
+        -webkit-box-shadow: $left $top $blur $color;
+        -moz-box-shadow: $left $top $blur $color;
+        box-shadow: $left $top $blur $color;
+    }
+}
+
+// Border-radius (me)
+@mixin border-radius($radius: 4px) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
+
+// Transition (me)
+@mixin transition($trans) {
+    -webkit-transition: $trans;
+    -moz-transition: $trans;
+    transition: $trans;
+}
+
+// Remove draggable on <img />
+@mixin remove-drag-on-img() {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

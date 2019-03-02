@@ -28,7 +28,7 @@ const actions = {
         xmlString: xmlString
       })
       .then(res => {
-        console.log(res.data);
+        console.log(JSON.parse(JSON.stringify(res.data)));
         context.commit("setFeatureModel", res.data);
         router.push("/show-feature-model");
       });

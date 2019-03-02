@@ -1,99 +1,123 @@
-<template lang="html">
+<template>
   <div class="homepage-content">
-    <div class="tile is-ancestor">
-      <div class="tile is-parent is-vertical">
-        <div class="tile is-parent" style="background-color: rgb(218, 223, 225)">
-          <div style="width: 100%">
-               <nav class="navbar" style="background-color: transparent">
-                <div class="navbar-brand">
-                  <a class="navbar-item" @click="pushRouter('/home')">
-                    <h1 class="is-size-4">DyMMer Dashboard</h1>
-                  </a>
-                  <div class="navbar-burger burger" data-target="navMenu" @click="showNav = !showNav" :class="{ 'is-active': showNav }">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
+    <section class="main-content columns" style="overflow: hidden;">
+      <aside class="column is-paddingless" :class="{'active': menu_bars}">
+        <div class="infobar">
+          <h1 class="has-text-centered is-size-5" style="margin-top: 15px;">DyMMer Web</h1>
+        </div>
 
-                <div id="navMenu" class="navbar-menu" :class="{ 'is-active': showNav }">
-                  <!-- <div class="navbar-start">
-                    <a class="navbar-item has-text-white" @click="pushRouter('/project')">
-                      The Project
-                    </a>
-                    <a class="navbar-item has-text-white" @click="pushRouter('/docs')">
-                      Documentation
-                    </a>
-                    <a class="navbar-item has-text-white" @click="pushRouter('/developers')">
-                      Developers
-                    </a>
-                  </div> -->
+        <div class="menu-bars" @click="menu_bars=!menu_bars">
+          <i class="fa" :class="(!menu_bars) ? 'fa-bars' : 'fa-times'"/>
+        </div>
 
-                  <!-- <div class="navbar-end">
-                    <div class="navbar-item">
-                      <div class="field is-grouped">
-                        <p class="control">
-                          <a class="button is-light is-outlined" @click="pushRouter('/dashboard')">
-                            <span class="icon">
-                              <i class="fas fa-tachometer-alt"></i>
-                            </span>
-                            <span>
-                              Dashboard
-                            </span>
-                          </a>
-                        </p>
-                        <p class="control">
-                          <a class="button is-light is-outlined" target="_blank" href="https://github.com/dymmerufc">
-                            <span class="icon">
-                              <i class="fab fa-github"></i>
-                            </span>
-                            <span>Colaborate</span>
-                          </a>
-                        </p>
-                      </div>
-                    </div>
-                  </div> -->
-                </div>
-              </nav>
+        <div style="margin-top: 20px">
+          <ul class="menu-list">
+            <li>
+              <a class="has-text-white" @click="pushRouter('/home')">
+                <i class="fas fa-home"></i>
+                Home
+              </a>
+            </li>
+          </ul>
+
+          <p class="menu-label has-text-light" style="margin: 20px 0px 5px 8px; font-size: 0.7rem">
+            Feature Model
+          </p>
+          <ul class="menu-list">
+            <li>
+              <a class="has-text-white">
+                <i class="fas fa-plus"></i>
+                Create
+              </a>
+            </li>
+            <li>
+              <a class="has-text-white">
+                <i class="fas fa-file-import"></i>
+                Import
+              </a>
+            </li>
+            <li>
+              <a class="has-text-white">
+                <i class="fas fa-wrench"></i>
+                Apply Configurations
+              </a>
+            </li>
+            <li>
+              <a class="has-text-white">
+                <i class="fas fa-table"></i>
+                My Feature Models
+              </a>
+            </li>
+            <li>
+              <a class="has-text-white">
+                <i class="fas fa-database"></i>
+                Public Feature Models
+              </a>
+            </li>
+          </ul>
+
+          <p class="menu-label has-text-light" style="margin: 20px 0px 5px 8px; font-size: 0.7rem">
+            Quality Measures
+          </p>
+          <ul class="menu-list">
+            <li>
+              <a class="has-text-white">
+                <i class="fas fa-tasks"></i>
+                Apply Measures
+              </a>
+            </li>
+          </ul>
+
+          <p class="menu-label has-text-light" style="margin: 20px 0px 5px 8px; font-size: 0.7rem">
+            General
+          </p>
+          <ul class="menu-list">
+            <li>
+              <a class="has-text-white">
+                <i class="fas fa-cog"></i>
+                Account Settings
+              </a>
+            </li>
+            <li>
+              <a class="has-text-white">
+                <i class="fas fa-question"></i>
+                Help
+              </a>
+            </li>
+            <li>
+              <a class="has-text-white" @click="pushRouter('/')">
+                <i class="fas fa-sign-out-alt"></i>
+                Exit Dashboard
+              </a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <div class="container section column">
+        <div class="level">
+          <div class="level-left" :class="{'menu-bar-opened': menu_bars}">
+            <!-- <div class="level-item">
+              <div class="user">
+                <i class="fa fa-user"/>
+              </div>
+            </div> -->
+          </div>
+          <div class="level-right">
+            <div class="control has-icons-right">
+              <input class="input" type="text" placeholder="Buscar">
+              <span class="icon is-right">
+                <i class="fas fa-search"></i>
+              </span>
+            </div>
           </div>
         </div>
 
-        <div class="tile">
-          <div class="tile is-vertical notification is-3" style="width: 250px !important;">
-            <nav>
-              <aside class="menu">
-                <p class="menu-label">
-                  General
-                </p>
-                <ul class="menu-list">
-                  <li><a class="is-active" @click="pushRouter('/home')">Home</a></li>
-                  <li><a>Customers</a></li>
-                </ul>
-                <p class="menu-label">
-                  Feature Model
-                </p>
-                <ul class="menu-list">
-                  <li><a>Create</a></li>
-                  <li><a>Import</a></li>
-                </ul>
-                <p class="menu-label">
-                  Quality Measures
-                </p>
-                <ul class="menu-list">
-                  <li><a>Apply</a></li>
-                </ul>
-              </aside>
-            </nav>
-          </div>
-          <div class="tile is-parent is-vertical">
-            <!-- <tree></tree> -->
-            <router-view/>
-          </div>
-
+        <div class="dashboard-pages">
+          <router-view/>
         </div>
-
       </div>
-    </div>
+    </section>
 
     <footer class="footer has-background-black-bis">
       <div class="content has-text-centered">
@@ -115,30 +139,35 @@ export default {
   },
   data() {
     return {
-      showNav: false
+      // showNav: false,
+      menu_bars: false,
     };
   },
   methods: {
     pushRouter(route) {
       this.$router.push(route);
+      this.menu_bars=!this.menu_bars;
     }
   },
   mounted() {
-    //this.$router.push("/home");
+    this.$router.push("/home");
   }
 };
 </script>
 
-<style lang="css">
-a {
-  text-decoration: none !important;
+<style lang="scss" scoped>
+@import "./Dashboard";
+
+a.has-text-white:hover {
+    color: #1f1a2f !important;
 }
-.is-active {
-  background-color: #7957d5;
-  color: white !important;
-  text-decoration: none !important;
-}
-.notification {
-  border-radius: 0;
+
+.dashboard-pages {
+  height: 100%;
+  background-color: #362e5080;
+
+  @include phone {
+    background-color: white;
+  }
 }
 </style>

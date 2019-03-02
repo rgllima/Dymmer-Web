@@ -1,0 +1,9 @@
+@import 'mixins';
+
+a, button, input, textarea, .level-item, .card-toggle .card-toggle-head, .notific-box-item {
+    @include transition(all 0.2s);
+}
+
+aside, aside .infobar, .level-left, .notific-box {
+    @include transition(all 0.3s);
+}

@@ -1,6 +1,6 @@
 <template>
   <div id="home-page">
-    <div style="max-width: 800px; margin: 0 auto;">
+    <div class="content-page">
       <div class="tile is-ancestor">
         <div class="tile is-child">
           <div class="tile">
@@ -100,5 +100,35 @@ export default {
 <style lang="scss" scoped>
 #home-page {
   padding: 20px !important;
+
+  .content-page {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  a {
+    width: 100%;
+  }
+
+  @media (min-width: 769px) and (max-width: 1279px){
+    padding-top: 50px !important;
+
+    p {
+      font-size: 0.9rem;
+    }
+
+    img {
+      width: 70%;
+      margin: 0 auto;
+    }
+  }
+
+  @media (min-width: 300px) and (max-width: 768px){
+    padding-top: 50px !important;
+
+    .content-page {
+      margin: 0 100px;
+    }
+  }
 }
 </style>
