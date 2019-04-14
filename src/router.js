@@ -56,6 +56,11 @@ const router = new Router({
           path: "/feature-model-list",
           name: "FeatureModelList",
           component: () => import("@/views/Dashboard/Childs/FeatureModelList")
+        },
+        {
+          path: "/measures-shower",
+          name: "CalculatedMeasureShower",
+          component: () => import("@/views/Dashboard/Childs/CalculatedMeasureShower")
         }
       ]
     }

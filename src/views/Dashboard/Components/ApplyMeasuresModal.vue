@@ -1,84 +1,81 @@
 <template>
   <section id="apply-measures-modal">
-    <div class="content">
-      <p class="subtitle">Select Measures</p>
-      <div class="field">
-        <div v-if="!switchInput" class="measures">
-          <input id="check1" type="checkbox" name="check1" class="switch is-rounded" @click="toggleSwitchs(true)">
-          <label for="check1"> Select All </label>
+    <template>
+      <div class="card">
+        <header class="card-header">
+          <div class="card-header-title">
+            <p>Select Measures</p>
+          </div>
+        </header>
+        <div class="card-content">
+          <div class="content">
+            <!-- <div class="field">
+              <b-checkbox>Select All</b-checkbox>
+            </div> -->
+            <div class="field" v-for="(measure, index) in measures" :key="index">
+              <b-checkbox
+                :id="`checkbox-${measure._id}`"
+                :native-value="measure"
+                v-model="checkedMeasures"
+              >
+                <b-tooltip :label="measure.description" dashed>{{ `${measure.initials} - ${measure.name}` }}</b-tooltip>
+              </b-checkbox>
+            </div>
+          </div>
         </div>
-        <div v-else class="measures">
-          <input id="check1" type="checkbox" name="check1" class="switch is-rounded" @click="toggleSwitchs(false)">
-          <label for="check1"> Deselect All </label>
-        </div>
-        <div class="measures" v-for="measure in measures" :key="measure._id">
-          <input :id="measure._id" type="checkbox" :name="measure.name" class="switch is-rounded">
-          <label :for="measure._id">
-            <b-tooltip :label="measure.description" dashed>{{measure.name}}</b-tooltip>
-          </label>
-        </div>
+        <footer class="card-footer">
+          <a href="#" class="card-footer-item">Cancel</a>
+          <a href="#" class="card-footer-item" @click="applyMeasures">Apply Measures</a>
+        </footer>
       </div>
-      <div class="buttons">
-        <button class="button is-danger is-small" @click="() => this.$emit('close')">Cancel</button>
-        <button
-          class="button is-success is-small"
-          style="float: right"
-        >Apply Measures</button>
-      </div>
-    </div>
+    </template>
   </section>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   props: ["featureModel"],
   data() {
     return {
-      switchInput: false,
-      measures: [
-        {
-          _id: 1323,
-          name: 'Number of Features',
-          description: "Number of all features"
-        },
-        {
-          _id: 2312,
-          name: 'Number of XOR Features',
-          description: "testando esse aqui"
-        },
-        {
-          _id: 2343,
-          name: 'Number of Grouped Features',
-          description: "outro teste sendo realizado"
-        },
-        {
-          _id: 2892,
-          name: 'Number of NOT Leaf Features',
-          description: "Rapaz, mais um teste"
-        },
-        {
-          _id: 2902,
-          name: 'Branching Factor',
-          description: "Ok"
-        }
-      ]
+      checkedMeasures: [],
+      checkbox: false,
+      checkboxCustom: "Yes",
+      switchInput: false
     };
   },
 
+  computed: {
+    ...mapGetters({
+      measures: "qualityMeasures/getMeasuresModel",
+      featureTree: "featureModel/getFeatureModel"
+    })
+  },
+
   methods: {
+    async applyMeasures() {
+      let obj = {};
+      obj["measures"] = this.checkedMeasures;
+      obj["featureTree"] = this.featureTree.feature_tree[0];
+
+      await this.$store.dispatch("qualityMeasures/calculateSelectedMeasures", obj);
+      this.$emit("close");
+    },
     toggleSwitchs(value) {
       this.switchInput = value;
 
-      let switchs = document.getElementsByClassName('switch');
+      let switchs = document.getElementsByClassName("switch");
       for (const obj of switchs) {
-        if (value) obj.setAttribute('checked', value);
-        else obj.removeAttribute('checked')
+        if (value) obj.setAttribute("checked", value);
+        else obj.removeAttribute("checked");
       }
     }
   },
 
   mounted() {
-    console.log(this.$refs);
+    this.$store.dispatch("qualityMeasures/fetchMeasuresOnDatabase");
+    // console.log(this.$refs, this.measures, this.featureTree.feature_tree[0]);
   }
 };
 </script>

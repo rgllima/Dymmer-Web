@@ -8,7 +8,7 @@
           </button>
 
           <b-table
-            :data="data"
+            :data="featureModelDatabase"
             default-sort-direction="asc"
             default-sort="name"
             paginated
@@ -19,7 +19,7 @@
             <template slot-scope="props">
               <b-table-column field="id" label="ID" width="40" sortable numeric>{{ props.index+1 }}</b-table-column>
               <b-table-column field="name" label="Feature Name" sortable>
-                <a>{{ props.row.name }}</a>
+                <a @click="showFeatureModel(props.row)">{{ props.row.name }}</a>
               </b-table-column>
               <b-table-column
                 field="type"
@@ -29,14 +29,14 @@
                 centered
               >{{ props.row.type }}</b-table-column>
               <b-table-column field="numFeatures" label="Nº Features" width="120" sortable centered>
-                <span class="tag is-success">{{ props.row.numFeatures }}</span>
+                <span class="tag is-success">{{ props.row.number_features }}</span>
               </b-table-column>
               <b-table-column field="creator" label="Creator" sortable>{{ props.row.creator }}</b-table-column>
               <b-table-column field="origin" label="Origin" width="100" sortable centered>
                 <span class="tag is-info">{{ props.row.origin }}</span>
               </b-table-column>
               <b-table-column field="created" label="Created" width="100" sortable centered>
-                <span class="tag is-warning">{{ new Date(props.row.created).toLocaleDateString() }}</span>
+                <span class="tag is-warning">{{ new Date(props.row.date).toLocaleDateString() }}</span>
               </b-table-column>
             </template>
           </b-table>
@@ -47,73 +47,29 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   data() {
     return {
-      data: [],
       checkedRows: []
     };
   },
 
+  computed: {
+    ...mapGetters({
+      featureModelDatabase: 'featureModelDatabase/getFeatureModelDatabase'
+    })
+  },
+
+  methods: {
+    showFeatureModel(featureModel) {
+      this.$store.dispatch("featureModel/showFeatureModel", featureModel);
+    }
+  },
+
   mounted() {
-    this.data = [
-      {
-        name: "Number of OR Groups",
-        type: "SPL",
-        numFeatures: 10,
-        creator: "Fulano de Tal",
-        created: "2018-09-12T00:00:00Z",
-        origin: "SPLOT"
-      },
-      {
-        name: "Number of OR Groups",
-        type: "DSPL",
-        numFeatures: 10,
-        creator: "Fulano de Tal",
-        created: "2018-09-12T00:00:00Z",
-        origin: "SPLOT"
-      },
-      {
-        name: "Number of OR Groups",
-        type: "SPL",
-        numFeatures: 10,
-        creator: "Fulano de Tal",
-        created: "2018-09-12T00:00:00Z",
-        origin: "SPLOT"
-      },
-      {
-        name: "Number of OR Groups",
-        type: "SPL",
-        numFeatures: 10,
-        creator: "Fulano de Tal",
-        created: "2018-09-12T00:00:00Z",
-        origin: "DYMMER"
-      },
-      {
-        name: "Number of OR Groups",
-        type: "SPL",
-        numFeatures: 10,
-        creator: "Fulano de Tal",
-        created: "2018-09-12T23:00:00Z",
-        origin: "SPLOT"
-      },
-      {
-        name: "Number of OR Groups",
-        type: "SPL",
-        numFeatures: 10,
-        creator: "Fulano de Tal",
-        created: "2018-09-12T00:00:00Z",
-        origin: "SPLOT"
-      },
-      {
-        name: "Number of OR Groups",
-        type: "SPL",
-        numFeatures: 10,
-        creator: "Fulano de Tal",
-        created: "2018-09-12T00:00:00Z",
-        origin: "SPLOT"
-      }
-    ];
+    this.$store.dispatch("featureModelDatabase/fetchFeatureModelsOnDatabase");
   }
 };
 </script>
