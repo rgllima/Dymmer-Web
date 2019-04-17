@@ -33,6 +33,11 @@ const actions = {
         router.push("/show-feature-model");
       });
     // context.commit("loading/setIsLoading", false, { root: true });
+  },
+
+  showFeatureModel: async (context, data) => {
+    context.commit("setFeatureModel", data);
+    router.push("/show-feature-model");
   }
 };
 

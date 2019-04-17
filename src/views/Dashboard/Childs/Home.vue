@@ -27,33 +27,33 @@
               </a>
             </div>
             <div class="tile is-parent">
-              <a href="#" class="box image is-256x256">
-                <img src="../../../assets/protractor.svg" alt="settings">
-                <br>
-                <p class="has-text-centered">Apply Quality Measures</p>
-              </a>
-            </div>
-            <div class="tile is-parent">
-              <a href="#" class="box image is-256x256">
-                <img src="../../../assets/wireframe.svg" alt="settings">
-                <br>
-                <p class="has-text-centered">Feature Model Configuration</p>
-              </a>
-            </div>
-          </div>
-          <div class="tile">
-            <div class="tile is-parent">
-              <a href="#" class="box image is-256x256">
-                <img src="../../../assets/analysis.svg" alt="settings">
+              <a class="box image is-256x256" @click="pushRouter('feature-model-list')">
+                <img src="../../../assets/private-database.svg" alt="settings">
                 <br>
                 <p class="has-text-centered">My Feature Models</p>
               </a>
             </div>
             <div class="tile is-parent">
-              <a href="#" class="box image is-256x256">
+              <a class="box image is-256x256" @click="pushRouter('feature-model-list')">
                 <img src="../../../assets/database.svg" alt="settings">
                 <br>
-                <p class="has-text-centered">Feature Model Repository</p>
+                <p class="has-text-centered">SPL Repository</p>
+              </a>
+            </div>
+          </div>
+          <div class="tile">
+            <div class="tile is-parent">
+              <a href="#" class="box image is-256x256" @click="pushRouter('feature-model-list')">
+                <img src="../../../assets/database.svg" alt="settings">
+                <br>
+                <p class="has-text-centered">DSPL Repository</p>
+              </a>
+            </div>
+            <div class="tile is-parent">
+              <a href="#" class="box image is-256x256">
+                <img src="../../../assets/big-data.svg" alt="settings">
+                <br>
+                <p class="has-text-centered">Measures Dataset</p>
               </a>
             </div>
 

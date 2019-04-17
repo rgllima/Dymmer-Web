@@ -203,15 +203,6 @@
 import VTreeview from './TreeView/VTreeview/VTreeview.vue'
 import HiddenCard from './HiddenCard/HiddenCard.vue'
 
-import {
-  numberOfFeatures,
-  numberOfMandatoryFeatures,
-  numberOfOptionalFeatures,
-  numberOfGroupedFeatures,
-  numberGroupesOr,
-  numberGroupesXor
-  } from '../services/featureModelMeasures'
-
 // import ExampleFeatureModel from '../.././static/featureModelExample2.json'
 
 export default {

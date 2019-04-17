@@ -22,7 +22,7 @@
               <div class="content">
                 <div class="tile">
                   <div class="tile is-child" style="padding: 0 5px">
-                    <a href="#" class="box">
+                    <a href="#" class="box" @click="openMeasuresModal">
                       <img src="../../../assets/protractor.svg" alt="settings">
                       <br>
                       <p class="has-text-centered">Apply Measures</p>
@@ -110,6 +110,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import ApplyMeasuresModal from '../Components/ApplyMeasuresModal'
 
 export default {
   name: "ShowFeatureModel",
@@ -159,6 +160,17 @@ export default {
           a += await this.searchNameConstraint(feature_tree.children[node], element);
       }
       return a;
+    },
+
+    openMeasuresModal() {
+        this.$modal.open({
+            parent: this,
+            component: ApplyMeasuresModal,
+            props: {
+              featureModel: this.featureModel
+            },
+            hasModalCard: true
+        })
     }
   },
 
