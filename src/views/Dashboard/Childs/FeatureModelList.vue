@@ -29,7 +29,7 @@
                 centered
               >{{ props.row.type }}</b-table-column>
               <b-table-column field="numFeatures" label="Nº Features" width="120" sortable centered>
-                <span class="tag is-success">{{ props.row.number_features }}</span>
+                <span class="tag is-success">{{ props.row.number_of_features }}</span>
               </b-table-column>
               <b-table-column field="creator" label="Creator" sortable>{{ props.row.creator }}</b-table-column>
               <b-table-column field="origin" label="Origin" width="100" sortable centered>

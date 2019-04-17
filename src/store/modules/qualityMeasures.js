@@ -1,14 +1,16 @@
 import router from "@/router";
-// import VueCookies from "vue-cookies";
-// import axios from "axios";
+import VueCookies from "vue-cookies";
+import axios from "axios";
 
-import measures from "../../../test_files/quality_measures.json";
+//import measures from "../../../test_files/quality_measures.json";
 import { calculate } from "../../../test_files/measures/calculateMeasures.js";
 
 const state = {
   measures: [],
   //AQUI
   resultMeasuresComputation: [],
+  apiURL: `https://dymmer-web-backend.herokuapp.com`,
+  token: VueCookies.get("USERTOKEN"),
   error: null
 };
 
@@ -24,7 +26,18 @@ const mutations = {
 
 const actions = {
   fetchMeasuresOnDatabase: async context => {
-    context.commit("setMeasures", measures);
+    //context.commit("setMeasures", measures);
+
+    await axios
+      .get(`${state.apiURL}/qualitymeasures/list`, {
+        headers: {
+          Authorization: `Bearer ${state.token}`
+        }
+      })
+      .then(response => {
+        context.commit("setMeasures", response.data.qualityMeasureList);
+      })
+      .catch(err => console.log(err));
   },
 
   //OBS. RETIRAR ISSO DAQUI, É OUTRO MÓDULO

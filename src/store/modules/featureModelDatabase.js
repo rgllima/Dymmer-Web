@@ -1,11 +1,11 @@
 // import router from "@/router";
-// import axios from "axios";
-
-import ft1 from "../../../test_files/featureModelExample";
-import ft2 from "../../../test_files/featureModelExample2";
+import VueCookies from "vue-cookies";
+import axios from "axios";
 
 const state = {
   featureModelDatabase: [],
+  apiURL: `https://dymmer-web-backend.herokuapp.com`,
+  token: VueCookies.get("USERTOKEN"),
   error: null
 };
 
@@ -20,11 +20,21 @@ const mutations = {
 
 const actions = {
   fetchFeatureModelsOnDatabase: async context => {
-    let b = [];
-    b.push(ft1.feature_model);
-    b.push(ft2.feature_model);
-    console.log(b);
-    context.commit("setFeatureModelDatabase", b);
+    await axios
+      .get(`${state.apiURL}/featuremodels/list`, {
+        headers: {
+          Authorization: `Bearer ${state.token}`
+        }
+      })
+      .then(response => {
+        console.log(response.data.featureModelList);
+        let ftm = [];
+        response.data.featureModelList.map(featureModel => {
+          ftm.push(JSON.parse(featureModel.featureModelJson));
+        });
+        context.commit("setFeatureModelDatabase", ftm);
+      })
+      .catch(err => console.log(err));
   }
 };
 
