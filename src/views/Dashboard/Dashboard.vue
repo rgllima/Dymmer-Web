@@ -85,7 +85,7 @@
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('/')">
+              <a class="has-text-white" @click="logout">
                 <i class="fas fa-sign-out-alt"></i>
                 Exit Dashboard
               </a>
@@ -147,6 +147,10 @@ export default {
     pushRouter(route) {
       this.$router.push(route);
       this.menu_bars=!this.menu_bars;
+    },
+
+    logout() {
+      this.$store.dispatch("authentication/logout")
     }
   },
   mounted() {

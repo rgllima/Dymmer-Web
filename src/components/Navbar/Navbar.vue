@@ -28,7 +28,7 @@
         <div class="navbar-item">
           <div class="field is-grouped">
             <p class="control">
-              <a class="button is-light is-outlined" @click="pushRouter('/dashboard')">
+              <a class="button is-light is-outlined" @click="pushRouter('/home')">
                 <span class="icon">
                   <i class="fas fa-tachometer-alt"></i>
                 </span>

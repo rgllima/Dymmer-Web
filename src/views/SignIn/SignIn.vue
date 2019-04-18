@@ -46,8 +46,7 @@
                         <label for="email">Email</label>
                         <input
                           v-model="user.email"
-                          id="dymmer-input"
-                          class="input"
+                          class="input dymmer-input"
                           type="text"
                           placeholder="Your Email"
                         >
@@ -58,8 +57,7 @@
                         <label for="password">Password</label>
                         <input
                          v-model="user.password"
-                          id="dymmer-input"
-                          class="input"
+                          class="input dymmer-input"
                           type="password"
                           placeholder="Your Password"
                         >
@@ -87,8 +85,7 @@
                         <label for="name">Your Name</label>
                         <input
                           v-model="user.name"
-                          id="dymmer-input"
-                          class="input"
+                          class="input dymmer-input"
                           type="text"
                           placeholder="Your Name"
                         >
@@ -99,8 +96,7 @@
                         <label for="email">Email</label>
                         <input
                           v-model="user.email"
-                          id="dymmer-input"
-                          class="input"
+                          class="input dymmer-input"
                           type="text"
                           placeholder="Your Email"
                         >
@@ -111,8 +107,7 @@
                         <label for="password">Password</label>
                         <input
                           v-model="user.password"
-                          id="dymmer-input"
-                          class="input"
+                          class="input dymmer-input"
                           type="password"
                           placeholder="Your Password"
                         >
@@ -291,7 +286,7 @@ export default {
     margin: 40px 0;
   }
 
-  #dymmer-input {
+  .dymmer-input {
     background-color: transparent;
     border-color: transparent;
     color: white;

@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
-// import VueCookies from 'vue-cookies'
+import VueCookies from "vue-cookies";
 
 Vue.use(Router);
-// Vue.use(VueCookies)
+Vue.use(VueCookies);
 
 const router = new Router({
   mode: "history",
@@ -67,12 +67,41 @@ const router = new Router({
   ]
 });
 
-// router.beforeEach((to, from, next) => {
-//   const tokenExists = window.$cookies.isKey('USERTOKEN')
-//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-//   if (requiresAuth && !tokenExists) next('/dashboard')
-//   else if (!requiresAuth && tokenExists) next('/')
-//   else next()
-// })
+router.beforeEach((to, from, next) => {
+  const tokenExists = window.$cookies.isKey("USERTOKEN");
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  console.log(`Auth: ${requiresAuth} /`, `Has Token: ${tokenExists}`);
+
+  if (requiresAuth && !tokenExists) {
+    console.log("Quer entrar, mas não tem chave");
+    next("/");
+    // if (to.path === "/dashboard") {
+    //   console.log("to.path 1", to.path);
+    //   next();
+    // } else {
+    //   next("/dashboard");
+    // }
+    //  else {
+    //   console.log("to.path 2", to.path);
+    //   next();
+    // }
+  } else {
+    console.log("Segue o jogo...");
+    next();
+  }
+  //  else if (!requiresAuth || !tokenExists) {
+  //   if (to.path !== "/") {
+  //     console.log("to.path 3", to.path);
+  //     next("/");
+  //   } else {
+  //     console.log("to.path 4", to.path);
+  //     next();
+  //   }
+  // }
+
+  // if (requiresAuth && tokenExists && to.path !== "/dashboard") next("/dashboard");
+  // else if (!requiresAuth && !tokenExists && to.path !== "/") next("/");
+  // else next();
+});
 
 export default router;
