@@ -9,7 +9,6 @@ const state = {
         createdAt: ''
     },
     apiURL: `https://dymmer-web-backend.herokuapp.com`,
-    token: VueCookies.get("USERTOKEN"),
     error: null
 };
 
@@ -24,11 +23,12 @@ const mutations = {
 
 const actions = {
     async fetchValeThresholds(context) {
+        let token = VueCookies.get("USERTOKEN");
         await axios({
             method: "get",
             url: `${state.apiURL}/valemethod/thresholds`,
             headers: {
-                Authorization: `Bearer ${state.token}`
+                Authorization: `Bearer ${token}`
             }
         }).then(response => {
             let data = response.data.returnedValeThresholds
