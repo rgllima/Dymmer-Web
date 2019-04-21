@@ -5,7 +5,6 @@ import axios from "axios";
 const state = {
   featureModelDatabase: [],
   apiURL: `https://dymmer-web-backend.herokuapp.com`,
-  token: VueCookies.get("USERTOKEN"),
   error: null
 };
 
@@ -20,17 +19,19 @@ const mutations = {
 
 const actions = {
   fetchFeatureModelsOnDatabase: async context => {
+    let token = VueCookies.get("USERTOKEN");
     await axios
       .get(`${state.apiURL}/featuremodels/list`, {
         headers: {
-          Authorization: `Bearer ${state.token}`
+          Authorization: `Bearer ${token}`
         }
       })
       .then(response => {
-        console.log(response.data.featureModelList);
         let ftm = [];
         response.data.featureModelList.map(featureModel => {
-          ftm.push(JSON.parse(featureModel.featureModelJson));
+          let fmodel = JSON.parse(featureModel.featureModelJson);
+          fmodel["_id"] = featureModel._id;
+          ftm.push(fmodel);
         });
         context.commit("setFeatureModelDatabase", ftm);
       })

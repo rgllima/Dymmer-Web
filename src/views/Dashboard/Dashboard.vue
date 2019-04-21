@@ -94,7 +94,7 @@
         </div>
       </aside>
 
-      <div class="container section column">
+      <div class="mycontainer section column">
         <div class="level">
           <div class="level-left" :class="{'menu-bar-opened': menu_bars}">
             <!-- <div class="level-item">

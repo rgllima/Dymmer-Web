@@ -57,7 +57,7 @@ export default {
     async applyMeasures() {
       let obj = {};
       obj["measures"] = this.checkedMeasures;
-      obj["featureTree"] = this.featureTree.feature_tree[0];
+      obj["featureTree"] = this.featureTree._id;
 
       await this.$store.dispatch("qualityMeasures/calculateSelectedMeasures", obj);
       this.$emit("close");
@@ -80,7 +80,9 @@ export default {
 };
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass" >
+.animation-content
+  overflow: scroll
 #apply-measures-modal
   min-width: 300px
   background-color: white
