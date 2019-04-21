@@ -6,6 +6,7 @@ import featureModel from "@/store/modules/featureModel";
 import featureModelDatabase from "@/store/modules/featureModelDatabase";
 import qualityMeasures from "@/store/modules/qualityMeasures";
 import loading from "@/store/modules/loading";
+import valeThresholds from "@/store/modules/valeThresholds"
 
 Vue.use(Vuex);
 
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     featureModel,
     featureModelDatabase,
     qualityMeasures,
-    loading
+    loading,
+    valeThresholds
   },
   strict: debug
 });

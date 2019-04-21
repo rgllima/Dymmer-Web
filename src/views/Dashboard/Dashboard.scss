@@ -153,7 +153,7 @@ aside {
     }
 }
 
-.container {
+.mycontainer {
     @include tablet {
         max-width: none;
     }

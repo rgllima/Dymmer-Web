@@ -3,7 +3,8 @@
     <div class="tile is-ancestor is-vertical">
 
       <div class="tile is-parent">
-        Ahakajsjaskajskajksk ksjaskjaksjajk
+        <!-- Aqui sedem ser inseridas infromações sobre essa página -->
+        <button class="button is-info" @click="calculateTrasholds">Visualizar Thresholds</button>
       </div>
 
       <div class="tile is-parent">
@@ -23,7 +24,7 @@
               <b-table-column field="initials" label="Initials" sortable>{{ props.row.initials }}</b-table-column>
 
               <b-table-column field="measure" label="Result" sortable centered>
-                {{ props.row.value }}
+                {{ props.row.value.toFixed(2) }}
               </b-table-column>
             </template>
           </b-table>
@@ -40,8 +41,13 @@ export default {
   data() {
     return {
       openAll: true,
-      data: []
     };
+  },
+
+  methods: {
+    async calculateTrasholds() {      
+      await this.$store.dispatch("valeThresholds/fetchValeThresholds");
+    }
   },
 
   computed: {

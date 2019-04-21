@@ -1,9 +1,9 @@
 import Vue from "vue";
 import Router from "vue-router";
-// import VueCookies from 'vue-cookies'
+import VueCookies from "vue-cookies";
 
 Vue.use(Router);
-// Vue.use(VueCookies)
+Vue.use(VueCookies);
 
 const router = new Router({
   mode: "history",
@@ -67,12 +67,14 @@ const router = new Router({
   ]
 });
 
-// router.beforeEach((to, from, next) => {
-//   const tokenExists = window.$cookies.isKey('USERTOKEN')
-//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-//   if (requiresAuth && !tokenExists) next('/dashboard')
-//   else if (!requiresAuth && tokenExists) next('/')
-//   else next()
-// })
+router.beforeEach((to, from, next) => {
+  const tokenExists = window.$cookies.isKey("USERTOKEN");
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+  if (requiresAuth && !tokenExists)
+    next("/");
+  else
+    next();
+});
 
 export default router;

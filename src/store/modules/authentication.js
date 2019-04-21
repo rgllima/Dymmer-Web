@@ -6,7 +6,6 @@ const state = {
   userData: {
     nome: "Usuário"
   },
-  userToken: VueCookies.get("USERTOKEN"),
   apiURL: `https://dymmer-web-backend.herokuapp.com`,
   error: null
 };
@@ -28,9 +27,9 @@ const actions = {
         password: user.password
       })
       .then(response => {
-        console.log(response);
+        // console.log(response);
         VueCookies.set("USERTOKEN", response.data.token, "0");
-        router.push("/dashboard");
+        router.push("/home");
       })
       .catch(err => {
         console.log(err);
@@ -46,9 +45,9 @@ const actions = {
         name: user.name
       })
       .then(response => {
-        console.log(response);
+        // console.log(response);
         VueCookies.set("USERTOKEN", response.data.token, "0");
-        router.push("/dashboard");
+        router.push("/home");
       })
       .catch(err => {
         console.log(err);

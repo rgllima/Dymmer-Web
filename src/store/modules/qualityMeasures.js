@@ -2,9 +2,6 @@ import router from "@/router";
 import VueCookies from "vue-cookies";
 import axios from "axios";
 
-//import measures from "../../../test_files/quality_measures.json";
-import { calculate } from "../../../test_files/measures/calculateMeasures.js";
-
 const state = {
   measures: [],
   //AQUI
@@ -26,12 +23,12 @@ const mutations = {
 
 const actions = {
   fetchMeasuresOnDatabase: async context => {
-    //context.commit("setMeasures", measures);
+    let token = VueCookies.get("USERTOKEN");
 
     await axios
       .get(`${state.apiURL}/qualitymeasures/list`, {
         headers: {
-          Authorization: `Bearer ${state.token}`
+          Authorization: `Bearer ${token}`
         }
       })
       .then(response => {
@@ -42,11 +39,21 @@ const actions = {
 
   //OBS. RETIRAR ISSO DAQUI, É OUTRO MÓDULO
   calculateSelectedMeasures: async (context, obj) => {
-    // console.log(obj);
-    let response = await calculate(obj.measures, obj.featureTree);
-    console.log(response);
-    context.commit("setResultMeasuresComputation", response);
-    router.push("/measures-shower");
+    let token = VueCookies.get("USERTOKEN");
+    await axios({
+      method: "post",
+      url: `${state.apiURL}/qualitymeasures/apply/${obj.featureTree}`,
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      data: {
+        measures: obj.measures
+      }
+    }).then(response => {
+      let data = response.data.appliedQualityMeasuresList
+      context.commit("setResultMeasuresComputation", data);
+      router.push("/measures-shower");
+    }).catch(err => console.log(err));
   }
 };
 

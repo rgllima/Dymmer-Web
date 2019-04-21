@@ -7,7 +7,7 @@ const state = {
     feature_tree: [],
     constraints: []
   },
-  apiURL: `https://dymmer-server.herokuapp.com`,
+  apiURL: `https://dymmer-web-backend.herokuapp.com`,
   error: null
 };
 
