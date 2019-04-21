@@ -29,7 +29,7 @@ const actions = {
       .then(response => {
         // console.log(response);
         VueCookies.set("USERTOKEN", response.data.token, "0");
-        router.push("/home");
+        router.push("/dashboard");
       })
       .catch(err => {
         console.log(err);
@@ -47,7 +47,7 @@ const actions = {
       .then(response => {
         // console.log(response);
         VueCookies.set("USERTOKEN", response.data.token, "0");
-        router.push("/home");
+        router.push("/dashboard");
       })
       .catch(err => {
         console.log(err);

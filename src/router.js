@@ -73,8 +73,12 @@ router.beforeEach((to, from, next) => {
 
   if (requiresAuth && !tokenExists)
     next("/");
-  else
-    next();
+  else {
+    if (to.path === '/dashboard')
+      next('/home')
+    else 
+      next();
+  }
 });
 
 export default router;
