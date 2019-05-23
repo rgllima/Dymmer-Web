@@ -129,7 +129,7 @@ export default {
 
       for (const index in ftConstraints) {
         conFeatures = [];
-        conKeys = Object.values(ftConstraints[index])[0].split("or");
+        conKeys = ftConstraints[index].value.split("or");
 
         for (const key in conKeys) {
           let id = conKeys[key].replace(/[\s\W-]+/g, "");

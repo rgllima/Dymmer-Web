@@ -1,5 +1,4 @@
 import router from "@/router";
-// import VueCookies from "vue-cookies";
 import axios from "axios";
 
 const state = {
@@ -22,7 +21,6 @@ const mutations = {
 
 const actions = {
   convertXmlToJson: async (context, xmlString) => {
-    // context.commit("loading/setIsLoading", true, { root: true });
     axios
       .post(`${state.apiURL}/xml/xml-to-json`, {
         xmlString: xmlString
@@ -32,7 +30,6 @@ const actions = {
         context.commit("setFeatureModel", res.data);
         router.push("/show-feature-model");
       });
-    // context.commit("loading/setIsLoading", false, { root: true });
   },
 
   showFeatureModel: async (context, data) => {

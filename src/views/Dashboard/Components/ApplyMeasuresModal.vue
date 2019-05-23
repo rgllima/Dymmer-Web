@@ -60,6 +60,8 @@ export default {
       obj["featureTree"] = this.featureTree._id;
 
       await this.$store.dispatch("qualityMeasures/calculateSelectedMeasures", obj);
+      await this.$store.dispatch("valeThresholds/fetchValeThresholds");
+      this.$router.push("/measures-shower");
       this.$emit("close");
     },
     toggleSwitchs(value) {

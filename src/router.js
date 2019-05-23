@@ -67,18 +67,18 @@ const router = new Router({
   ]
 });
 
-router.beforeEach((to, from, next) => {
-  const tokenExists = window.$cookies.isKey("USERTOKEN");
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+// router.beforeEach((to, from, next) => {
+//   const tokenExists = window.$cookies.isKey("USERTOKEN");
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-  if (requiresAuth && !tokenExists)
-    next("/");
-  else {
-    if (to.path === '/dashboard')
-      next('/home')
-    else 
-      next();
-  }
-});
+//   if (requiresAuth && !tokenExists)
+//     next("/");
+//   else {
+//     if (to.path === '/dashboard')
+//       next('/home')
+//     else
+//       next();
+//   }
+// });
 
 export default router;

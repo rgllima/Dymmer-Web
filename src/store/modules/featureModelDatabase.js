@@ -1,5 +1,3 @@
-// import router from "@/router";
-import VueCookies from "vue-cookies";
 import axios from "axios";
 
 const state = {
@@ -19,13 +17,8 @@ const mutations = {
 
 const actions = {
   fetchFeatureModelsOnDatabase: async context => {
-    let token = VueCookies.get("USERTOKEN");
     await axios
-      .get(`${state.apiURL}/featuremodels/list`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      .get(`${state.apiURL}/featuremodels/list`)
       .then(response => {
         let ftm = [];
         response.data.featureModelList.map(featureModel => {
