@@ -8,7 +8,8 @@
         <div id="content" class="tile is-ancestor">
           <div class="tile is-parent">
             <div class="tile is-child">
-              <h2 id="mytitle" class="title has-text-white">The
+              <h2 id="mytitle" class="title has-text-white">
+                The
                 <b-tooltip label="Dynamic feature Model tool based on Measures" dashed>DyMMer</b-tooltip> tool allows the extraction of quality measures from feature models.
               </h2>
               <p
@@ -16,8 +17,7 @@
                 class="subtitle has-text-light"
               >The tool collects a large number of quality measures to support the maintainability evaluation of the features model, 40 measurements in total, uses specific measures for LPSD feature models.</p>
               <div class="buttons">
-                <a class="button is-success" @click="openSignModal(false)">GET STARTED</a>
-                <a class="button is-outlined" @click="openSignModal(true)">SIGN IN</a>
+                <a class="button is-success" @click="openDashboard">GET STARTED</a>
               </div>
             </div>
           </div>
@@ -143,7 +143,7 @@
           </p>
         </div>
       </footer>
-    </section> -->
+    </section>-->
   </div>
 </template>
 
@@ -167,15 +167,8 @@ export default {
     };
   },
   methods: {
-    openSignModal(hasAccount) {
-      this.$modal.open({
-        parent: this,
-        component: SignIn,
-        hasModalCard: true,
-        props: {
-          hasAccount: hasAccount
-        }
-      });
+    openDashboard() {
+      this.$router.push("/home");
     }
   }
 };
@@ -297,7 +290,7 @@ export default {
     text-align: center;
   }
 
-  .dymmer-form{
+  .dymmer-form {
     max-width: 400px;
     margin: 50px auto 100px auto;
     background-color: white;
