@@ -21,7 +21,7 @@ const mutations = {
 
 const actions = {
   convertXmlToJson: async (context, xmlString) => {
-    axios
+    await axios
       .post(`${state.apiURL}/xml/xml-to-json`, {
         xmlString: xmlString
       })

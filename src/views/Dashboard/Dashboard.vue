@@ -95,7 +95,7 @@
           </div>
           <div class="level-right">
             <div class="control">
-              <button class="button">
+              <button class="button" @click="openAddFeatureModelModal">
                 <i class="icon fas fa-plus"></i> Add Feature Model
               </button>
             </div>
@@ -122,6 +122,7 @@
 
 <script>
 import Tree from "@/components/Tree.vue";
+import FeatureModelModal from './Components/AddFeatureModelModal'
 
 export default {
   components: {
@@ -137,6 +138,14 @@ export default {
     pushRouter(route) {
       this.$router.push(route);
       this.menu_bars = !this.menu_bars;
+    },
+
+    openAddFeatureModelModal() {
+        this.$modal.open({
+            parent: this,
+            component: FeatureModelModal,
+            hasModalCard: true
+        })
     },
 
     logout() {

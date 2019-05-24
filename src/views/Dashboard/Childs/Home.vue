@@ -84,6 +84,7 @@ export default {
     pushRouter(route) {
       this.$router.push(route);
     },
+
     getXmlToString(ev) {
       const file = ev.target.files[0];
       const reader = new FileReader();
