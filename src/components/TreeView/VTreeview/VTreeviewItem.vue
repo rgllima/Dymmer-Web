@@ -8,16 +8,29 @@
       <i v-if="icon" class="far" :class="icon" ></i>
     </span>
 
+    <span v-if="contextInEdition" class="edit-icon blue">
+      <i  class="fas fa-redo-alt"></i>
+    </span>
+
+    <span v-if="contextInEdition" class="edit-icon green">
+      <i class="fas fa-check"></i>
+    </span>
+
+    <span v-if="contextInEdition" class="edit-icon danger">
+      <i class="fas fa-times"></i>
+    </span>
+
     <input type="radio" name="rad" v-model="checked" :id="model.id" :value="model.id">
-    <label v-if="!(model.type == 'g')" v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
-    <label v-if="model.type == 'g'" v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{[new String(model.multiplicity)]}}</label>
+    <label v-if="!(model.type == 'g')" v-show="!edit" class="tree-text" :class="changeItemStyle(model.id)" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
+    <label v-else v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{[new String(model.multiplicity)]}}</label>
     <input v-show="edit" ref="title" class="tree-text" v-model="model.name" :placeholder="model.name" key="input" @blur="blur" @keyup.enter="blur">
 
     <div class="tree-children">
       <ul v-show="open" v-if="isFolder">
         <v-treeview-item v-for="child in model.children" :key="child.id"
         :model="child" :treeRules="treeRules" :openAll="openAll" @addNode="addNode"
-        @selected="selected" :searchText="searchText" @openTree="openTree">
+        @selected="selected" :searchText="searchText" :contextResolutions="contextResolutions"
+        :contextInEdition="contextInEdition" @openTree="openTree">
         </v-treeview-item>
       </ul>
     </div>
@@ -27,7 +40,7 @@
 <script>
 export default {
   name: 'v-treeview-item',
-  props: ['model', 'treeRules', 'openAll', 'searchText'],
+  props: ['model', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
   data() {
     return {
       open: false,
@@ -56,6 +69,16 @@ export default {
     }
   },
   methods: {
+    changeItemStyle(id) {
+      if (!this.contextResolutions || this.contextResolutions.length === 0)
+        return ''
+      if (id === '_r')
+        return ''
+      let context = this.contextResolutions.filter(resolution => (resolution.feature_id === id))[0]
+
+      if (context.status) return 'ignoredItem'
+      else return 'selectedItem'
+    },
     getTypeRule(type) {
       var typeRule = this.treeRules.filter(t => t.type == type)[0]
       return typeRule
@@ -158,8 +181,37 @@ ul label:before {
   color: #cc0000;
 }
 
+.selectedItem {
+  background-color: #ffc3a0;
+  padding: 0 25px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.ignoredItem {
+  padding: 0 25px;
+  text-decoration: line-through;
+}
+
 .tree-icon {
-  font-size: 0.7em;
+  font-size: .8em;
   margin-right: 10px;
+}
+
+.edit-icon {
+  font-size: .8em;
+  margin-right: 10px;
+}
+
+.danger {
+  color: #ff4444
+}
+
+.green {
+  color: #008000
+}
+
+.blue {
+  color: #0099cc
 }
 </style>

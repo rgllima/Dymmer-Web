@@ -33,9 +33,6 @@ const router = new Router({
       path: "/dashboard",
       name: "Dashboard",
       component: () => import("@/views/Dashboard/Dashboard"),
-      meta: {
-        requiresAuth: true
-      },
       children: [
         {
           path: "/home",
@@ -61,6 +58,11 @@ const router = new Router({
           path: "/measures-shower",
           name: "CalculatedMeasureShower",
           component: () => import("@/views/Dashboard/Childs/CalculatedMeasureShower")
+        },
+        {
+          path: "/fmodel-manager",
+          name: "FModelManager",
+          component: () => import("@/views/Dashboard/FModelManager/Index")
         }
       ]
     }

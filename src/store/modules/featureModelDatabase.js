@@ -26,6 +26,7 @@ const actions = {
           fmodel["_id"] = featureModel._id;
           ftm.push(fmodel);
         });
+        console.log(JSON.parse(JSON.stringify(ftm)))
         context.commit("setFeatureModelDatabase", ftm);
       })
       .catch(err => console.log(err));

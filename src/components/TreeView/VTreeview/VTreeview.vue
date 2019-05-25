@@ -1,27 +1,37 @@
 <template>
-<div @mouseup.prevent="mousedown">
+  <div @mouseup.prevent="mousedown">
     <ul>
-      <v-treeview-item class="v-treeview-item" v-for="item in value" :key="item.id"
-        :model="item" :treeRules="treeRules" :openAll="openAll" :searchText="searchText"
-        @selected="selected" @openTree="openTree"></v-treeview-item>
+      <v-treeview-item
+        class="v-treeview-item"
+        v-for="item in value"
+        :key="item.id"
+        :model="item"
+        :treeRules="treeRules"
+        :openAll="openAll"
+        :searchText="searchText"
+        :contextResolutions="contextResolutions"
+        :contextInEdition="contextInEdition"
+        @selected="selected"
+        @openTree="openTree"
+      ></v-treeview-item>
     </ul>
-    <v-context v-if="hasContext" :show="showContext" :contextItems="contextItems" :mouseEvent="mouseEvent" @contextSelected="contextSelected" ></v-context>
+    <v-context
+      v-if="hasToolbox"
+      :show="showContext"
+      :contextItems="contextItems"
+      :mouseEvent="mouseEvent"
+      @contextSelected="contextSelected"
+    ></v-context>
   </div>
 </template>
 
 <script>
-import VTreeviewItem from './VTreeviewItem.vue'
-import VContext from '../VContext/VContext.vue'
+import VTreeviewItem from "./VTreeviewItem.vue";
+import VContext from "../VContext/VContext.vue";
 
 export default {
-  props: [
-    'value',
-    'openAll',
-    'hasContext',
-    'editName',
-    'searchText',
-  ],
-  name: 'v-treeview',
+  props: ["value", "openAll", "editName", "searchText", "hasToolbox", "contextResolutions", "contextInEdition"],
+  name: "v-treeview",
   data() {
     return {
       showContext: false,
@@ -33,14 +43,7 @@ export default {
           type: "#",
           max_children: 6,
           max_depth: 4,
-          valid_children: [
-            "r",
-            "m",
-            "o",
-            "g",
-            "",
-            "FMM_PARENT_IN_LAW"
-          ]
+          valid_children: ["r", "m", "o", "g", "", "FMM_PARENT_IN_LAW"]
         },
         {
           type: "r",
@@ -87,7 +90,7 @@ export default {
           valid_children: []
         }
       ]
-    }
+    };
   },
   created() {},
   methods: {
@@ -111,12 +114,18 @@ export default {
 
       this.contextItems.push({ title: "Rename", icon: "far fa-edit" });
       this.contextItems.push({ title: "Remove", icon: "far fa-trash-alt" });
-      this.contextItems.push({ title: "Create Feature Above", icon: "fas fa-caret-up" }); //Rever
-      this.contextItems.push({ title: "Create Feature Below", icon: "fas fa-caret-down" }); //Rever
+      this.contextItems.push({
+        title: "Create Feature Above",
+        icon: "fas fa-caret-up"
+      }); //Rever
+      this.contextItems.push({
+        title: "Create Feature Below",
+        icon: "fas fa-caret-down"
+      }); //Rever
     },
     contextSelected(title) {
-      let command = title
-      console.log(command)
+      let command = title;
+      console.log(command);
       switch (command) {
         case "Create Mandatory":
           var node = {
@@ -139,19 +148,19 @@ export default {
           break;
         case "Remove":
           break;
-        }
-      },
+      }
+    },
     openTree(node) {
-      this.$emit('openTree', node)
+      this.$emit("openTree", node);
     },
     mousedown(e) {
       if (this.contextItems) {
-        e.preventDefault()
+        e.preventDefault();
         this.mouseEvent = {
           button: e.button,
           pageX: e.clientX,
           pageY: e.clientY
-        }
+        };
       }
     }
   },
@@ -159,7 +168,7 @@ export default {
     VContext,
     VTreeviewItem
   }
-}
+};
 </script>
 
 <style scoped>

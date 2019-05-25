@@ -7,7 +7,7 @@
           <div class="box">
             <h1 class="has-text-centered is-size-5">Feature Diagram</h1>
             <br>
-            <v-treeview v-model="featureModel.feature_tree" :openAll="openAll" :hasContext="false"></v-treeview>
+            <v-treeview v-model="featureModel.feature_tree" :openAll="openAll" :hasToolbox="false"></v-treeview>
           </div>
         </div>
         <div class="tile is-child is-vertical " style="padding: 0 10px">
