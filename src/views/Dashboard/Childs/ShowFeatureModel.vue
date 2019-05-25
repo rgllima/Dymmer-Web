@@ -28,27 +28,6 @@
                       <p class="has-text-centered">Apply Measures</p>
                     </a>
                   </div>
-                  <div class="tile is-child" style="padding: 0 5px">
-                    <a href="#" class="box">
-                      <img src="../../../assets/wireframe.svg" alt="settings">
-                      <br>
-                      <p class="has-text-centered">Feature Configuration</p>
-                    </a>
-                  </div>
-                  <div class="tile is-child" style="padding: 0 5px">
-                    <a href="#" class="box">
-                      <img src="../../../assets/edit-tools.svg" alt="settings">
-                      <br>
-                      <p class="has-text-centered">Edit Model</p>
-                    </a>
-                  </div>
-                  <div class="tile is-child" style="padding: 0 5px">
-                    <a href="#" class="box">
-                      <img src="../../../assets/import.svg" alt="settings">
-                      <br>
-                      <p class="has-text-centered">Import Model</p>
-                    </a>
-                  </div>
                 </div>
               </div>
             </div>

@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="tile is-parent">
-        <div class="tile is-child box">
+        <div class="tile is-child context-manager--scroll-box box">
           <v-treeview
             v-model="featureModel.feature_tree"
             :openAll="openAll"
@@ -79,6 +79,10 @@ export default {
 .context-manager
   .box
     padding: .4rem
+  &--scroll-box
+    min-height: 500px
+    height: calc(100vh - 150px)
+    overflow: scroll
   &--tile
     min-width: 220px
   &--card

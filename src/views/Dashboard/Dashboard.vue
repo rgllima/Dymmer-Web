@@ -28,13 +28,13 @@
           <p class="menu-label has-text-light">Feature Model</p>
           <ul class="menu-list">
             <li>
-              <a class="has-text-white">
+              <a class="has-text-white" @click="pushRouter('feature-model-list')">
                 <i class="fas fa-table"></i>
                 SPL Repository
               </a>
             </li>
             <li>
-              <a class="has-text-white">
+              <a class="has-text-white" @click="pushRouter('feature-model-list')">
                 <i class="fas fa-database"></i>
                 DSPL Repository
               </a>

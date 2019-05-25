@@ -29,7 +29,7 @@ const actions = {
       .then(res => {
         console.log(JSON.parse(JSON.stringify(res.data)));
         context.commit("setFeatureModel", res.data);
-        router.push("/show-feature-model");
+        router.push("/fmodel-manager");
       });
   },
 

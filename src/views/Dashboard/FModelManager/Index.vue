@@ -2,7 +2,7 @@
   <div class="fmodel">
     <b-tabs class="fmodel-tabs" type="is-boxed" expanded>
       <b-tab-item class="fmodel-item" label="Feature Editor" icon-pack="fas" icon="edit">
-        <h1>Dymmer 1</h1>
+        <feature-editor/>
       </b-tab-item>
       <b-tab-item class="fmodel-item" label="Context Manager" icon-pack="fas" icon="align-justify">
         <context-manager/>
@@ -15,11 +15,13 @@
 </template>
 
 <script>
+import FeatureEditor from './FeatureEditor'
 import ContextManager from './ContextManager'
 
 export default {
   components: {
-    'context-manager': ContextManager
+    'context-manager': ContextManager,
+    'feature-editor': FeatureEditor
   },
 
   data: () => ({}),
