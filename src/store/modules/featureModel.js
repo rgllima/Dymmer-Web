@@ -17,6 +17,9 @@ const mutations = {
   },
   setError(state, payload) {
     state.error = payload;
+  },
+  addContext(state, payload) {
+    state.featureModel.contexts.push(payload);
   }
 };
 

@@ -125,7 +125,7 @@ export default {
     },
     contextSelected(title) {
       let command = title;
-      console.log(command);
+      // console.log(command);
       switch (command) {
         case "Create Mandatory":
           var node = {

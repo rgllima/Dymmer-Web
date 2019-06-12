@@ -20,12 +20,12 @@ export default {
     visibleActions: false
   }),
   mounted() {
-    console.log(this.active);
+    // console.log(this.active);
   },
 
   computed: {
     isActive: function() {
-      console.log("Opa");
+      // console.log("Opa");
       return this.active;
     }
   },

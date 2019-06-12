@@ -8,20 +8,32 @@
       <i v-if="icon" class="far" :class="icon" ></i>
     </span>
 
-    <span v-if="contextInEdition" class="edit-icon blue">
-      <i  class="fas fa-redo-alt"></i>
+    <span v-if="(!(model.type == 'r' || model.type == 'g') && contextInEdition )">
+      <span v-if="!allowChangeContext" class="btn-icon edit-icon blue" @click="allowChangeContext = true">
+        <i  class="fas fa-redo-alt"></i>
+      </span>
+
+      <span v-if="allowChangeContext" class="btn-icon edit-icon green">
+        <i class="fas fa-check"></i>
+      </span>
+
+      <span v-if="allowChangeContext" class="btn-icon edit-icon danger">
+        <i class="fas fa-times"></i>
+      </span>
     </span>
 
-    <span v-if="contextInEdition" class="edit-icon green">
-      <i class="fas fa-check"></i>
-    </span>
+    <span v-if="!contextInEdition">
+      <span v-if="contextStatus == 'selectedItem'" class="edit-icon green">
+        <i class="fas fa-check"></i>
+      </span>
 
-    <span v-if="contextInEdition" class="edit-icon danger">
-      <i class="fas fa-times"></i>
+      <span v-if="contextStatus == 'ignoredItem'" class="edit-icon danger">
+        <i class="fas fa-times"></i>
+      </span>
     </span>
 
     <input type="radio" name="rad" v-model="checked" :id="model.id" :value="model.id">
-    <label v-if="!(model.type == 'g')" v-show="!edit" class="tree-text" :class="changeItemStyle(model.id)" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
+    <label v-if="!(model.type == 'g')" v-show="!edit" class="tree-text" :class="contextStatus" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
     <label v-else v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{[new String(model.multiplicity)]}}</label>
     <input v-show="edit" ref="title" class="tree-text" v-model="model.name" :placeholder="model.name" key="input" @blur="blur" @keyup.enter="blur">
 
@@ -45,7 +57,8 @@ export default {
     return {
       open: false,
       checked: null,
-      edit: false
+      edit: false,
+      allowChangeContext: false
     }
   },
   computed: {
@@ -66,19 +79,21 @@ export default {
           return true
         } else return false
       }
-    }
-  },
-  methods: {
-    changeItemStyle(id) {
+    },
+    contextStatus() {
       if (!this.contextResolutions || this.contextResolutions.length === 0)
         return ''
-      if (id === '_r')
+      if (this.model.id === '_r')
         return ''
-      let context = this.contextResolutions.filter(resolution => (resolution.feature_id === id))[0]
+      let context = this.contextResolutions.filter(resolution => (resolution.feature_id === this.model.id))[0]
 
-      if (context.status) return 'ignoredItem'
-      else return 'selectedItem'
+      if (context)
+        if (context.status) return 'selectedItem'
+        else return 'ignoredItem'
+      else return ''
     },
+  },
+  methods: {
     getTypeRule(type) {
       var typeRule = this.treeRules.filter(t => t.type == type)[0]
       return typeRule
@@ -118,17 +133,23 @@ export default {
       this.selected(this)
     }
   },
+
   created() {
     if (this.model.id == null) {
       this.editName()
     }
     this.open = this.openAll
   },
+
   watch: {
+    contextInEdition() {
+      this.allowChangeContext = false
+    },
+
     openAll(openAll) {
       this.open = openAll
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -182,15 +203,16 @@ ul label:before {
 }
 
 .selectedItem {
-  background-color: #ffc3a0;
-  padding: 0 25px;
-  border-radius: 4px;
-  font-weight: bold;
+  background-color: #d3ffce;
+  padding: 0 7px;
+  border-radius: 10px;
 }
 
 .ignoredItem {
-  padding: 0 25px;
+  background-color: #ffe4e1;
+  padding: 0 7px;
   text-decoration: line-through;
+  border-radius: 10px;
 }
 
 .tree-icon {
@@ -201,6 +223,11 @@ ul label:before {
 .edit-icon {
   font-size: .8em;
   margin-right: 10px;
+}
+
+.btn-icon {
+  z-index: 1;
+  position: relative;
 }
 
 .danger {
