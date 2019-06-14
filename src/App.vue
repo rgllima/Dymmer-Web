@@ -12,10 +12,8 @@ export default {
 
 <style>
 @import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
-body {
-  line-height: 1.5 !important;
-}
-body, button, input, select, textarea {
-  font-family: 'Raleway', sans-serif !important;
+#app {
+  font-family: 'Raleway', sans-serif;
+  line-height: 1.5;
 }
 </style>
