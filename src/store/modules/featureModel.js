@@ -40,8 +40,6 @@ const mutations = {
         context.resolutions.map(feature => {
           if (feature.feature_id === payload.id) {
             feature.status = payload.status;
-            state.hasChanged = true; // Flag. There was some changes in Feature Model
-            console.log("Alterei");
           }
         });
       }
@@ -68,17 +66,24 @@ const actions = {
   },
 
   changeContext(context, data) {
-    let a = runContextAnalysis(data, state.featureModel);
-    console.log("A:", a);
-    a.map(feature => {
-      context.commit("changeFeatureStatus", feature);
-    });
+    try {
+      let features = runContextAnalysis(data, state.featureModel);
+
+      features.map(feature => {
+        context.commit("changeFeatureStatus", feature);
+      });
+
+      context.commit("setHasChanged", true);
+    } catch (error) {
+      context.commit("setError", error);
+    }
   },
 
   saveFeatureModel: async (context, data) => {}
 };
 
 const getters = {
+  getError: state => state.error,
   getHasChanged: state => state.hasChanged,
   getFeatureModel: state => state.featureModel,
   getFeatureModelContext: state => state.featureModel.contexts
