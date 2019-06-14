@@ -6,11 +6,13 @@
         v-for="item in value"
         :key="item.id"
         :model="item"
+        :father_id="null"
         :treeRules="treeRules"
         :openAll="openAll"
         :searchText="searchText"
         :contextResolutions="contextResolutions"
         :contextInEdition="contextInEdition"
+        @changeStatus="changeStatus"
         @selected="selected"
         @openTree="openTree"
       ></v-treeview-item>
@@ -43,7 +45,7 @@ export default {
           type: "#",
           max_children: 6,
           max_depth: 4,
-          valid_children: ["r", "m", "o", "g", "", "FMM_PARENT_IN_LAW"]
+          valid_children: ["r", "m", "o", "g", ""]
         },
         {
           type: "r",
@@ -73,27 +75,14 @@ export default {
           type: "",
           icon: "fas fa-stop",
           valid_children: []
-        },
-        {
-          type: "FMM_PARENT_IN_LAW",
-          icon: "far fa-user",
-          valid_children: ["Basic", "Top-up"]
-        },
-        {
-          type: "Basic",
-          icon: "far fa-hospital",
-          valid_children: ["Top-up"]
-        },
-        {
-          type: "Top-up",
-          icon: "far fa-plus-square",
-          valid_children: []
         }
       ]
     };
   },
-  created() {},
   methods: {
+    changeStatus(feature){
+      this.$emit("changeFeatureStatus", feature)
+    },
     getTypeRule(type) {
       var typeRule = this.treeRules.filter(t => t.type == type)[0];
       return typeRule;
@@ -125,7 +114,6 @@ export default {
     },
     contextSelected(title) {
       let command = title;
-      // console.log(command);
       switch (command) {
         case "Create Mandatory":
           var node = {

@@ -8,16 +8,16 @@
       <i v-if="icon" class="far" :class="icon" ></i>
     </span>
 
-    <span v-if="(!(model.type == 'r' || model.type == 'g') && contextInEdition )">
-      <span v-if="!allowChangeContext" class="btn-icon edit-icon blue" @click="allowChangeContext = true">
+    <span v-if="(!forbidenChangeTypes.includes(model.type) && contextInEdition )">
+      <span v-if="!allowChangeContext" class="btn-icon edit-icon blue" @click="discardFeatureStatus">
         <i  class="fas fa-redo-alt"></i>
       </span>
 
-      <span v-if="allowChangeContext" class="btn-icon edit-icon green">
+      <span v-if="allowChangeContext" class="btn-icon edit-icon green" @click="changeFeatureStatus(true)">
         <i class="fas fa-check"></i>
       </span>
 
-      <span v-if="allowChangeContext" class="btn-icon edit-icon danger">
+      <span v-if="allowChangeContext" class="btn-icon edit-icon danger" @click="changeFeatureStatus(false)">
         <i class="fas fa-times"></i>
       </span>
     </span>
@@ -39,10 +39,12 @@
 
     <div class="tree-children">
       <ul v-show="open" v-if="isFolder">
-        <v-treeview-item v-for="child in model.children" :key="child.id"
-        :model="child" :treeRules="treeRules" :openAll="openAll" @addNode="addNode"
+        <v-treeview-item v-for="child in model.children" :key="child.id" :model="child"
+        :father="{id: model.id, type: model.type, multiplicity: model.multiplicity}"
+        :treeRules="treeRules" :openAll="openAll" @addNode="addNode"
         @selected="selected" :searchText="searchText" :contextResolutions="contextResolutions"
-        :contextInEdition="contextInEdition" @openTree="openTree">
+        :contextInEdition="contextInEdition" @openTree="openTree"
+        @changeStatus="changeStatus">
         </v-treeview-item>
       </ul>
     </div>
@@ -52,9 +54,10 @@
 <script>
 export default {
   name: 'v-treeview-item',
-  props: ['model', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
+  props: ['model', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
   data() {
     return {
+      forbidenChangeTypes: ["r", "g", "m"],
       open: false,
       checked: null,
       edit: false,
@@ -94,6 +97,16 @@ export default {
     },
   },
   methods: {
+    discardFeatureStatus(){
+      this.allowChangeContext = true
+    },
+    changeFeatureStatus(status){
+      this.allowChangeContext = false
+      this.$emit("changeStatus", { id: this.model.id, status: status, father: this.father })
+    },
+    changeStatus(node){
+      this.$emit("changeStatus", node)
+    },
     getTypeRule(type) {
       var typeRule = this.treeRules.filter(t => t.type == type)[0]
       return typeRule
@@ -211,7 +224,6 @@ ul label:before {
 .ignoredItem {
   background-color: #ffe4e1;
   padding: 0 7px;
-  text-decoration: line-through;
   border-radius: 10px;
 }
 
