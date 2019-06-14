@@ -1,7 +1,9 @@
 import router from "@/router";
 import axios from "axios";
+import { runContextAnalysis } from "@/core/manageContextChanges.js";
 
 const state = {
+  hasChanged: false,
   featureModel: {
     feature_tree: [],
     constraints: [],
@@ -12,6 +14,9 @@ const state = {
 };
 
 const mutations = {
+  setHasChanged: (state, payload) => {
+    state.hasChanged = payload;
+  },
   setFeatureModel: (state, payload) => {
     state.featureModel = payload;
   },
@@ -20,6 +25,27 @@ const mutations = {
   },
   addContext(state, payload) {
     state.featureModel.contexts.push(payload);
+  },
+  selectContext(state, payload) {
+    state.featureModel.contexts.map(context => {
+      if (context.name === payload) context["isTheCurrent"] = true;
+      else context["isTheCurrent"] = false;
+    });
+  },
+  changeFeatureStatus(state, payload) {
+    console.log("Store", payload);
+    state.featureModel.contexts.map(context => {
+      if (context.isTheCurrent) {
+        // console.log(context);
+        context.resolutions.map(feature => {
+          if (feature.feature_id === payload.id) {
+            feature.status = payload.status;
+            state.hasChanged = true; // Flag. There was some changes in Feature Model
+            console.log("Alterei");
+          }
+        });
+      }
+    });
   }
 };
 
@@ -41,18 +67,19 @@ const actions = {
     router.push("/fmodel-manager");
   },
 
-  selectContext: (context, name) => {
-    let featureModel = state.featureModel;
-    featureModel.contexts.map(context => {
-      if (context.name === name) context["active"] = true;
-      else context["active"] = false;
+  changeContext(context, data) {
+    let a = runContextAnalysis(data, state.featureModel);
+    console.log("A:", a);
+    a.map(feature => {
+      context.commit("changeFeatureStatus", feature);
     });
-    context.commit("setFeatureModel", {});
-    context.commit("setFeatureModel", featureModel);
-  }
+  },
+
+  saveFeatureModel: async (context, data) => {}
 };
 
 const getters = {
+  getHasChanged: state => state.hasChanged,
   getFeatureModel: state => state.featureModel,
   getFeatureModelContext: state => state.featureModel.contexts
 };

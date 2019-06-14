@@ -33,7 +33,7 @@
             <div class="context-manager--card" v-for="(context, index) in contexts" :key="index">
               <card-context
                 :title="context['name']"
-                :active="context['active']"
+                :active="context['isTheCurrent']"
                 @selectContext="selectContext"
               />
             </div>
@@ -74,6 +74,7 @@
               :hasToolbox="false"
               :contextResolutions="contextResolutions"
               :contextInEdition="contextInEdition"
+              @changeFeatureStatus="changeFeatureStatus"
             ></v-treeview>
           </div>
 
@@ -118,8 +119,12 @@ export default {
   },
 
   methods: {
+    changeFeatureStatus(node){
+      this.$store.dispatch("featureModel/changeContext", node);
+    },
+
     selectContext(name) {
-      this.$store.dispatch("featureModel/selectContext", name);
+      this.$store.commit("featureModel/selectContext", name);
       this.changeSelectedContext(name);
     },
 
@@ -177,7 +182,6 @@ export default {
   },
 
   mounted() {
-    // console.log(this.featureModel);
     if (this.featureModel.feature_tree.length === 0) this.$router.push("/home");
   }
 };
