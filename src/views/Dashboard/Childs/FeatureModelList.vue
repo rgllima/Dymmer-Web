@@ -3,19 +3,7 @@
     <div class="tile is-ancestor is-vertical">
       <div class="tile is-parent">
         <div class="tile is-child">
-          <button class="button field is-info">
-            <span>Apply Measures</span>
-          </button>
-
-          <b-table
-            :data="featureModelDatabase"
-            default-sort-direction="asc"
-            default-sort="name"
-            paginated
-            per-page="10"
-            :checked-rows.sync="checkedRows"
-            checkable
-          >
+          <b-table :data="featureModelDatabase" default-sort-direction="asc" default-sort="name">
             <template slot-scope="props">
               <b-table-column field="id" label="ID" width="40" sortable numeric>{{ props.index+1 }}</b-table-column>
               <b-table-column field="name" label="Feature Name" sortable>
@@ -47,7 +35,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -58,7 +46,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      featureModelDatabase: 'featureModelDatabase/getFeatureModelDatabase'
+      featureModelDatabase: "featureModelDatabase/getFeatureModelDatabase"
     })
   },
 
