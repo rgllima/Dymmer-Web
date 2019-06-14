@@ -51,6 +51,7 @@ function analyseGroupedFeatures(feature, featureModel) {
     });
     return response;
   }
+  return [{ id: feature.id, status: feature.status }];
 }
 
 function searchGrandfather(father, feature_tree) {
