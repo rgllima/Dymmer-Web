@@ -8,16 +8,43 @@
       <i v-if="icon" class="far" :class="icon" ></i>
     </span>
 
+    <span v-if="(!forbidenChangeTypes.includes(model.type) && contextInEdition )">
+      <span v-if="!allowChangeContext" class="btn-icon edit-icon blue" @click="discardFeatureStatus">
+        <i  class="fas fa-redo-alt"></i>
+      </span>
+
+      <span v-if="allowChangeContext" class="btn-icon edit-icon green" @click="changeFeatureStatus(true)">
+        <i class="fas fa-check"></i>
+      </span>
+
+      <span v-if="allowChangeContext" class="btn-icon edit-icon danger" @click="changeFeatureStatus(false)">
+        <i class="fas fa-times"></i>
+      </span>
+    </span>
+
+    <span v-if="!contextInEdition">
+      <span v-if="contextStatus == 'selectedItem'" class="edit-icon green">
+        <i class="fas fa-check"></i>
+      </span>
+
+      <span v-if="contextStatus == 'ignoredItem'" class="edit-icon danger">
+        <i class="fas fa-times"></i>
+      </span>
+    </span>
+
     <input type="radio" name="rad" v-model="checked" :id="model.id" :value="model.id">
-    <label v-if="!(model.type == 'g')" v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
-    <label v-if="model.type == 'g'" v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{[new String(model.multiplicity)]}}</label>
+    <label v-if="!(model.type == 'g')" v-show="!edit" class="tree-text" :class="contextStatus" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
+    <label v-else v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{[new String(model.multiplicity)]}}</label>
     <input v-show="edit" ref="title" class="tree-text" v-model="model.name" :placeholder="model.name" key="input" @blur="blur" @keyup.enter="blur">
 
     <div class="tree-children">
       <ul v-show="open" v-if="isFolder">
-        <v-treeview-item v-for="child in model.children" :key="child.id"
-        :model="child" :treeRules="treeRules" :openAll="openAll" @addNode="addNode"
-        @selected="selected" :searchText="searchText" @openTree="openTree">
+        <v-treeview-item v-for="child in model.children" :key="child.id" :model="child"
+        :father="{id: model.id, type: model.type, multiplicity: model.multiplicity}"
+        :treeRules="treeRules" :openAll="openAll" @addNode="addNode"
+        @selected="selected" :searchText="searchText" :contextResolutions="contextResolutions"
+        :contextInEdition="contextInEdition" @openTree="openTree"
+        @changeStatus="changeStatus">
         </v-treeview-item>
       </ul>
     </div>
@@ -27,12 +54,14 @@
 <script>
 export default {
   name: 'v-treeview-item',
-  props: ['model', 'treeRules', 'openAll', 'searchText'],
+  props: ['model', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
   data() {
     return {
+      forbidenChangeTypes: ["r", "g", "m"],
       open: false,
       checked: null,
-      edit: false
+      edit: false,
+      allowChangeContext: false
     }
   },
   computed: {
@@ -53,9 +82,31 @@ export default {
           return true
         } else return false
       }
-    }
+    },
+    contextStatus() {
+      if (!this.contextResolutions || this.contextResolutions.length === 0)
+        return ''
+      if (this.model.id === '_r')
+        return ''
+      let context = this.contextResolutions.filter(resolution => (resolution.feature_id === this.model.id))[0]
+
+      if (context)
+        if (context.status) return 'selectedItem'
+        else return 'ignoredItem'
+      else return ''
+    },
   },
   methods: {
+    discardFeatureStatus(){
+      this.allowChangeContext = true
+    },
+    changeFeatureStatus(status){
+      this.allowChangeContext = false
+      this.$emit("changeStatus", { id: this.model.id, status: status, father: this.father })
+    },
+    changeStatus(node){
+      this.$emit("changeStatus", node)
+    },
     getTypeRule(type) {
       var typeRule = this.treeRules.filter(t => t.type == type)[0]
       return typeRule
@@ -95,17 +146,23 @@ export default {
       this.selected(this)
     }
   },
+
   created() {
     if (this.model.id == null) {
       this.editName()
     }
     this.open = this.openAll
   },
+
   watch: {
+    contextInEdition() {
+      this.allowChangeContext = false
+    },
+
     openAll(openAll) {
       this.open = openAll
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -158,8 +215,42 @@ ul label:before {
   color: #cc0000;
 }
 
+.selectedItem {
+  background-color: #d3ffce;
+  padding: 0 7px;
+  border-radius: 10px;
+}
+
+.ignoredItem {
+  background-color: #ffe4e1;
+  padding: 0 7px;
+  border-radius: 10px;
+}
+
 .tree-icon {
-  font-size: 0.7em;
+  font-size: .8em;
   margin-right: 10px;
+}
+
+.edit-icon {
+  font-size: .8em;
+  margin-right: 10px;
+}
+
+.btn-icon {
+  z-index: 1;
+  position: relative;
+}
+
+.danger {
+  color: #ff4444
+}
+
+.green {
+  color: #008000
+}
+
+.blue {
+  color: #0099cc
 }
 </style>

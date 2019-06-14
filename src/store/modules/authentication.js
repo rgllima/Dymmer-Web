@@ -1,5 +1,4 @@
 import router from "@/router";
-import VueCookies from "vue-cookies";
 import axios from "axios";
 
 const state = {
@@ -26,10 +25,8 @@ const actions = {
         email: user.email,
         password: user.password
       })
-      .then(response => {
-        // console.log(response);
-        VueCookies.set("USERTOKEN", response.data.token, "0");
-        router.push("/home");
+      .then(() => {
+        router.push("/dashboard");
       })
       .catch(err => {
         console.log(err);
@@ -44,10 +41,8 @@ const actions = {
         password: user.password,
         name: user.name
       })
-      .then(response => {
-        // console.log(response);
-        VueCookies.set("USERTOKEN", response.data.token, "0");
-        router.push("/home");
+      .then(() => {
+        router.push("/dashboard");
       })
       .catch(err => {
         console.log(err);
@@ -56,7 +51,6 @@ const actions = {
   },
 
   logout: () => {
-    VueCookies.remove("USERTOKEN");
     router.push("/");
   }
 };

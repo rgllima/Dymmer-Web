@@ -33,9 +33,6 @@ const router = new Router({
       path: "/dashboard",
       name: "Dashboard",
       component: () => import("@/views/Dashboard/Dashboard"),
-      meta: {
-        requiresAuth: true
-      },
       children: [
         {
           path: "/home",
@@ -61,20 +58,29 @@ const router = new Router({
           path: "/measures-shower",
           name: "CalculatedMeasureShower",
           component: () => import("@/views/Dashboard/Childs/CalculatedMeasureShower")
+        },
+        {
+          path: "/fmodel-manager",
+          name: "FModelManager",
+          component: () => import("@/views/Dashboard/FModelManager/Index")
         }
       ]
     }
   ]
 });
 
-router.beforeEach((to, from, next) => {
-  const tokenExists = window.$cookies.isKey("USERTOKEN");
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+// router.beforeEach((to, from, next) => {
+//   const tokenExists = window.$cookies.isKey("USERTOKEN");
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-  if (requiresAuth && !tokenExists)
-    next("/");
-  else
-    next();
-});
+//   if (requiresAuth && !tokenExists)
+//     next("/");
+//   else {
+//     if (to.path === '/dashboard')
+//       next('/home')
+//     else
+//       next();
+//   }
+// });
 
 export default router;

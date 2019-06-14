@@ -3,7 +3,12 @@
     <section class="main-content columns" style="overflow: hidden;">
       <aside class="column is-paddingless" :class="{'active': menu_bars}">
         <div class="infobar">
-          <h1 class="has-text-centered is-size-5" style="margin-top: 15px;">DyMMer Web</h1>
+          <h1 class="infobar-text has-text-centered is-size-5">DyMMer Web</h1>
+        </div>
+
+        <div class="toggle-icon">
+          <i class="fas fa-chevron-circle-left"></i>
+          <i class="fas fas-hidden fa-chevron-circle-right"></i>
         </div>
 
         <div class="menu-bars" @click="menu_bars=!menu_bars">
@@ -14,51 +19,38 @@
           <ul class="menu-list">
             <li>
               <a class="has-text-white" @click="pushRouter('/home')">
-                <i class="fas fa-home"></i>
-                Home
+                <i class="fas fa-th-large"></i>
+                Dashboard
               </a>
             </li>
           </ul>
 
-          <p class="menu-label has-text-light" style="margin: 20px 0px 5px 8px; font-size: 0.7rem">
-            Feature Model
-          </p>
+          <p class="menu-label has-text-light">Feature Model</p>
           <ul class="menu-list">
             <li>
-              <a class="has-text-white">
-                <i class="fas fa-plus"></i>
-                Create
-              </a>
-            </li>
-            <li>
-              <a class="has-text-white">
-                <i class="fas fa-file-import"></i>
-                Import
-              </a>
-            </li>
-            <li>
-              <a class="has-text-white">
-                <i class="fas fa-wrench"></i>
-                Apply Configurations
-              </a>
-            </li>
-            <li>
-              <a class="has-text-white">
+              <a class="has-text-white" @click="pushRouter('feature-model-list')">
                 <i class="fas fa-table"></i>
-                My Feature Models
+                SPL Repository
+              </a>
+            </li>
+            <li>
+              <a class="has-text-white" @click="pushRouter('feature-model-list')">
+                <i class="fas fa-database"></i>
+                DSPL Repository
               </a>
             </li>
             <li>
               <a class="has-text-white">
                 <i class="fas fa-database"></i>
-                Public Feature Models
+                Measures Dataset
               </a>
             </li>
           </ul>
 
-          <p class="menu-label has-text-light" style="margin: 20px 0px 5px 8px; font-size: 0.7rem">
-            Quality Measures
-          </p>
+          <!-- <p
+            class="menu-label has-text-light"
+            style="margin: 20px 0px 5px 8px; font-size: 0.7rem"
+          >Quality Measures</p>
           <ul class="menu-list">
             <li>
               <a class="has-text-white">
@@ -66,11 +58,9 @@
                 Apply Measures
               </a>
             </li>
-          </ul>
+          </ul>-->
 
-          <p class="menu-label has-text-light" style="margin: 20px 0px 5px 8px; font-size: 0.7rem">
-            General
-          </p>
+          <p class="menu-label has-text-light">General</p>
           <ul class="menu-list">
             <li>
               <a class="has-text-white">
@@ -101,14 +91,13 @@
               <div class="user">
                 <i class="fa fa-user"/>
               </div>
-            </div> -->
+            </div>-->
           </div>
           <div class="level-right">
-            <div class="control has-icons-right">
-              <input class="input" type="text" placeholder="Buscar">
-              <span class="icon is-right">
-                <i class="fas fa-search"></i>
-              </span>
+            <div class="control">
+              <button class="button" @click="openAddFeatureModelModal">
+                <i class="icon fas fa-plus"></i> Add Feature Model
+              </button>
             </div>
           </div>
         </div>
@@ -122,7 +111,8 @@
     <footer class="footer has-background-black-bis">
       <div class="content has-text-centered">
         <p class="has-text-light">
-          <strong class="has-text-light">DyMMer</strong> by <a href="https://www.quixada.ufc.br/">Universidade Federal do Ceará - Campus Quixadá</a>. The source code is licensed
+          <strong class="has-text-light">DyMMer</strong> by
+          <a href="https://www.quixada.ufc.br/">Universidade Federal do Ceará - Campus Quixadá</a>. The source code is licensed
           <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
         </p>
       </div>
@@ -132,6 +122,7 @@
 
 <script>
 import Tree from "@/components/Tree.vue";
+import FeatureModelModal from './Components/AddFeatureModelModal'
 
 export default {
   components: {
@@ -140,17 +131,25 @@ export default {
   data() {
     return {
       // showNav: false,
-      menu_bars: false,
+      menu_bars: false
     };
   },
   methods: {
     pushRouter(route) {
       this.$router.push(route);
-      this.menu_bars=!this.menu_bars;
+      this.menu_bars = !this.menu_bars;
+    },
+
+    openAddFeatureModelModal() {
+        this.$modal.open({
+            parent: this,
+            component: FeatureModelModal,
+            hasModalCard: true
+        })
     },
 
     logout() {
-      this.$store.dispatch("authentication/logout")
+      this.$store.dispatch("authentication/logout");
     }
   },
   mounted() {
@@ -163,12 +162,12 @@ export default {
 @import "./Dashboard";
 
 a.has-text-white:hover {
-    color: #1f1a2f !important;
+  color: #372f9d !important;
 }
 
 .dashboard-pages {
   height: 100%;
-  background-color: #362e5080;
+  background-color: whitesmoke;
 
   @include phone {
     background-color: white;

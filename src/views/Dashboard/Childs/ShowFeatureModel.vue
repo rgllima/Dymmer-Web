@@ -7,7 +7,7 @@
           <div class="box">
             <h1 class="has-text-centered is-size-5">Feature Diagram</h1>
             <br>
-            <v-treeview v-model="featureModel.feature_tree" :openAll="openAll" :hasContext="false"></v-treeview>
+            <v-treeview v-model="featureModel.feature_tree" :openAll="openAll" :hasToolbox="false"></v-treeview>
           </div>
         </div>
         <div class="tile is-child is-vertical " style="padding: 0 10px">
@@ -26,27 +26,6 @@
                       <img src="../../../assets/protractor.svg" alt="settings">
                       <br>
                       <p class="has-text-centered">Apply Measures</p>
-                    </a>
-                  </div>
-                  <div class="tile is-child" style="padding: 0 5px">
-                    <a href="#" class="box">
-                      <img src="../../../assets/wireframe.svg" alt="settings">
-                      <br>
-                      <p class="has-text-centered">Feature Configuration</p>
-                    </a>
-                  </div>
-                  <div class="tile is-child" style="padding: 0 5px">
-                    <a href="#" class="box">
-                      <img src="../../../assets/edit-tools.svg" alt="settings">
-                      <br>
-                      <p class="has-text-centered">Edit Model</p>
-                    </a>
-                  </div>
-                  <div class="tile is-child" style="padding: 0 5px">
-                    <a href="#" class="box">
-                      <img src="../../../assets/import.svg" alt="settings">
-                      <br>
-                      <p class="has-text-centered">Import Model</p>
                     </a>
                   </div>
                 </div>
@@ -129,7 +108,7 @@ export default {
 
       for (const index in ftConstraints) {
         conFeatures = [];
-        conKeys = Object.values(ftConstraints[index])[0].split("or");
+        conKeys = ftConstraints[index].value.split("or");
 
         for (const key in conKeys) {
           let id = conKeys[key].replace(/[\s\W-]+/g, "");
