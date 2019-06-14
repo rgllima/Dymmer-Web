@@ -102,7 +102,12 @@ export default {
     },
     changeFeatureStatus(status){
       this.allowChangeContext = false
-      this.$emit("changeStatus", { id: this.model.id, status: status, father: this.father })
+      this.$emit("changeStatus", {
+        id: this.model.id,
+        type: this.model.type,
+        status: status,
+        father: this.father
+      })
     },
     changeStatus(node){
       this.$emit("changeStatus", node)

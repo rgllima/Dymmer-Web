@@ -36,12 +36,16 @@ const mutations = {
     console.log("Store", payload);
     state.featureModel.contexts.map(context => {
       if (context.isTheCurrent) {
-        // console.log(context);
-        context.resolutions.map(feature => {
-          if (feature.feature_id === payload.id) {
-            feature.status = payload.status;
-          }
-        });
+        let feature = context.resolutions.filter(
+          feature => feature.feature_id === payload.id
+        )[0];
+
+        if (!feature)
+          context.resolutions.push({
+            feature_id: payload.id,
+            status: payload.status
+          });
+        else feature.status = payload.status;
       }
     });
   }
@@ -68,6 +72,7 @@ const actions = {
   changeContext(context, data) {
     try {
       let features = runContextAnalysis(data, state.featureModel);
+      console.log("STORE", features);
 
       features.map(feature => {
         context.commit("changeFeatureStatus", feature);
@@ -77,9 +82,9 @@ const actions = {
     } catch (error) {
       context.commit("setError", error);
     }
-  },
+  }
 
-  saveFeatureModel: async (context, data) => {}
+  // saveFeatureModel: async (context, data) => {}
 };
 
 const getters = {

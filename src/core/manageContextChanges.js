@@ -7,69 +7,37 @@
 
 function runContextAnalysis(feature, featureModel) {
   let context = searchCurrentContext(featureModel.contexts);
-  let grandfather = searchGrandfather(
-    feature.father,
-    featureModel.feature_tree[0]
-  );
+  let father = searchFather(feature, featureModel.feature_tree[0]);
 
-  console.log("F", feature.father, "GF: ", grandfather);
+  console.log("C: ", feature, "F: ", feature.father, "Father: ", father);
 
-  switch (feature.father.type) {
-    // Father type is a group of features
-    case "g":
-      if (!verifyHierarchyIsChecked(grandfather, context))
-        throw "You cannot change this feature! Please, verify hierarchy!";
-      return analyseGroupedFeatures(feature, grandfather);
+  if (feature.father.type === "" || feature.father.type === "o") {
+    if (!verifyHierarchyIsChecked(feature.father, context))
+      throw "You cannot enable this feature! Please check the ancestors!";
 
-    // Father type is child of a group of features
-    case "":
-      console.log("DO SOMETHING - ''");
-      if (!verifyHierarchyIsChecked(feature.father, context))
-        throw "You cannot change this feature! Please, verify hierarchy!";
-      break;
-
-    // Father type is a mandatory feature
-    case "m":
-      console.log("DO SOMETHING - M");
-      // if (!verifyHierarchyIsChecked(feature.father, context))
-      //   throw "Erro aki chapa";
-      break;
-
-    // Father type is an optional feature
-    case "o":
-      console.log("DO SOMETHING - O");
-      if (!verifyHierarchyIsChecked(feature.father, context))
-        throw "You cannot change this feature! Please, verify hierarchy!";
-      break;
-    default:
-      break;
+    if (feature.type === "m") return analyseMandatoryFeatures(feature);
+    else if (feature.type === "o")
+      return analyseOptionalFeatures(feature, father);
+  } else if (feature.father.type === "g") {
+    let grandfather = searchGrandfather(
+      feature.father,
+      featureModel.feature_tree[0]
+    );
+    console.log(grandfather);
+    if (!verifyHierarchyIsChecked(grandfather, context))
+      throw "You cannot enable this feature! Please check the ancestors!";
+    return analyseGroupedFeatures(feature, grandfather);
+  } else if (feature.father.type === "m") {
+    if (!verifyHierarchyIsChecked(feature.father, context))
+      throw "You cannot enable this feature! Please check the ancestors!";
+    return analyseOptionalFeatures(feature, father);
+  } else if (feature.father.type === "r") {
+    return analyseOptionalFeatures(feature, father);
   }
-  console.log("ManageCOntext", feature, featureModel.feature_tree);
-  return [feature];
+  return [];
 }
 
-/**
- * Preciso saber quem é o avô da feature que eu estou tentando marcar
- * em seguida, verifico se o avô está marcado, se sim, continuo o processo de marcação
- * senão, devo retonar erro.
- */
-
 function analyseGroupedFeatures(feature, grandfather) {
-  // let grandfather = searchGrandfather(
-  //   feature.father,
-  //   featureModel.feature_tree[0]
-  // );
-
-  // let context = searchCurrentContext(featureModel.contexts);
-  // let isChecked = context.resolutions.filter(
-  //   data => data.feature_id === grandfather.id
-  // )[0];
-
-  // if (!isChecked || !isChecked.status) {
-  //   console.log("TEM QUE RETONAR ERRO");
-  //   return [];
-  // }
-
   let response = [];
   let child_feature = null;
 
@@ -90,14 +58,45 @@ function analyseGroupedFeatures(feature, grandfather) {
   return response;
 }
 
+function analyseMandatoryFeatures(feature) {
+  if (!feature.status) throw "You cannot disable a Mandatory feature!";
+  return [{ id: feature.id, status: feature.status }];
+}
+
+function analyseOptionalFeatures(feature, father) {
+  let response = [];
+  let child_feature = null;
+
+  if (!feature.status) {
+    child_feature = father.children.filter(
+      father_child => father_child.id === feature.id
+    )[0];
+
+    if (child_feature)
+      response = response.concat(changeChildStatusToFalse(child_feature));
+  }
+  response.push({ id: feature.id, status: feature.status });
+  return response;
+}
+
 function verifyHierarchyIsChecked(ancestral, context) {
   let isChecked = context.resolutions.filter(
     child => child.feature_id === ancestral.id
   )[0];
 
-  console.log(!isChecked, !isChecked.status);
   if (!isChecked || !isChecked.status) return false;
   return true;
+}
+
+function searchFather(child, feature_tree) {
+  let father;
+  for (const child_candidate of feature_tree.children) {
+    if (child.id === child_candidate.id) return feature_tree;
+    else father = searchGrandfather(child, child_candidate);
+
+    if (father) break;
+  }
+  return father;
 }
 
 function searchGrandfather(father, feature_tree) {
