@@ -15,16 +15,34 @@
 </template>
 
 <script>
-import FeatureEditor from './FeatureEditor'
-import ContextManager from './ContextManager'
+import FeatureEditor from "./FeatureEditor";
+import ContextManager from "./ContextManager";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
-    'context-manager': ContextManager,
-    'feature-editor': FeatureEditor
+    "context-manager": ContextManager,
+    "feature-editor": FeatureEditor
   },
 
   data: () => ({}),
+
+  computed: {
+    ...mapGetters({
+      error: "featureModel/getError"
+    })
+  },
+
+  watch: {
+    error() {
+      if (this.error)
+        this.$toast.open({
+          message: this.error,
+          type: "is-danger"
+        });
+      this.$store.commit("featureModel/setError", null);
+    }
+  }
 };
 </script>
 

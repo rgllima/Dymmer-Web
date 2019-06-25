@@ -36,14 +36,16 @@ const mutations = {
     console.log("Store", payload);
     state.featureModel.contexts.map(context => {
       if (context.isTheCurrent) {
-        // console.log(context);
-        context.resolutions.map(feature => {
-          if (feature.feature_id === payload.id) {
-            feature.status = payload.status;
-            state.hasChanged = true; // Flag. There was some changes in Feature Model
-            console.log("Alterei");
-          }
-        });
+        let feature = context.resolutions.filter(
+          feature => feature.feature_id === payload.id
+        )[0];
+
+        if (!feature)
+          context.resolutions.push({
+            feature_id: payload.id,
+            status: payload.status
+          });
+        else feature.status = payload.status;
       }
     });
   }
@@ -68,17 +70,25 @@ const actions = {
   },
 
   changeContext(context, data) {
-    let a = runContextAnalysis(data, state.featureModel);
-    console.log("A:", a);
-    a.map(feature => {
-      context.commit("changeFeatureStatus", feature);
-    });
-  },
+    try {
+      let features = runContextAnalysis(data, state.featureModel);
+      console.log("STORE", features);
 
-  saveFeatureModel: async (context, data) => {}
+      features.map(feature => {
+        context.commit("changeFeatureStatus", feature);
+      });
+
+      context.commit("setHasChanged", true);
+    } catch (error) {
+      context.commit("setError", error);
+    }
+  }
+
+  // saveFeatureModel: async (context, data) => {}
 };
 
 const getters = {
+  getError: state => state.error,
   getHasChanged: state => state.hasChanged,
   getFeatureModel: state => state.featureModel,
   getFeatureModelContext: state => state.featureModel.contexts

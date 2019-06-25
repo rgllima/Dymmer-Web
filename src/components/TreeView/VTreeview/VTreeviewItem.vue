@@ -57,7 +57,7 @@ export default {
   props: ['model', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
   data() {
     return {
-      forbidenChangeTypes: ["r", "g", "m"],
+      forbidenChangeTypes: ["r", "g"],
       open: false,
       checked: null,
       edit: false,
@@ -102,7 +102,12 @@ export default {
     },
     changeFeatureStatus(status){
       this.allowChangeContext = false
-      this.$emit("changeStatus", { id: this.model.id, status: status, father: this.father })
+      this.$emit("changeStatus", {
+        id: this.model.id,
+        type: this.model.type,
+        status: status,
+        father: this.father
+      })
     },
     changeStatus(node){
       this.$emit("changeStatus", node)
@@ -152,6 +157,11 @@ export default {
       this.editName()
     }
     this.open = this.openAll
+  },
+
+  mounted(){
+    if (!this.father || this.father.type == "r" || this.father.type == "m")
+      this.forbidenChangeTypes.push("m");
   },
 
   watch: {
