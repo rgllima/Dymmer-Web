@@ -2,7 +2,7 @@
  * Las modify -> june 14 2019
  * This code is very complex then it has a exhaustive documentation to guide future
  * maintenance. Perhaps the comments being very ugly, but it are necessary to avoid the
- * developers spends a lot of time understanding how it work.
+ * developers spends a lot of time understanding how it works.
  */
 
 function runContextAnalysis(feature, featureModel) {
