@@ -8,7 +8,7 @@
         <context-manager/>
       </b-tab-item>
       <b-tab-item class="fmodel-item" label="Apply Measures" icon-pack="fas" icon="square-root-alt">
-        <h1>Dymmer 3</h1>
+        <apply-measures/>
       </b-tab-item>
     </b-tabs>
   </div>
@@ -17,12 +17,14 @@
 <script>
 import FeatureEditor from "./FeatureEditor";
 import ContextManager from "./ContextManager";
+import ApplyMeasures from "./ApplyMeasures";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     "context-manager": ContextManager,
-    "feature-editor": FeatureEditor
+    "feature-editor": FeatureEditor,
+    "apply-measures": ApplyMeasures
   },
 
   data: () => ({}),
