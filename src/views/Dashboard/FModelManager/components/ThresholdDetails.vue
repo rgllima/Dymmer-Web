@@ -5,11 +5,11 @@
       <div class="tile notification box is-vertical">
         <p class="is-size-6">
           <strong>Name:</strong>
-          {{data.qualityMeasure.name}}
+          {{data.name}}
         </p>
         <p class="is-size-6e has-text-justified">
           <strong>Description:</strong>
-          {{data.qualityMeasure.description}}
+          {{data.description}}
         </p>
         <p class="is-size-6e">
           <strong>Thresholds Status:</strong>

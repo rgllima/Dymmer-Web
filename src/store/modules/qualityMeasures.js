@@ -1,56 +1,98 @@
-import router from "@/router";
 import axios from "axios";
+import dymmerServer from "../../util/dymmer-server";
 
 const state = {
   measures: [],
-  //AQUI
-  resultMeasuresComputation: [],
-  apiURL: `https://dymmer-web-backend.herokuapp.com`,
-  error: null
+  valeThresholds: [],
+  computedMeasures: [],
+  groupedMeasuresThresholds: []
 };
 
 const mutations = {
   setMeasures: (state, payload) => {
     state.measures = payload;
   },
-  //AQUI
-  setResultMeasuresComputation: (state, payload) => {
-    state.resultMeasuresComputation = payload;
+  setValeThresholds: (state, payload) => {
+    state.valeThresholds = payload;
+  },
+  setComputedMeasures: (state, payload) => {
+    state.computedMeasures = payload;
+  },
+  setGroupedMeasuresThresholds: (state, payload) => {
+    state.groupedMeasuresThresholds = payload;
+  },
+  resetGroupedMeasuresThresholds: state => {
+    state.groupedMeasuresThresholds = [];
   }
 };
 
 const actions = {
   fetchMeasuresOnDatabase: async context => {
+    let url = `${dymmerServer.getUrl()}/qualitymeasures/list`;
     await axios
-      .get(`${state.apiURL}/qualitymeasures/list`)
+      .get(url)
       .then(response => {
         context.commit("setMeasures", response.data.qualityMeasureList);
       })
       .catch(err => console.log(err));
   },
 
-  //OBS. RETIRAR ISSO DAQUI, É OUTRO MÓDULO
-  calculateSelectedMeasures: async (context, obj) => {
+  applyMeasures: async (context, data) => {
+    await context.dispatch("fetchComputedMeasures", data);
+    await context.dispatch("fetchValeThresholds");
+
+    let measures = state.computedMeasures;
+    let valeThresholds = state.valeThresholds;
+
+    let groupedMeasuresThresholds = [];
+    measures.forEach(element => {
+      let thresholds = valeThresholds.thresholds.filter(measure => {
+        return element._id === measure.qualityMeasure._id;
+      })[0];
+      let a = {};
+      Object.assign(a, element);
+      Object.assign(a, thresholds);
+      delete a["qualityMeasure"];
+      groupedMeasuresThresholds.push(a);
+    });
+
+    context.commit("setGroupedMeasuresThresholds", groupedMeasuresThresholds);
+  },
+
+  fetchComputedMeasures: async (context, obj) => {
+    let url = `${dymmerServer.getUrl()}/qualitymeasures/apply/${
+      obj.featureModel._id
+    }`;
+
     await axios({
       method: "post",
-      url: `${state.apiURL}/qualitymeasures/apply/${obj.featureTree}`,
+      url: url,
       data: {
         measures: obj.measures
       }
     })
       .then(response => {
         let data = response.data.appliedQualityMeasuresList;
-        context.commit("setResultMeasuresComputation", data);
-        // router.push("/measures-shower");
+        context.commit("setComputedMeasures", data);
+      })
+      .catch(err => console.log(err));
+  },
+
+  async fetchValeThresholds(context) {
+    let url = `${dymmerServer.getUrl()}/valemethod/thresholds`;
+    await axios
+      .get(url)
+      .then(response => {
+        let data = response.data.returnedValeThresholds;
+        context.commit("setValeThresholds", data);
       })
       .catch(err => console.log(err));
   }
 };
 
 const getters = {
-  getMeasuresModel: state => state.measures,
-  //AQUI
-  getResultMeasuresComputation: state => state.resultMeasuresComputation
+  getMeasures: state => state.measures,
+  getGroupedMeasuresThresholds: state => state.groupedMeasuresThresholds
 };
 
 export default {

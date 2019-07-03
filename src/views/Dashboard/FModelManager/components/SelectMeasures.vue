@@ -5,7 +5,7 @@
       <div class="select-measures--header-content">
         <p>
           <strong>Feature Type:</strong>
-          {{featureTree.type}}
+          {{featureModel.type}}
         </p>
         <div class="buttons">
           <b-dropdown v-if="contexts.length !== 0" aria-role="list">
@@ -37,10 +37,9 @@
           :native-value="measure"
           v-model="checkedMeasures"
         >
-          <b-tooltip
-            :label="measure.description"
-            dashed
-          >{{ `${measure.initials} - ${measure.name}` }}</b-tooltip>
+          <b-tooltip :label="measure.description" dashed>
+            {{ `${measure.initials} - ${measure.name}` }}
+          </b-tooltip>
         </b-checkbox>
       </article>
     </div>
@@ -71,38 +70,24 @@ export default {
 
   computed: {
     ...mapGetters({
-      measures: "qualityMeasures/getMeasuresModel",
-      featureTree: "featureModel/getFeatureModel"
+      measures: "qualityMeasures/getMeasures",
+      featureModel: "featureModel/getFeatureModel"
     })
   },
 
   methods: {
     async applyMeasures() {
-      let obj = {};
-      obj["measures"] = this.checkedMeasures;
-      obj["featureTree"] = this.featureTree._id;
+      let data = {};
+      data["measures"] = this.checkedMeasures;
+      data["featureModel"] = this.featureModel;
 
-      await this.$store.dispatch(
-        "qualityMeasures/calculateSelectedMeasures",
-        obj
-      );
-      await this.$store.dispatch("valeThresholds/fetchValeThresholds");
+      await this.$store.dispatch("qualityMeasures/applyMeasures", data);
       this.$emit("close");
-    },
-
-    toggleSwitchs(value) {
-      this.switchInput = value;
-
-      let switchs = document.getElementsByClassName("switch");
-      for (const obj of switchs) {
-        if (value) obj.setAttribute("checked", value);
-        else obj.removeAttribute("checked");
-      }
     }
   },
 
-  mounted(){
-      console.log('CONTEXT: ', this.contexts)
+  mounted() {
+    console.log("CONTEXT: ", this.contexts);
   }
 };
 </script>

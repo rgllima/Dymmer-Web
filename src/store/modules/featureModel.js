@@ -1,5 +1,6 @@
 import router from "@/router";
 import axios from "axios";
+import dymmerServer from "../../util/dymmer-server";
 import { runContextAnalysis } from "@/core/manageContextChanges.js";
 
 const state = {
@@ -8,9 +9,7 @@ const state = {
     feature_tree: [],
     constraints: [],
     contexts: []
-  },
-  apiURL: `https://dymmer-web-backend.herokuapp.com`,
-  error: null
+  }
 };
 
 const mutations = {
@@ -20,11 +19,9 @@ const mutations = {
   setFeatureModel: (state, payload) => {
     state.featureModel = payload;
   },
-  setError(state, payload) {
-    state.error = payload;
-  },
   addContext(state, payload) {
     state.featureModel.contexts.push(payload);
+    state.hasChanged = true;
   },
   selectContext(state, payload) {
     state.featureModel.contexts.map(context => {
@@ -33,7 +30,6 @@ const mutations = {
     });
   },
   changeFeatureStatus(state, payload) {
-    console.log("Store", payload);
     state.featureModel.contexts.map(context => {
       if (context.isTheCurrent) {
         let feature = context.resolutions.filter(
@@ -53,19 +49,31 @@ const mutations = {
 
 const actions = {
   convertXmlToJson: async (context, xmlString) => {
+    let url = `${dymmerServer.getUrl()}/xml/xml-to-json`;
     await axios
-      .post(`${state.apiURL}/xml/xml-to-json`, {
+      .post(url, {
         xmlString: xmlString
       })
       .then(res => {
         console.log(JSON.parse(JSON.stringify(res.data)));
         context.commit("setFeatureModel", res.data);
+        context.commit("setHasChanged", false);
+        context.commit("qualityMeasures/resetGroupedMeasuresThresholds", null, {
+          root: true
+        });
+
         router.push("/fmodel-manager");
       });
   },
 
+  // Move this to "Mutations"
   showFeatureModel: async (context, data) => {
     context.commit("setFeatureModel", data);
+    context.commit("setHasChanged", false);
+    context.commit("qualityMeasures/resetGroupedMeasuresThresholds", null, {
+      root: true
+    });
+
     router.push("/fmodel-manager");
   },
 
@@ -82,9 +90,11 @@ const actions = {
     } catch (error) {
       context.commit("setError", error);
     }
-  }
+  },
 
-  // saveFeatureModel: async (context, data) => {}
+  saveFeatureModelOnDatabase: async context => {
+    context.commit("setHasChanged", false);
+  }
 };
 
 const getters = {

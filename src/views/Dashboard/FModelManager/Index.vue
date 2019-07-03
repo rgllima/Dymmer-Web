@@ -1,16 +1,22 @@
 <template>
   <div class="fmodel">
-    <b-tabs class="fmodel-tabs" type="is-boxed" expanded>
-      <b-tab-item class="fmodel-item" label="Feature Editor" icon-pack="fas" icon="edit">
-        <feature-editor/>
-      </b-tab-item>
-      <b-tab-item class="fmodel-item" label="Context Manager" icon-pack="fas" icon="align-justify">
-        <context-manager/>
-      </b-tab-item>
-      <b-tab-item class="fmodel-item" label="Apply Measures" icon-pack="fas" icon="square-root-alt">
-        <apply-measures/>
-      </b-tab-item>
-    </b-tabs>
+    <div class="fmodel--status">
+      <fmodel-control/>
+    </div>
+
+    <div class="fmodel--tabs">
+      <b-tabs class="fmodel-tabs" type="is-boxed" expanded>
+        <b-tab-item class="fmodel-item" label="Feature Editor" icon-pack="fas" icon="edit">
+          <feature-editor/>
+        </b-tab-item>
+        <b-tab-item class="fmodel-item" label="Context Manager" icon-pack="fas" icon="align-justify">
+          <context-manager/>
+        </b-tab-item>
+        <b-tab-item class="fmodel-item" label="Apply Measures" icon-pack="fas" icon="square-root-alt">
+          <apply-measures/>
+        </b-tab-item>
+      </b-tabs>
+    </div>
   </div>
 </template>
 
@@ -18,13 +24,15 @@
 import FeatureEditor from "./FeatureEditor";
 import ContextManager from "./ContextManager";
 import ApplyMeasures from "./ApplyMeasures";
+import FModelControl from "./FModelControl"
 import { mapGetters } from "vuex";
 
 export default {
   components: {
     "context-manager": ContextManager,
     "feature-editor": FeatureEditor,
-    "apply-measures": ApplyMeasures
+    "apply-measures": ApplyMeasures,
+    "fmodel-control": FModelControl
   },
 
   data: () => ({}),
