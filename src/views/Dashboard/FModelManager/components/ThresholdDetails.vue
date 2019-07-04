@@ -17,7 +17,10 @@
         </p>
       </div>
       <div class="tile notification box">
-        <div id="chartdiv"></div>
+        <div v-if="this.data.veryHigh > 0" id="chartdiv"></div>
+        <div v-else class="has-text-centered threshold-details--message">
+          <h1 class="has-text-centered is-size-5">No views available for this value!</h1>
+        </div>
       </div>
     </div>
   </div>
@@ -34,16 +37,12 @@ export default {
   props: ["data"],
 
   methods: {
-      checkMeasureStatus() {
-      if (this.data.value <= this.data.veryLow)
-        return 'Very Low';
-      else if (this.data.value <= this.data.low)
-        return 'Low';
-      else if (this.data.value <= this.data.high)
-        return 'Moderate';
-      else if (this.data.value <= this.data.veryHigh)
-        return 'High';
-      else return 'Very High';
+    checkMeasureStatus() {
+      if (this.data.value <= this.data.veryLow) return "Very Low";
+      else if (this.data.value <= this.data.low) return "Low";
+      else if (this.data.value <= this.data.high) return "Moderate";
+      else if (this.data.value <= this.data.veryHigh) return "High";
+      else return "Very High";
     }
   },
 
@@ -169,6 +168,8 @@ export default {
 .threshold-details
   p
     margin: 0
+  &--message
+    width: 100%
 
 
 #chartdiv

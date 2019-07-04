@@ -21,6 +21,7 @@ const mutations = {
   },
   addContext(state, payload) {
     state.featureModel.contexts.push(payload);
+    if (state.featureModel.type === "SPL") state.featureModel.type = "DSPL";
     state.hasChanged = true;
   },
   selectContext(state, payload) {

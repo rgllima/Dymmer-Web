@@ -1,9 +1,49 @@
 @import 'mixins';
 
-a, button, input, textarea, .level-item, .card-toggle .card-toggle-head, .notific-box-item {
+a,
+button,
+input,
+textarea,
+.level-item,
+.card-toggle .card-toggle-head,
+.notific-box-item {
     @include transition(all 0.2s);
 }
 
-aside, aside .infobar, .level-left, .notific-box {
+aside,
+aside .infobar,
+.level-left,
+.notific-box {
     @include transition(all 0.3s);
+}
+
+@-webkit-keyframes pulse {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 rgb(65, 160, 128);
+    }
+
+    70% {
+        -webkit-box-shadow: 0 0 0 5px rgba(65, 160, 128, 0);
+    }
+
+    100% {
+        -webkit-box-shadow: 0 0 0 0 rgba(65, 160, 128, 0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        -moz-box-shadow: 0 0 0 0 rgb(65, 160, 128);
+        box-shadow: 0 0 0 0 rgb(65, 160, 128);
+    }
+
+    70% {
+        -moz-box-shadow: 0 0 0 5px rgba(65, 160, 128, 0);
+        box-shadow: 0 0 0 5px rgba(65, 160, 128, 0);
+    }
+
+    100% {
+        -moz-box-shadow: 0 0 0 0 rgba(65, 160, 128, 0);
+        box-shadow: 0 0 0 0 rgba(65, 160, 128, 0);
+    }
 }

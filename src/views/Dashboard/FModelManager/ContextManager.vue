@@ -188,6 +188,9 @@ export default {
 </script>
 
 <style lang="sass">
+@import "../../../assets/css/colors"
+@import "../../../assets/css/animations"
+
 .context-manager
   .box
     padding: .4rem
@@ -208,6 +211,9 @@ export default {
     align-items: center
   &--button
     margin: 0 auto
-    background: #3369
+    background: $green-save
     color: white
+  &--button:hover
+    color: white
+    animation: pulse 2s infinite
 </style>

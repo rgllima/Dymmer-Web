@@ -1,14 +1,14 @@
 <template>
   <div class="apply-measures">
     <div class="box">
-      <div v-if="groupedMeasuresThresholds.length == 0">
-        <button
-          class="apply-measures--button button"
-          @click="openSelectMeasuresInModal"
-        >Apply Measures</button>
-      </div>
+      <button
+        v-if="groupedMeasuresThresholds.length == 0"
+        class="apply-measures--button button"
+        @click="openSelectMeasuresInModal"
+      >Apply Measures</button>
+
       <div v-else>
-        <button class="button is-primary" @click="openSelectMeasuresInModal">Reapply Measures</button>
+        <button class="apply-measures--button button is-pulled-right" @click="openSelectMeasuresInModal">Reapply Measures</button>
         <h1 class="has-text-centered is-size-5">Measures Result</h1>
         <br />
         <b-table :data="groupedMeasuresThresholds" default-sort-direction="asc" default-sort="name">
@@ -99,9 +99,18 @@ export default {
 </script>
 
 <style lang="sass">
+@import "../../../assets/css/colors"
+@import "../../../assets/css/animations"
+
 .apply-measures
   &--button
+    display: block
     margin: 0 auto
+    background: $green-save
+    color: white
+  &--button:hover
+    color: white
+    animation: pulse 2s infinite
 
 .veryLow
   background-color: #f6db2f !important

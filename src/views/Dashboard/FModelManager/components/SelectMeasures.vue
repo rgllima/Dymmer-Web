@@ -1,5 +1,5 @@
 <template>
-  <div class="select-measures modal-card">
+  <div class="select-measures modal-card" ref="element" :closable="false">
     <header class="select-measures--header">
       <p class="subtitle">Select the Measures to Apply</p>
       <div class="select-measures--header-content">
@@ -8,19 +8,29 @@
           {{featureModel.type}}
         </p>
         <div class="buttons">
-          <b-dropdown v-if="contexts.length !== 0" aria-role="list">
-            <button class="button is-small is-warning" slot="trigger">
-              <span>Select a Context</span>
-              <b-icon icon="menu-down"></b-icon>
-            </button>
+          <div v-if="contexts.length !== 0">
+            <span style="margin: 0 5px 10px 0">
+              <strong>Select a Context:</strong>
+            </span>
+            <b-dropdown v-model="selectedContext" aria-role="list">
+              <button class="button is-small is-primary" slot="trigger">
+                <span>{{`${!selectedContext ? "Context List" : selectedContext}`}}</span>
+                <b-icon icon="menu-down"></b-icon>
+              </button>
 
-            <b-dropdown-item
-              v-for="(context, index) in contexts"
-              aria-role="listitem"
-              :key="index"
-            >{{context.name}}</b-dropdown-item>
-          </b-dropdown>
-          <button class="button is-small is-success" @click="applyMeasures">Apply Measures</button>
+              <b-dropdown-item
+                v-for="(context, index) in contexts"
+                aria-role="listitem"
+                :value="context.name"
+                :key="index"
+                @click="selectContext(context.name)"
+              >{{context.name}}</b-dropdown-item>
+            </b-dropdown>
+          </div>
+          <button
+            class="button select-measures--button is-small"
+            @click="applyMeasures"
+          >Apply Measures</button>
         </div>
       </div>
     </header>
@@ -37,9 +47,10 @@
           :native-value="measure"
           v-model="checkedMeasures"
         >
-          <b-tooltip :label="measure.description" dashed>
-            {{ `${measure.initials} - ${measure.name}` }}
-          </b-tooltip>
+          <b-tooltip
+            :label="measure.description"
+            dashed
+          >{{ `${measure.initials} - ${measure.name}` }}</b-tooltip>
         </b-checkbox>
       </article>
     </div>
@@ -55,8 +66,10 @@ export default {
     return {
       checkedMeasures: [],
       checkboxCustom: "Yes",
+      selectedContext: null,
       switchInput: false,
-      checkAll: false
+      checkAll: false,
+      loadingComponent: null
     };
   },
 
@@ -77,12 +90,44 @@ export default {
 
   methods: {
     async applyMeasures() {
+      if (!this.selectedContext) {
+        this.showMessage("Please, select a context name!", "is-danger");
+        return;
+      }
+
+      if (this.checkedMeasures.length === 0) {
+        this.showMessage(
+          "Please, select at least one measure to calculate!",
+          "is-danger"
+        );
+        return;
+      }
+
+      this.loading();
       let data = {};
       data["measures"] = this.checkedMeasures;
       data["featureModel"] = this.featureModel;
 
       await this.$store.dispatch("qualityMeasures/applyMeasures", data);
+      this.loadingComponent.close();
       this.$emit("close");
+    },
+
+    selectContext(context) {
+      this.$store.commit("featureModel/selectContext", context);
+    },
+
+    loading() {
+      this.loadingComponent = this.$loading.open({
+        container: this.$refs.element
+      });
+    },
+
+    showMessage(message, color) {
+      this.$toast.open({
+        message: message,
+        type: color
+      });
     }
   },
 
@@ -93,11 +138,20 @@ export default {
 </script>
 
 <style lang="sass">
+@import "../../../../assets/css/colors"
+@import "../../../../assets/css/animations"
+
 .modal
   z-index: 100
   min-height: 500px
 .animation-content
   padding: 10px
+.dropdown
+  .button
+    width: 150px
+    span
+      width: 100%
+      text-align: left
 .select-measures
   width: fit-content
   min-width: 300px
@@ -142,4 +196,11 @@ export default {
       margin-bottom: 5px
   &--coulumns
     margin-bottom: 20px
+  &--button
+    background: $green-save
+    animation: pulse 2s infinite
+    color: white
+  &--button:hover
+    color: white
+    animation: none
 </style>

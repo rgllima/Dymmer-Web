@@ -61,6 +61,9 @@ export default {
 
 
 <style lang="sass" scoped>
+@import "../../../assets/css/colors"
+@import "../../../assets/css/animations"
+
 .fmodel-status
   background: white
   border-radius: 5px
@@ -79,27 +82,8 @@ export default {
       color: #848484
       text-decoration: underline
   &--save-btn
-    background: #41a080
+    background: $green-save
     color: white
     border-color: #008080
     animation: pulse 2s infinite
-
-@-webkit-keyframes pulse
-  0%
-    -webkit-box-shadow: 0 0 0 0 rgb(65, 160, 128)
-  70%
-    -webkit-box-shadow: 0 0 0 5px rgba(65, 160, 128, 0)
-  100%
-    -webkit-box-shadow: 0 0 0 0 rgba(65, 160, 128, 0)
-
-@keyframes pulse
-  0%
-    -moz-box-shadow: 0 0 0 0 rgb(65, 160, 128)
-    box-shadow: 0 0 0 0 rgb(65, 160, 128)
-  70%
-    -moz-box-shadow: 0 0 0 5px rgba(65, 160, 128, 0)
-    box-shadow: 0 0 0 5px rgba(65, 160, 128, 0)
-  100%
-    -moz-box-shadow: 0 0 0 0 rgba(65, 160, 128, 0)
-    box-shadow: 0 0 0 0 rgba(65, 160, 128, 0)
 </style>
