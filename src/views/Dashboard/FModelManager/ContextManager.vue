@@ -35,6 +35,8 @@
                 :title="context['name']"
                 :active="context['isTheCurrent']"
                 @selectContext="selectContext"
+                @deleteContext="deleteContext"
+                @saveNewContextName="saveNewContextName"
               />
             </div>
           </div>
@@ -178,6 +180,14 @@ export default {
 
         this.createContextResolution(child.children, resolutions);
       }
+    },
+
+    deleteContext() {
+      this.$store.commit("featureModel/deleteContext")
+    },
+
+    saveNewContextName(context) {
+      this.$store.commit("featureModel/renameContext", context)
     }
   },
 

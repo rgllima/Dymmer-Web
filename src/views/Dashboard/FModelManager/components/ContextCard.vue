@@ -1,14 +1,24 @@
 <template>
   <div :class="`context-card ${isActive ? 'context-card__active': ''}`" @click="selectContext">
-    <div class="context-card-title">
+    <div v-if="!isEditing" class="context-card-title" @dblclick="renameContext(title)">
       <p>{{title}}</p>
+    </div>
+    <div v-else class="context-card-title">
+      <input
+        class="input"
+        type="text"
+        ref="input"
+        v-model="contextTitle"
+        @blur="isEditing = false"
+        @keyup.enter="saveNewContextName"
+      />
     </div>
     <div class="context-card-buttons" @click="showActions">
       <i class="fas fa-ellipsis-v"></i>
     </div>
     <div v-if="visibleActions" class="context-card-actions">
-      <button class="context-card-action green" @click="renameContext">RENAME</button>
-      <button class="context-card-action danger" @click="deleteContext">DELETE</button>
+      <button class="context-card-action green" @click="renameContext(title)">RENAME</button>
+      <button class="context-card-action danger" @click="showDeleteContextAlert">DELETE</button>
     </div>
   </div>
 </template>
@@ -17,7 +27,9 @@
 export default {
   props: { active: { type: Boolean, default: false }, title: String },
   data: () => ({
-    visibleActions: false
+    visibleActions: false,
+    contextTitle: "",
+    isEditing: false
   }),
   mounted() {
     // console.log(this.active);
@@ -25,7 +37,6 @@ export default {
 
   computed: {
     isActive: function() {
-      // console.log("Opa");
       return this.active;
     }
   },
@@ -41,11 +52,35 @@ export default {
       }
     },
 
-    renameContext() {
+    renameContext(context) {
       this.visibleActions = false;
+      this.isEditing = true;
+      this.contextTitle = context;
+
+      this.$nextTick(() => {
+        this.$refs.input.focus();
+      });
+    },
+
+    saveNewContextName() {
+      this.$emit("saveNewContextName", this.contextTitle);
+      this.isEditing = false;
+    },
+
+    showDeleteContextAlert() {
+      this.$dialog.confirm({
+        title: "Confirm deletion",
+        message: "Do you really want to exclude this context?",
+        type: "is-danger",
+        cancelText: "Cancel",
+        confirmText: "Delete",
+        onConfirm: () => this.deleteContext()
+      });
     },
 
     deleteContext() {
+      this.$toast.open(`${this.title} context deleted!`);
+      this.$emit("deleteContext");
       this.visibleActions = false;
     },
 

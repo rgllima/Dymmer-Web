@@ -24,6 +24,25 @@ const mutations = {
     if (state.featureModel.type === "SPL") state.featureModel.type = "DSPL";
     state.hasChanged = true;
   },
+  deleteContext(state) {
+    state.featureModel.contexts.map(context => {
+      if (context.isTheCurrent) {
+        state.featureModel.contexts.pop(context);
+        if (state.featureModel.contexts.length === 0)
+          state.featureModel.type = "SPL";
+        state.hasChanged = true;
+        return;
+      }
+    });
+  },
+  renameContext(state, payload) {
+    state.featureModel.contexts.map(context => {
+      if (context.isTheCurrent) {
+        context.name = payload;
+        state.hasChanged = true;
+      }
+    });
+  },
   selectContext(state, payload) {
     state.featureModel.contexts.map(context => {
       if (context.name === payload) context["isTheCurrent"] = true;
