@@ -9,8 +9,9 @@
               class="input"
               type="text"
               placeholder="Insert a context name..."
+              @keyup.enter="addContext"
               v-model="contextName"
-            >
+            />
           </div>
         </div>
         <div class="field is-grouped">
@@ -26,14 +27,35 @@
 
     <div class="tile is-ancestor">
       <div class="context-manager--tile tile is-3 is-vertical is-parent">
-        <div class="tile is-child box">
-          <p class="has-text-centered subtitle">Available Contexts</p>
+        <aside class="tile is-child box">
+          <h1 class="has-text-centered is-size-5">Available Contexts</h1>
 
           <div v-if="contexts.length !== 0">
+            <div style="margin-bottom: 15px">
+              <button
+                class="button is-small create-ctx-btn"
+                @click="modalActive=true"
+                :disabled="contextInEdition"
+              >
+                <i class="icon fas fa-plus"></i> Create New Context
+              </button>
+              <button
+                v-if="!contextInEdition"
+                class="button is-small is-warning edit-ctx-btn"
+                @click="editContext"
+                :disabled="contextResolutions.length === 0"
+              >Edit Selected Context</button>
+              <button
+                v-else
+                class="button is-small is-warning edit-ctx-btn pulse"
+                @click="saveContext"
+              >Validate and Save Context</button>
+            </div>
             <div class="context-manager--card" v-for="(context, index) in contexts" :key="index">
               <card-context
                 :title="context['name']"
                 :active="context['isTheCurrent']"
+                :isDisabled="contextInEdition"
                 @selectContext="selectContext"
                 @deleteContext="deleteContext"
                 @saveNewContextName="saveNewContextName"
@@ -44,28 +66,13 @@
           <div v-else>
             <p class="has-text-centered">There are no contexts.</p>
           </div>
-        </div>
+        </aside>
       </div>
       <div class="tile is-parent">
         <div v-if="contexts.length !== 0" class="tile is-child context-manager--scroll-box box">
           <div class="field is-grouped">
             <div class="control" style="width: 55%; min-width: 150px">
               <p class="has-text-right subtitle">Context View</p>
-            </div>
-            <div class="control has-addons has-text-right" style="width: 43%; min-width: 150px">
-              <button
-                class="button is-info is-small"
-                style="margin-right: 10px"
-                @click="modalActive=true"
-                :disabled="contextInEdition"
-              >Add Context</button>
-              <button
-                v-if="!contextInEdition"
-                class="button is-warning is-small"
-                @click="editContext"
-                :disabled="contextResolutions.length === 0"
-              >Edit Context</button>
-              <button v-else class="button is-success is-small" @click="saveContext">Save Context</button>
             </div>
           </div>
 
@@ -121,7 +128,7 @@ export default {
   },
 
   methods: {
-    changeFeatureStatus(node){
+    changeFeatureStatus(node) {
       this.$store.dispatch("featureModel/changeContext", node);
     },
 
@@ -137,20 +144,19 @@ export default {
     },
 
     addContext() {
-      if (!this.contextName.trim()) {
-        this.$toast.open({
-          message: "Please, insert a context name!",
-          type: "is-danger"
-        });
-        return;
-      }
+      if (!this.contextName.trim())
+        return this.showMessage("Please, insert a context name!", "is-danger");
+
       let context = {};
 
       context["constraints"] = [];
       context["name"] = this.contextName;
       context["resolutions"] = [];
 
-      this.createContextResolution(this.featureModel.feature_tree, context["resolutions"]);
+      this.createContextResolution(
+        this.featureModel.feature_tree[0],
+        context["resolutions"]
+      );
 
       this.$store.commit("featureModel/addContext", context);
       this.selectContext(this.contextName);
@@ -169,8 +175,8 @@ export default {
     },
 
     createContextResolution(nodes, resolutions) {
-      for (const child of nodes) {
-        if (child.type === "m") {
+      for (const child of nodes.children) {
+        if (child.type === "m" && (nodes.type === "r" || nodes.type === "m")) {
           resolutions.push({
             feature_id: `${child.id}`,
             feature_name: `${child.name}`,
@@ -178,16 +184,23 @@ export default {
           });
         }
 
-        this.createContextResolution(child.children, resolutions);
+        this.createContextResolution(child, resolutions);
       }
     },
 
     deleteContext() {
-      this.$store.commit("featureModel/deleteContext")
+      this.$store.commit("featureModel/deleteContext");
     },
 
     saveNewContextName(context) {
-      this.$store.commit("featureModel/renameContext", context)
+      this.$store.commit("featureModel/renameContext", context);
+    },
+
+    showMessage(message, color) {
+      this.$toast.open({
+        message: message,
+        type: color
+      });
     }
   },
 
@@ -226,4 +239,27 @@ export default {
   &--button:hover
     color: white
     animation: pulse 2s infinite
+
+.button[disabled]
+  background-color: #48a080
+  border-color: #48a080
+  box-shadow: none
+  cursor: not-allowed
+.button .icon:first-child:last-child
+  margin-right: 1px
+  font-size: 0.7rem
+
+.create-ctx-btn
+  @extend .context-manager--button
+  margin-top: 10px
+  width: 100%
+  border-radius: 3px 3px 0 0 !important
+  border: none
+.edit-ctx-btn
+  @extend .context-manager--button
+  width: 100%
+  border-radius: 0 0 3px 3px !important
+  border: none
+.pulse
+  animation: pulse 2s infinite
 </style>

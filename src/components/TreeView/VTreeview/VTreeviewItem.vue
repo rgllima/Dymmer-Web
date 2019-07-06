@@ -57,7 +57,7 @@ export default {
   props: ['model', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
   data() {
     return {
-      forbidenChangeTypes: ["r", "g"],
+      forbidenChangeTypes: ["r", "g", "m"],
       open: false,
       checked: null,
       edit: false,
@@ -160,8 +160,8 @@ export default {
   },
 
   mounted(){
-    if (!this.father || this.father.type == "r" || this.father.type == "m")
-      this.forbidenChangeTypes.push("m");
+    // if (!this.father || this.father.type == "r" || this.father.type == "m")
+    //   this.forbidenChangeTypes.push("m");
   },
 
   watch: {

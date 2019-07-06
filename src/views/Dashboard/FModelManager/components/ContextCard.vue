@@ -1,5 +1,9 @@
 <template>
-  <div :class="`context-card ${isActive ? 'context-card__active': ''}`" @click="selectContext">
+  <div
+    :class="`context-card ${isActive ? 'context-card__active': ''}`"
+    @click="selectContext"
+    :disabled="disabled"
+  >
     <div v-if="!isEditing" class="context-card-title" @dblclick="renameContext(title)">
       <p>{{title}}</p>
     </div>
@@ -25,7 +29,11 @@
 
 <script>
 export default {
-  props: { active: { type: Boolean, default: false }, title: String },
+  props: {
+    active: { type: Boolean, default: false },
+    title: String,
+    isDisabled: { type: Boolean, default: false }
+  },
   data: () => ({
     visibleActions: false,
     contextTitle: "",
@@ -38,11 +46,16 @@ export default {
   computed: {
     isActive: function() {
       return this.active;
+    },
+
+    disabled: function() {
+      return this.isDisabled;
     }
   },
 
   methods: {
     showActions() {
+      if (this.isDisabled) return;
       this.visibleActions = true;
     },
 
@@ -53,6 +66,8 @@ export default {
     },
 
     renameContext(context) {
+      if (this.isDisabled) return;
+
       this.visibleActions = false;
       this.isEditing = true;
       this.contextTitle = context;
@@ -68,6 +83,8 @@ export default {
     },
 
     showDeleteContextAlert() {
+      if (this.isDisabled) return;
+
       this.$dialog.confirm({
         title: "Confirm deletion",
         message: "Do you really want to exclude this context?",
@@ -85,6 +102,8 @@ export default {
     },
 
     selectContext() {
+      if (this.isDisabled) return;
+
       this.$emit("selectContext", this.title);
     }
   },
@@ -134,6 +153,9 @@ export default {
     border: none
     width: 100%
     cursor: pointer
+  &[disabled]
+    opacity: .5
+    pointer-events: none
 .danger
   color: #ff4444
   &:hover
