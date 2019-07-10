@@ -129,6 +129,7 @@ export default {
       this.$emit('openTree', node)
     },
     addNode(newNode) {
+      console.log("ADDNODE")
       var typeRule = this.getTypeRule(this.model.type)
 
       if (typeRule.valid_children.indexOf(newNode.type) > -1) {
@@ -136,6 +137,7 @@ export default {
       }
     },
     editName() {
+      console.log("RENAME FUNCTION")
       this.edit = true
       this.$nextTick(() => this.$refs.title.focus())
     },

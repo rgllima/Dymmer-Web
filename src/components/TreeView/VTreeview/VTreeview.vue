@@ -1,7 +1,9 @@
 <template>
-  <div @mouseup.prevent="mousedown">
+  <!-- <div @mouseup.prevent="mousedown"> -->
+  <div @mouseup.prevent="mousedown" @contextmenu.capture.prevent>
     <ul>
       <v-treeview-item
+        ref="vtreeview"
         class="v-treeview-item"
         v-for="item in value"
         :key="item.id"
@@ -17,13 +19,14 @@
         @openTree="openTree"
       ></v-treeview-item>
     </ul>
-    <v-context
-      v-if="hasToolbox"
-      :show="showContext"
-      :contextItems="contextItems"
-      :mouseEvent="mouseEvent"
-      @contextSelected="contextSelected"
-    ></v-context>
+    <div v-if="hasToolbox">
+      <v-context
+        :clickedOutside="clickedOutside"
+        :contextItems="contextItems"
+        :mouseEvent="mouseEvent"
+        @contextSelected="contextSelected"
+      ></v-context>
+    </div>
   </div>
 </template>
 
@@ -32,11 +35,23 @@ import VTreeviewItem from "./VTreeviewItem.vue";
 import VContext from "../VContext/VContext.vue";
 
 export default {
-  props: ["value", "openAll", "editName", "searchText", "hasToolbox", "contextResolutions", "contextInEdition"],
+  props: [
+    "value",
+    "openAll",
+    "editName",
+    "searchText",
+    "hasToolbox",
+    "contextResolutions",
+    "contextInEdition"
+  ],
+  components: {
+    VContext,
+    VTreeviewItem
+  },
   name: "v-treeview",
   data() {
     return {
-      showContext: false,
+      clickedOutside: false,
       mouseEvent: null,
       selectedNode: null,
       contextItems: [],
@@ -57,13 +72,13 @@ export default {
           type: "m",
           name: "Mandatory",
           icon: "fas fa-circle",
-          valid_children: ["m", "o"]
+          valid_children: ["m", "o", "g"]
         },
         {
           type: "o",
           name: "Optional",
           icon: "far fa-circle",
-          valid_children: ["o"]
+          valid_children: ["m","o", "g"]
         },
         {
           type: "g",
@@ -73,20 +88,24 @@ export default {
         },
         {
           type: "",
+          name: "Grouped Child",
           icon: "fas fa-stop",
-          valid_children: []
+          valid_children: ["m", "o"]
         }
       ]
     };
   },
+
   methods: {
-    changeStatus(feature){
-      this.$emit("changeFeatureStatus", feature)
+    changeStatus(feature) {
+      this.$emit("changeFeatureStatus", feature);
     },
+
     getTypeRule(type) {
       var typeRule = this.treeRules.filter(t => t.type == type)[0];
       return typeRule;
     },
+
     selected(node) {
       this.selectedNode = node;
       this.contextItems = [];
@@ -112,6 +131,7 @@ export default {
         icon: "fas fa-caret-down"
       }); //Rever
     },
+
     contextSelected(title) {
       let command = title;
       switch (command) {
@@ -121,6 +141,7 @@ export default {
             type: "m",
             children: []
           };
+          console.log("CREATE MANDATORY");
           this.selectedNode.addNode(node);
           break;
         case "Create Optional":
@@ -132,29 +153,55 @@ export default {
           this.selectedNode.addNode(node);
           break;
         case "Rename":
+          console.log("rename");
           this.selectedNode.editName();
           break;
         case "Remove":
           break;
       }
     },
+
     openTree(node) {
       this.$emit("openTree", node);
     },
+
     mousedown(e) {
+      console.log("pageX", e.pageX);
+      console.log("pageY", e.pageY);
+      console.log("clientX", e.clientX);
+      console.log("clientY", e.clientY);
+      console.log("layerX", e.layerX);
+      console.log("layerY", e.layerY);
+      console.log("offsetX", e.offsetX);
+      console.log("offsetY", e.offsetY);
+
       if (this.contextItems) {
         e.preventDefault();
         this.mouseEvent = {
           button: e.button,
-          pageX: e.clientX,
-          pageY: e.clientY
+          pageX: e.layerX,
+          pageY: e.layerY
         };
       }
+    },
+
+    hiddenToolbox(e) {
+      this.clickedOutside = null;
+      let el = this.$refs.vtreeview;
+      let target = e.target;
+
+      this.$nextTick(() => {
+        this.clickedOutside = !el[0].$el.contains(target);
+      });
     }
   },
-  components: {
-    VContext,
-    VTreeviewItem
+
+  created() {
+    window.addEventListener("click", this.hiddenToolbox);
+  },
+
+  beforeDestroy() {
+    window.removeEventListener("click", this.hiddenToolbox);
   }
 };
 </script>

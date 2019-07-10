@@ -14,6 +14,6 @@ export default {
 @import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
 #app {
   font-family: 'Raleway', sans-serif;
-  line-height: 1.5;
+  line-height: 1.35;
 }
 </style>

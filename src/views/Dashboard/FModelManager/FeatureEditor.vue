@@ -7,31 +7,11 @@
           <div class="box">
             <h1 class="has-text-centered is-size-5">Feature Diagram</h1>
             <br>
-            <v-treeview v-model="featureModel.feature_tree" :openAll="openAll" :hasToolbox="false"></v-treeview>
+            <v-treeview v-model="featureModel.feature_tree" :openAll="openAll" :hasToolbox="true"></v-treeview>
           </div>
         </div>
         <div class="tile is-child is-vertical" style="padding: 0 10px">
-          <!-- <b-collapse class="card">
-            <div slot="trigger" slot-scope="props" class="card-header" style="width: 100%">
-              <p class="card-header-title" style="justify-content: center;">Manage Feature Model</p>
-              <a class="card-header-icon">
-                <b-icon pack="fas" :icon="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></b-icon>
-              </a>
-            </div>
-            <div class="card-content manage-feature">
-              <div class="content">
-                <div class="tile">
-                  <div class="tile is-child" style="padding: 0 5px">
-                    <a href="#" class="box" @click="openMeasuresModal">
-                      <img src="../../../assets/protractor.svg" alt="settings">
-                      <br>
-                      <p class="has-text-centered">Apply Measures</p>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </b-collapse> -->
+
           <div class="tile is-vertical" style="margin-top: 20px;">
             <div class="tile is-child">
               <b-collapse class="card" :open="false">
@@ -177,6 +157,20 @@ export default {
           );
       }
       return a;
+    },
+
+    addNode(newNode) {
+      console.log("ADDNODE")
+      // var typeRule = this.getTypeRule(this.model.type)
+
+      // if (typeRule.valid_children.indexOf(newNode.type) > -1) {
+      //   this.model.children.push(newNode)
+      // }
+    },
+    editName() {
+      console.log("RENAME FUNCTION")
+      // this.edit = true
+      // this.$nextTick(() => this.$refs.title.focus())
     }
   },
 
