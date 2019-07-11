@@ -6,12 +6,16 @@
           <!-- <h1 class="has-text-centered is-size-5">Feature Diagram</h1> -->
           <div class="box">
             <h1 class="has-text-centered is-size-5">Feature Diagram</h1>
-            <br>
-            <v-treeview v-model="featureModel.feature_tree" :openAll="openAll" :hasToolbox="true"></v-treeview>
+            <br />
+            <v-treeview
+              v-model="featureModel.feature_tree"
+              :openAll="openAll"
+              :hasToolbox="true"
+              @removeNode="removeNode"
+            ></v-treeview>
           </div>
         </div>
         <div class="tile is-child is-vertical" style="padding: 0 10px">
-
           <div class="tile is-vertical" style="margin-top: 20px;">
             <div class="tile is-child">
               <b-collapse class="card" :open="false">
@@ -106,7 +110,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-        openAll: true,
+      openAll: true,
       constraints: []
     };
   },
@@ -160,7 +164,7 @@ export default {
     },
 
     addNode(newNode) {
-      console.log("ADDNODE")
+      console.log("ADDNODE");
       // var typeRule = this.getTypeRule(this.model.type)
 
       // if (typeRule.valid_children.indexOf(newNode.type) > -1) {
@@ -168,9 +172,12 @@ export default {
       // }
     },
     editName() {
-      console.log("RENAME FUNCTION")
+      console.log("RENAME FUNCTION");
       // this.edit = true
       // this.$nextTick(() => this.$refs.title.focus())
+    },
+    removeNode(id) {
+      console.log("Remove: ", id);
     }
   },
 

@@ -21,8 +21,9 @@
     </ul>
     <div v-if="hasToolbox">
       <v-context
+        ref="vcontext"
         :clickedOutside="clickedOutside"
-        :contextItems="contextItems"
+        :toolboxContent="toolboxContent"
         :mouseEvent="mouseEvent"
         @contextSelected="contextSelected"
       ></v-context>
@@ -54,7 +55,8 @@ export default {
       clickedOutside: false,
       mouseEvent: null,
       selectedNode: null,
-      contextItems: [],
+      parentNode: null,
+      toolboxContent: {},
       treeRules: [
         {
           type: "#",
@@ -78,7 +80,7 @@ export default {
           type: "o",
           name: "Optional",
           icon: "far fa-circle",
-          valid_children: ["m","o", "g"]
+          valid_children: ["m", "o", "g"]
         },
         {
           type: "g",
@@ -108,55 +110,67 @@ export default {
 
     selected(node) {
       this.selectedNode = node;
-      this.contextItems = [];
-      var typeRule = this.getTypeRule(this.selectedNode.model.type);
-      typeRule.valid_children.map(function(type, key) {
+      this.parentNode = this.selectedNode.$parent;
+      this.toolboxContent = {};
+
+      let typeRule = this.getTypeRule(this.selectedNode.model.type);
+      let parentTypeRule = null;
+
+      if (this.parentNode.model)
+        parentTypeRule = this.getTypeRule(this.parentNode.model.type);
+
+      this.toolboxContent["node"] = this.getValidChildren(typeRule);
+      this.toolboxContent["parent"] = this.getValidChildren(parentTypeRule);
+    },
+
+    getValidChildren(rule) {
+      if (!rule) return null;
+
+      let items = [];
+      rule.valid_children.map(function(type, key) {
         var childType = this.getTypeRule(type);
         var item = {
           title: "Create " + childType.name,
           icon: childType.icon,
           type: childType
         };
-        this.contextItems.push(item);
+        items.push(item);
       }, this);
-
-      this.contextItems.push({ title: "Rename", icon: "far fa-edit" });
-      this.contextItems.push({ title: "Remove", icon: "far fa-trash-alt" });
-      this.contextItems.push({
-        title: "Create Feature Above",
-        icon: "fas fa-caret-up"
-      }); //Rever
-      this.contextItems.push({
-        title: "Create Feature Below",
-        icon: "fas fa-caret-down"
-      }); //Rever
+      return items;
     },
 
-    contextSelected(title) {
-      let command = title;
+    contextSelected(data) {
+      let node;
+      if (data.whois === "node") node = this.selectedNode;
+      else node = this.parentNode;
+
+      let command = data.title;
+
       switch (command) {
         case "Create Mandatory":
-          var node = {
+          var newNode = {
             name: "New Mandatory Feature",
             type: "m",
             children: []
           };
           console.log("CREATE MANDATORY");
-          this.selectedNode.addNode(node);
+          node.addNode(newNode);
           break;
         case "Create Optional":
-          var node = {
+          var newNode = {
             name: "New Optional Feature",
             type: "o",
             children: []
           };
-          this.selectedNode.addNode(node);
+          node.addNode(newNode);
           break;
         case "Rename":
           console.log("rename");
           this.selectedNode.editName();
+          console.log(this.selectedNode);
           break;
         case "Remove":
+          this.$emit("removeNode", this.selectedNode.model.id);
           break;
       }
     },
@@ -166,16 +180,16 @@ export default {
     },
 
     mousedown(e) {
-      console.log("pageX", e.pageX);
-      console.log("pageY", e.pageY);
-      console.log("clientX", e.clientX);
-      console.log("clientY", e.clientY);
-      console.log("layerX", e.layerX);
-      console.log("layerY", e.layerY);
-      console.log("offsetX", e.offsetX);
-      console.log("offsetY", e.offsetY);
+      // console.log("pageX", e.pageX);
+      // console.log("pageY", e.pageY);
+      // console.log("clientX", e.clientX);
+      // console.log("clientY", e.clientY);
+      // console.log("layerX", e.layerX);
+      // console.log("layerY", e.layerY);
+      // console.log("offsetX", e.offsetX);
+      // console.log("offsetY", e.offsetY);
 
-      if (this.contextItems) {
+      if (this.toolboxContent) {
         e.preventDefault();
         this.mouseEvent = {
           button: e.button,
@@ -187,11 +201,18 @@ export default {
 
     hiddenToolbox(e) {
       this.clickedOutside = null;
-      let el = this.$refs.vtreeview;
+      let vtreeview = this.$refs.vtreeview;
+      let vcontext = this.$refs.vcontext;
       let target = e.target;
 
+      let vctxClickResult = vcontext.$el.contains(target);
+      let vtreeClickResult = vtreeview[0].$el.contains(target);
+
+      console.log("CTX: ", vctxClickResult, "TREE: ", vtreeClickResult);
+
+      // if (!vctxClickResult)
       this.$nextTick(() => {
-        this.clickedOutside = !el[0].$el.contains(target);
+        this.clickedOutside = !vctxClickResult;
       });
     }
   },
