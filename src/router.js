@@ -37,27 +37,12 @@ const router = new Router({
         {
           path: "/home",
           name: "Home",
-          component: () => import("@/views/Dashboard/Childs/Home")
-        },
-        {
-          path: "/show-feature-model",
-          name: "ShowFeatureModel",
-          component: () => import("@/views/Dashboard/Childs/ShowFeatureModel")
-        },
-        {
-          path: "/measure-thresholds",
-          name: "MeasureThresholds",
-          component: () => import("@/views/Dashboard/Childs/MeasureThresholds")
+          component: () => import("@/views/Dashboard/Home/Home")
         },
         {
           path: "/feature-model-list",
-          name: "FeatureModelList",
-          component: () => import("@/views/Dashboard/Childs/FeatureModelList")
-        },
-        {
-          path: "/measures-shower",
-          name: "CalculatedMeasureShower",
-          component: () => import("@/views/Dashboard/Childs/CalculatedMeasureShower")
+          name: "FModelList",
+          component: () => import("@/views/Dashboard/FModelList/FModelList")
         },
         {
           path: "/fmodel-manager",
