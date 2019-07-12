@@ -22,4 +22,19 @@ function getFeatureParentReference(id, feature_tree) {
   return feature;
 }
 
-export { getFeatureReference, getFeatureParentReference };
+function getLastFeatureId(feature_tree) {
+  let id = 1;
+
+  let a = feature_tree.id.split("_");
+  let c = parseInt(a[a.length - 1]);
+  if (c > id) id = c;
+
+  for (const child of feature_tree.children) {
+    let b = getLastFeatureId(child);
+    console.log("b: ", b, "id:", id);
+    if (b > id) id = b;
+  }
+  return id;
+}
+
+export { getFeatureReference, getFeatureParentReference, getLastFeatureId };
