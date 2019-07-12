@@ -3,6 +3,10 @@
     <div class="tile is-ancestor is-vertical">
       <div class="tile is-parent">
         <div class="tile is-child">
+          <!-- <vue-content-loading>
+            <rect x="0" y="0" rx="4" ry="4" width="400px" height="10" />
+          </vue-content-loading> -->
+
           <b-table :data="featureModelDatabase" default-sort-direction="asc" default-sort="name">
             <template slot-scope="props">
               <b-table-column field="id" label="ID" width="40" sortable numeric>{{ props.index+1 }}</b-table-column>
@@ -36,8 +40,13 @@
 
 <script>
 import { mapGetters } from "vuex";
+// import VueContentLoading from "vue-content-loading";
 
 export default {
+  // components: {
+  //   VueContentLoading
+  // },
+
   data() {
     return {
       checkedRows: []
@@ -58,6 +67,7 @@ export default {
 
   mounted() {
     this.$store.dispatch("featureModelDatabase/fetchFeatureModelsOnDatabase");
+    // console.log(document.getElementById("feature-model-list"))
   }
 };
 </script>
