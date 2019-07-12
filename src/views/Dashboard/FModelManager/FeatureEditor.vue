@@ -3,15 +3,15 @@
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child is-vertical" style="max-width: 500px; overflow: hidden;">
-          <!-- <h1 class="has-text-centered is-size-5">Feature Diagram</h1> -->
           <div class="box">
             <h1 class="has-text-centered is-size-5">Feature Diagram</h1>
             <br />
             <v-treeview
-              v-model="featureModel.feature_tree"
+              :value="featureTree"
               :openAll="openAll"
               :hasToolbox="true"
               @addNode="addNode"
+              @editName="editName"
               @removeNode="removeNode"
             ></v-treeview>
           </div>
@@ -112,6 +112,7 @@ export default {
   data() {
     return {
       openAll: true,
+      featureTree: [],
       constraints: []
     };
   },
@@ -168,8 +169,9 @@ export default {
       console.log("ADDNODE", data);
       this.$store.commit("featureModel/addFeature", data);
     },
-    editName() {
+    editName(data) {
       console.log("RENAME FUNCTION");
+      this.$store.commit("featureModel/renameFeature", data);
     },
     removeNode(id) {
       console.log("Remove: ", id);
@@ -183,9 +185,26 @@ export default {
     })
   },
 
+  watch: {
+    featureModel: {
+      handler: function(newValue) {
+        this.featureTree = JSON.parse(
+          JSON.stringify(this.featureModel.feature_tree)
+        );
+      },
+      deep: true
+    }
+  },
+
   mounted() {
-    if (this.featureModel.feature_tree.length === 0) this.$router.push("/home");
-    else this.generateVisualConstraints();
+    if (this.featureModel.feature_tree.length === 0) {
+      this.$router.push("/home");
+    } else {
+      this.generateVisualConstraints();
+      this.featureTree = JSON.parse(
+        JSON.stringify(this.featureModel.feature_tree)
+      );
+    }
   }
 };
 </script>

@@ -4,7 +4,8 @@ import dymmerServer from "../../util/dymmer-server";
 import { runContextAnalysis } from "@/core/manageContextChanges.js";
 import {
   getFeatureReference,
-  getFeatureParentReference
+  getFeatureParentReference,
+  getLastFeatureId
 } from "@/core/featureModel.js";
 
 const state = {
@@ -24,6 +25,7 @@ const mutations = {
 
   setFeatureModel: (state, payload) => {
     state.featureModel = payload;
+    state.nextId = getLastFeatureId(state.featureModel.feature_tree[0]);
   },
 
   addFeature(state, payload) {
@@ -32,13 +34,21 @@ const mutations = {
       state.featureModel.feature_tree
     );
 
-    payload.node["id"] = `${payload.parent.id}_${25}`;
+    let index = (state.nextId += 1);
+    payload.node["id"] = `${payload.parent.id}_${index}`;
     node.children.push(payload.node);
     state.hasChanged = true;
-    console.log(node);
   },
 
-  renameFeature(state, payload) {},
+  renameFeature(state, payload) {
+    let node = getFeatureReference(payload.id, state.featureModel.feature_tree);
+
+    if (node["name"] !== payload["name"]) {
+      node["name"] = payload["name"];
+      state.hasChanged = true;
+      console.log(node["name"]);
+    }
+  },
 
   deleteFeature(state, payload) {
     let feature_tree = state.featureModel.feature_tree;

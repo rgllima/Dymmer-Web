@@ -14,7 +14,7 @@
           </span>
           <span>Create Child Feature</span>
         </li>
-        <li @click="action('Rename')">
+        <li v-if="toolboxContent.type !== 'g'" @click="action('Rename')">
           <span class="icon">
             <i class="fas fa-edit"></i>
           </span>
@@ -75,6 +75,7 @@ export default {
 
     openOptions(whois) {
       this.data = this.toolboxContent[`${whois}`];
+      console.log('===> ', this.toolboxContent)
       this.whoisNode = whois;
       this.$nextTick(() => {
         this.showOption = true;
@@ -87,15 +88,15 @@ export default {
       // await this.$nextTick()
       console.log("clickedOutside")
       if (this.clickedOutside) {
-        console.log("Clicou Fora", this.clickedOutside, this.showContext)
+        // console.log("Clicou Fora", this.clickedOutside, this.showContext)
         this.showContext = false;
       }
     },
 
      mouseEvent() {
-      console.log("Vcontext - Mouse Event 1")
+      // console.log("Vcontext - Mouse Event 1")
       if (this.mouseEvent.button === 2) {
-        console.log("Vcontext - Mouse Event 2")
+        // console.log("Vcontext - Mouse Event 2")
         this.menuStyle = {
           width: "210px",
           left: this.mouseEvent.pageX + "px",
@@ -108,7 +109,6 @@ export default {
           "z-index": 20
         };
         // this.$nextTick(() => {
-
           this.showContext = true;
           this.showOption = false;
         // });

@@ -15,6 +15,7 @@
         :contextResolutions="contextResolutions"
         :contextInEdition="contextInEdition"
         @emitAddNode="addNode"
+        @emitEditName="editName"
         @changeStatus="changeStatus"
         @selected="selected"
         @openTree="openTree"
@@ -40,7 +41,6 @@ export default {
   props: [
     "value",
     "openAll",
-    "editName",
     "searchText",
     "hasToolbox",
     "contextResolutions",
@@ -122,6 +122,7 @@ export default {
 
       this.toolboxContent["node"] = this.getValidChildren(typeRule);
       this.toolboxContent["parent"] = this.getValidChildren(parentTypeRule);
+      this.toolboxContent["type"] = this.selectedNode.model.type;
     },
 
     getValidChildren(rule) {
@@ -181,6 +182,10 @@ export default {
       this.$emit("addNode", nodes);
     },
 
+    editName(data) {
+      this.$emit("editName", data);
+    },
+
     openTree(node) {
       this.$emit("openTree", node);
     },
@@ -194,7 +199,7 @@ export default {
       // console.log("layerY", e.layerY);
       // console.log("offsetX", e.offsetX);
       // console.log("offsetY", e.offsetY);
-      console.log("Mouse Click")
+      console.log("Mouse Click");
 
       if (this.toolboxContent) {
         e.preventDefault();
@@ -215,7 +220,7 @@ export default {
 
       this.$nextTick(() => {
         this.clickedOutside = !vctxClickResult;
-        console.log(this.clickedOutside, vcontext.showContext)
+        console.log(this.clickedOutside, vcontext.showContext);
       });
     }
   },

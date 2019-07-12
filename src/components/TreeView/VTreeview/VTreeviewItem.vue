@@ -41,7 +41,7 @@
       <ul v-show="open" v-if="isFolder">
         <v-treeview-item v-for="child in model.children" :key="child.id" :feature="child"
         :father="{id: model.id, type: model.type, multiplicity: model.multiplicity}"
-        :treeRules="treeRules" :openAll="openAll" @emitAddNode="emitAddNode"
+        :treeRules="treeRules" :openAll="openAll" @emitAddNode="emitAddNode" @emitEditName="emitEditName"
         @selected="selected" :searchText="searchText" :contextResolutions="contextResolutions"
         :contextInEdition="contextInEdition" @openTree="openTree"
         @changeStatus="changeStatus">
@@ -117,16 +117,22 @@ export default {
       var typeRule = this.treeRules.filter(t => t.type == type)[0]
       return typeRule
     },
-    blur() {
+    blur(e) {
+      console.log('BLUR: ', e, !this.model.id)
+      if (e.type === 'keyup') console.log("OPAAAS")
+
       this.edit = false
       console.log("AKI QUE A MÁGICA ACONTECE")
 
       if (!this.model.id)
         this.$emit("emitAddNode", {parent: this.$parent.model, node: this.model})
+      else this.$emit("emitEditName", {id: this.model.id, name: this.model.name})
     },
     emitAddNode(data) {
-      console.log("Emitido")
       this.$emit("emitAddNode", data)
+    },
+    emitEditName(data) {
+      this.$emit("emitEditName", data)
     },
     selected(node) {
       this.checked = null
@@ -146,7 +152,6 @@ export default {
       }
     },
     editName() {
-      console.log("RENAME FUNCTION")
       this.edit = true
       this.$nextTick(() => this.$refs.title.focus())
     },
@@ -165,7 +170,7 @@ export default {
   },
 
   created() {
-    this.model = this.feature //JSON.parse(JSON.stringify(this.feature));
+    this.model = this.feature;
     if (!this.model.id) {
       this.editName()
     }
@@ -174,7 +179,7 @@ export default {
 
   watch: {
     feature() {
-      this.model = this.feature// JSON.parse(JSON.stringify(this.feature));
+      this.model = this.feature
       console.log("Feature Mudou")
     },
 
