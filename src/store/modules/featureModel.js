@@ -2,9 +2,14 @@ import router from "@/router";
 import axios from "axios";
 import dymmerServer from "../../util/dymmer-server";
 import { runContextAnalysis } from "@/core/manageContextChanges.js";
+import {
+  getFeatureReference,
+  getFeatureParentReference
+} from "@/core/featureModel.js";
 
 const state = {
   hasChanged: false,
+  nextId: 1,
   featureModel: {
     feature_tree: [],
     constraints: [],
@@ -16,25 +21,55 @@ const mutations = {
   setHasChanged: (state, payload) => {
     state.hasChanged = payload;
   },
+
   setFeatureModel: (state, payload) => {
     state.featureModel = payload;
   },
+
+  addFeature(state, payload) {
+    let node = getFeatureReference(
+      payload.parent.id,
+      state.featureModel.feature_tree
+    );
+
+    payload.node["id"] = `${payload.parent.id}_${25}`;
+    node.children.push(payload.node);
+    state.hasChanged = true;
+    console.log(node);
+  },
+
+  renameFeature(state, payload) {},
+
+  deleteFeature(state, payload) {
+    let feature_tree = state.featureModel.feature_tree;
+    if (payload === feature_tree[0].id) return;
+
+    let parent = getFeatureParentReference(payload, feature_tree[0]);
+    parent.children = parent.children.filter(node => {
+      return node.id !== payload;
+    });
+
+    state.hasChanged = true;
+  },
+
   addContext(state, payload) {
     state.featureModel.contexts.push(payload);
     if (state.featureModel.type === "SPL") state.featureModel.type = "DSPL";
     state.hasChanged = true;
   },
+
   deleteContext(state) {
-    state.featureModel.contexts.map(context => {
-      if (context.isTheCurrent) {
-        state.featureModel.contexts.pop(context);
-        if (state.featureModel.contexts.length === 0)
-          state.featureModel.type = "SPL";
-        state.hasChanged = true;
-        return;
+    state.featureModel.contexts = state.featureModel.contexts.filter(
+      context => {
+        return !context.isTheCurrent;
       }
-    });
+    );
+
+    if (state.featureModel.contexts.length === 0)
+      state.featureModel.type = "SPL";
+    state.hasChanged = true;
   },
+
   renameContext(state, payload) {
     state.featureModel.contexts.map(context => {
       if (context.isTheCurrent) {

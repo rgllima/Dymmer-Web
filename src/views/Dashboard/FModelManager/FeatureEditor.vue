@@ -11,6 +11,7 @@
               v-model="featureModel.feature_tree"
               :openAll="openAll"
               :hasToolbox="true"
+              @addNode="addNode"
               @removeNode="removeNode"
             ></v-treeview>
           </div>
@@ -163,21 +164,16 @@ export default {
       return a;
     },
 
-    addNode(newNode) {
-      console.log("ADDNODE");
-      // var typeRule = this.getTypeRule(this.model.type)
-
-      // if (typeRule.valid_children.indexOf(newNode.type) > -1) {
-      //   this.model.children.push(newNode)
-      // }
+    addNode(data) {
+      console.log("ADDNODE", data);
+      this.$store.commit("featureModel/addFeature", data);
     },
     editName() {
       console.log("RENAME FUNCTION");
-      // this.edit = true
-      // this.$nextTick(() => this.$refs.title.focus())
     },
     removeNode(id) {
       console.log("Remove: ", id);
+      this.$store.commit("featureModel/deleteFeature", id);
     }
   },
 

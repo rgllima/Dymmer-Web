@@ -7,13 +7,14 @@
         class="v-treeview-item"
         v-for="item in value"
         :key="item.id"
-        :model="item"
+        :feature="item"
         :father_id="null"
         :treeRules="treeRules"
         :openAll="openAll"
         :searchText="searchText"
         :contextResolutions="contextResolutions"
         :contextInEdition="contextInEdition"
+        @emitAddNode="addNode"
         @changeStatus="changeStatus"
         @selected="selected"
         @openTree="openTree"
@@ -149,15 +150,16 @@ export default {
       switch (command) {
         case "Create Mandatory":
           var newNode = {
+            id: null,
             name: "New Mandatory Feature",
             type: "m",
             children: []
           };
-          console.log("CREATE MANDATORY");
           node.addNode(newNode);
           break;
         case "Create Optional":
           var newNode = {
+            id: null,
             name: "New Optional Feature",
             type: "o",
             children: []
@@ -175,6 +177,10 @@ export default {
       }
     },
 
+    addNode(nodes) {
+      this.$emit("addNode", nodes);
+    },
+
     openTree(node) {
       this.$emit("openTree", node);
     },
@@ -188,6 +194,7 @@ export default {
       // console.log("layerY", e.layerY);
       // console.log("offsetX", e.offsetX);
       // console.log("offsetY", e.offsetY);
+      console.log("Mouse Click")
 
       if (this.toolboxContent) {
         e.preventDefault();
@@ -200,29 +207,27 @@ export default {
     },
 
     hiddenToolbox(e) {
-      this.clickedOutside = null;
-      let vtreeview = this.$refs.vtreeview;
+      this.clickedOutside = false;
       let vcontext = this.$refs.vcontext;
       let target = e.target;
 
       let vctxClickResult = vcontext.$el.contains(target);
-      let vtreeClickResult = vtreeview[0].$el.contains(target);
 
-      console.log("CTX: ", vctxClickResult, "TREE: ", vtreeClickResult);
-
-      // if (!vctxClickResult)
       this.$nextTick(() => {
         this.clickedOutside = !vctxClickResult;
+        console.log(this.clickedOutside, vcontext.showContext)
       });
     }
   },
 
   created() {
-    window.addEventListener("click", this.hiddenToolbox);
+    if (!this.hasToolbox) return;
+    else window.addEventListener("mousedown", this.hiddenToolbox);
   },
 
   beforeDestroy() {
-    window.removeEventListener("click", this.hiddenToolbox);
+    if (!this.hasToolbox) return;
+    else window.removeEventListener("mousedown", this.hiddenToolbox);
   }
 };
 </script>

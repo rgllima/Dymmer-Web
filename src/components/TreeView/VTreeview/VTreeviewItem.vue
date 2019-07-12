@@ -39,9 +39,9 @@
 
     <div class="tree-children">
       <ul v-show="open" v-if="isFolder">
-        <v-treeview-item v-for="child in model.children" :key="child.id" :model="child"
+        <v-treeview-item v-for="child in model.children" :key="child.id" :feature="child"
         :father="{id: model.id, type: model.type, multiplicity: model.multiplicity}"
-        :treeRules="treeRules" :openAll="openAll" @addNode="addNode"
+        :treeRules="treeRules" :openAll="openAll" @emitAddNode="emitAddNode"
         @selected="selected" :searchText="searchText" :contextResolutions="contextResolutions"
         :contextInEdition="contextInEdition" @openTree="openTree"
         @changeStatus="changeStatus">
@@ -54,13 +54,14 @@
 <script>
 export default {
   name: 'v-treeview-item',
-  props: ['model', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
+  props: ['feature', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
   data() {
     return {
       forbidenChangeTypes: ["r", "g", "m"],
       open: false,
       checked: null,
       edit: false,
+      model: null,
       allowChangeContext: false
     }
   },
@@ -118,6 +119,14 @@ export default {
     },
     blur() {
       this.edit = false
+      console.log("AKI QUE A MÁGICA ACONTECE")
+
+      if (!this.model.id)
+        this.$emit("emitAddNode", {parent: this.$parent.model, node: this.model})
+    },
+    emitAddNode(data) {
+      console.log("Emitido")
+      this.$emit("emitAddNode", data)
     },
     selected(node) {
       this.checked = null
@@ -128,8 +137,8 @@ export default {
       this.open = true
       this.$emit('openTree', node)
     },
+
     addNode(newNode) {
-      console.log("ADDNODE")
       var typeRule = this.getTypeRule(this.model.type)
 
       if (typeRule.valid_children.indexOf(newNode.type) > -1) {
@@ -141,6 +150,7 @@ export default {
       this.edit = true
       this.$nextTick(() => this.$refs.title.focus())
     },
+
     showContextMenu(e) {
       e.preventDefault()
       this.open = true
@@ -155,18 +165,19 @@ export default {
   },
 
   created() {
-    if (this.model.id == null) {
+    this.model = this.feature //JSON.parse(JSON.stringify(this.feature));
+    if (!this.model.id) {
       this.editName()
     }
     this.open = this.openAll
   },
 
-  mounted(){
-    // if (!this.father || this.father.type == "r" || this.father.type == "m")
-    //   this.forbidenChangeTypes.push("m");
-  },
-
   watch: {
+    feature() {
+      this.model = this.feature// JSON.parse(JSON.stringify(this.feature));
+      console.log("Feature Mudou")
+    },
+
     contextInEdition() {
       this.allowChangeContext = false
     },

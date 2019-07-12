@@ -56,7 +56,7 @@ export default {
     return {
       data: [],
       whoisNode: "node",
-      showContext: true,
+      showContext: false,
       showOption: false,
       menuStyle: null
     };
@@ -67,10 +67,12 @@ export default {
       this.showOption = false;
       this.showContext = false;
     },
+
     action(title) {
       this.$emit("contextSelected", { title: title, whois: this.whoisNode });
       this.closeMenu();
     },
+
     openOptions(whois) {
       this.data = this.toolboxContent[`${whois}`];
       this.whoisNode = whois;
@@ -81,20 +83,19 @@ export default {
   },
 
   watch: {
-    // showOption() {
-    //   console.log("ShowOption: ", this.showOption);
-    // },
-
-    clickedOutside() {
+    async clickedOutside() {
+      // await this.$nextTick()
+      console.log("clickedOutside")
       if (this.clickedOutside) {
+        console.log("Clicou Fora", this.clickedOutside, this.showContext)
         this.showContext = false;
-        // console.log("Clicou fora");
       }
     },
 
-    mouseEvent() {
-      // let mouseButton = this.mouseEvent.button;
+     mouseEvent() {
+      console.log("Vcontext - Mouse Event 1")
       if (this.mouseEvent.button === 2) {
+        console.log("Vcontext - Mouse Event 2")
         this.menuStyle = {
           width: "210px",
           left: this.mouseEvent.pageX + "px",
@@ -106,16 +107,12 @@ export default {
           "box-shadow": "2px 2px 2px #aaa",
           "z-index": 20
         };
-        this.$nextTick(() => {
+        // this.$nextTick(() => {
+
           this.showContext = true;
           this.showOption = false;
-        });
+        // });
       }
-      // else if (mouseButton === 0 && this.showOption) {
-      //   return;
-      // }
-      // console.log("Vou fechar aqui", mouseButton, this.showOption);
-      // this.showContext = false;
     }
   },
 
