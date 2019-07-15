@@ -118,11 +118,11 @@ export default {
       return typeRule
     },
     blur(e) {
-      console.log('BLUR: ', e, !this.model.id)
+      // console.log('BLUR: ', e, !this.model.id)
       if (e.type === 'keyup') console.log("OPAAAS")
 
       this.edit = false
-      console.log("AKI QUE A MÁGICA ACONTECE")
+      // console.log("AKI QUE A MÁGICA ACONTECE")
 
       if (!this.model.id)
         this.$emit("emitAddNode", {parent: this.$parent.model, node: this.model})

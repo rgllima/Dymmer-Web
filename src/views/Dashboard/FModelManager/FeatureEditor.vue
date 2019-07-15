@@ -2,19 +2,20 @@
   <div class="feature-editor">
     <div class="tile is-ancestor">
       <div class="tile is-parent">
-        <div class="tile is-child is-vertical" style="max-width: 500px; overflow: hidden;">
-          <div class="box">
+        <div class="tile is-child is-vertical feature-editor--scroll-box box">
+          <div class="control">
             <h1 class="has-text-centered is-size-5">Feature Diagram</h1>
             <br />
-            <v-treeview
-              :value="featureTree"
-              :openAll="openAll"
-              :hasToolbox="true"
-              @addNode="addNode"
-              @editName="editName"
-              @removeNode="removeNode"
-            ></v-treeview>
           </div>
+
+          <v-treeview
+            :value="featureTree"
+            :openAll="openAll"
+            :hasToolbox="true"
+            @addNode="addNode"
+            @editName="editName"
+            @removeNode="removeNode"
+          ></v-treeview>
         </div>
         <div class="tile is-child is-vertical" style="padding: 0 10px">
           <div class="tile is-vertical" style="margin-top: 20px;">
@@ -209,28 +210,13 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-#show-feature-model-page {
-  padding: 20px;
-
-  p {
-    margin: 0;
-  }
-
-  a {
-    height: 100%;
-  }
-
-  .manage-feature {
-    p {
-      font-size: 0.8rem;
-    }
-  }
-
-  img {
-    width: 70px;
-    display: block;
-    margin: 0 auto;
-  }
-}
+<style lang="sass">
+.feature-editor
+  .box
+    padding: .4rem
+  &--scroll-box
+    min-height: 500px
+    height: calc(100vh - 150px)
+    overflow-x: hidden
+    overflow-y: scroll
 </style>

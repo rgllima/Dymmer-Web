@@ -20,7 +20,7 @@
           </span>
           <span>Rename</span>
         </li>
-        <li class="is-danger" @click="action('Remove')">
+        <li class="is-danger" @click="confirmeDeletion">
           <span class="icon">
             <i class="fas fa-trash-alt"></i>
           </span>
@@ -73,9 +73,20 @@ export default {
       this.closeMenu();
     },
 
+    confirmeDeletion() {
+      this.$dialog.confirm({
+        title: "Confirm deletion",
+        message: "Do you really want to exclude this feature?",
+        type: "is-danger",
+        cancelText: "Cancel",
+        confirmText: "Delete",
+        onConfirm: () => this.action("Remove")
+      });
+    },
+
     openOptions(whois) {
       this.data = this.toolboxContent[`${whois}`];
-      console.log('===> ', this.toolboxContent)
+      // console.log('===> ', this.toolboxContent)
       this.whoisNode = whois;
       this.$nextTick(() => {
         this.showOption = true;
@@ -86,14 +97,14 @@ export default {
   watch: {
     async clickedOutside() {
       // await this.$nextTick()
-      console.log("clickedOutside")
+      // console.log("clickedOutside")
       if (this.clickedOutside) {
         // console.log("Clicou Fora", this.clickedOutside, this.showContext)
         this.showContext = false;
       }
     },
 
-     mouseEvent() {
+    mouseEvent() {
       // console.log("Vcontext - Mouse Event 1")
       if (this.mouseEvent.button === 2) {
         // console.log("Vcontext - Mouse Event 2")
@@ -109,8 +120,8 @@ export default {
           "z-index": 20
         };
         // this.$nextTick(() => {
-          this.showContext = true;
-          this.showOption = false;
+        this.showContext = true;
+        this.showOption = false;
         // });
       }
     }

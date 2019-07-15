@@ -1,6 +1,6 @@
 <template>
   <!-- <div @mouseup.prevent="mousedown"> -->
-  <div @mouseup.prevent="mousedown" @contextmenu.capture.prevent>
+  <div class="vtreeview-component" @mouseup.prevent="mousedown" @contextmenu.capture.prevent>
     <ul>
       <v-treeview-item
         ref="vtreeview"
@@ -21,15 +21,16 @@
         @openTree="openTree"
       ></v-treeview-item>
     </ul>
-    <div v-if="hasToolbox">
+    <!-- <div> -->
       <v-context
+        v-if="hasToolbox"
         ref="vcontext"
         :clickedOutside="clickedOutside"
         :toolboxContent="toolboxContent"
         :mouseEvent="mouseEvent"
         @contextSelected="contextSelected"
       ></v-context>
-    </div>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -63,7 +64,7 @@ export default {
           type: "#",
           max_children: 6,
           max_depth: 4,
-          valid_children: ["r", "m", "o", "g", ""]
+          valid_children: ["r", "m", "o", "g", "g0", "g1", ""]
         },
         {
           type: "r",
@@ -75,13 +76,19 @@ export default {
           type: "m",
           name: "Mandatory",
           icon: "fas fa-circle",
-          valid_children: ["m", "o", "g"]
+          valid_children: ["m", "o", "g0", "g1"]
         },
         {
           type: "o",
           name: "Optional",
           icon: "far fa-circle",
-          valid_children: ["m", "o", "g"]
+          valid_children: ["m", "o", "g0", "g1"]
+        },
+        {
+          type: "",
+          name: "Grouped Child",
+          icon: "fas fa-stop",
+          valid_children: ["m", "o", "g0", "g1"]
         },
         {
           type: "g",
@@ -90,10 +97,16 @@ export default {
           valid_children: [""]
         },
         {
-          type: "",
-          name: "Grouped Child",
-          icon: "fas fa-stop",
-          valid_children: ["m", "o"]
+          type: "g0",
+          name: "[1,1] Group",
+          icon: "fas fa-layer-group",
+          valid_children: []
+        },
+        {
+          type: "g1",
+          name: "[1,*] Group",
+          icon: "fas fa-layer-group",
+          valid_children: []
         }
       ]
     };
@@ -148,29 +161,41 @@ export default {
 
       let command = data.title;
 
+      let newNode = {};
+      newNode["id"] = null;
+      newNode["children"] = [];
+      console.log("NODE Clicado: ", node);
+
       switch (command) {
         case "Create Mandatory":
-          var newNode = {
-            id: null,
-            name: "New Mandatory Feature",
-            type: "m",
-            children: []
-          };
+          newNode["name"] = "New Mandatory Feature";
+          newNode["type"] = "m";
           node.addNode(newNode);
           break;
         case "Create Optional":
-          var newNode = {
-            id: null,
-            name: "New Optional Feature",
-            type: "o",
-            children: []
-          };
+          newNode["name"] = "New Optional Feature";
+          newNode["type"] = "o";
           node.addNode(newNode);
           break;
+        case "Create Grouped Child":
+          newNode["name"] = "New Grouped Feature";
+          newNode["type"] = "";
+          node.addNode(newNode);
+          break;
+        case "Create [1,1] Group":
+          newNode["name"] = "";
+          newNode["multiplicity"] = "1,1";
+          newNode["type"] = "g";
+          this.$emit("addNode", { parent: node.model, node: newNode });
+          break;
+        case "Create [1,*] Group":
+          newNode["name"] = "";
+          newNode["multiplicity"] = "1,*";
+          newNode["type"] = "g";
+          this.$emit("addNode", { parent: node.model, node: newNode });
+          break;
         case "Rename":
-          console.log("rename");
           this.selectedNode.editName();
-          console.log(this.selectedNode);
           break;
         case "Remove":
           this.$emit("removeNode", this.selectedNode.model.id);
@@ -191,6 +216,8 @@ export default {
     },
 
     mousedown(e) {
+      console.log(e);
+      // console.log('Width do Dispositivo', e.view.window.innerWidth)
       // console.log("pageX", e.pageX);
       // console.log("pageY", e.pageY);
       // console.log("clientX", e.clientX);
@@ -238,6 +265,10 @@ export default {
 </script>
 
 <style scoped>
+.vtreeview-component {
+  position: relative;
+}
+
 ul {
   position: relative;
 }
