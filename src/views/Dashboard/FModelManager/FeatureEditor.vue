@@ -20,84 +20,10 @@
         <div class="tile is-child is-vertical" style="padding: 0 10px">
           <div class="tile is-vertical" style="margin-top: 20px;">
             <div class="tile is-child">
-              <b-collapse class="card" :open="false">
-                <div slot="trigger" slot-scope="props" class="card-header" style="width: 100%">
-                  <p class="card-header-title" style="justify-content: center;">Feature Information</p>
-                  <a class="card-header-icon">
-                    <b-icon pack="fas" :icon="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></b-icon>
-                  </a>
-                </div>
-                <div class="card-content">
-                  <div class="content">
-                    <p>
-                      <strong>Name your feature model:</strong>
-                      {{featureModel.name}}
-                    </p>
-                    <p>
-                      <strong>Short description of feature model:</strong>
-                      {{featureModel.description}}
-                    </p>
-                    <p>
-                      <strong>Primary Author:</strong>
-                      {{featureModel.creator}}
-                    </p>
-                    <p>
-                      <strong>Author's Address:</strong>
-                      {{featureModel.address}}
-                    </p>
-                    <p>
-                      <strong>Author's Email:</strong>
-                      {{featureModel.email}}
-                    </p>
-                    <p>
-                      <strong>Author's Phone Number:</strong>
-                      {{featureModel.phone}}
-                    </p>
-                    <p>
-                      <strong>Author's Website:</strong>
-                      {{featureModel.website}}
-                    </p>
-                    <p>
-                      <strong>Author's Organization:</strong>
-                      {{featureModel.organization}}
-                    </p>
-                    <p>
-                      <strong>Author's Organization Department:</strong>
-                      {{featureModel.department}}
-                    </p>
-                    <p>
-                      <strong>Date model was created:</strong>
-                      {{featureModel.date}}
-                    </p>
-                  </div>
-                </div>
-              </b-collapse>
+              <feature-info :featureModel="featureModel" />
             </div>
             <div class="tile is-child">
-              <b-collapse class="card">
-                <div slot="trigger" slot-scope="props" class="card-header" style="width: 100%">
-                  <p
-                    class="card-header-title"
-                    style="justify-content: center;"
-                  >Cross-Tree Constraints</p>
-                  <a class="card-header-icon">
-                    <b-icon pack="fas" :icon="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></b-icon>
-                  </a>
-                </div>
-                <div class="card-content">
-                  <div class="content">
-                    <div v-if="constraints.length !== 0">
-                      <p v-for="(value, key) in constraints" :key="key">
-                        <strong>{{key+1}}:</strong>
-                        {{ value }}
-                      </p>
-                    </div>
-                    <div v-else>
-                      <p>No constraints</p>
-                    </div>
-                  </div>
-                </div>
-              </b-collapse>
+              <constraint-card :constraints="constraints" />
             </div>
           </div>
         </div>
@@ -108,8 +34,15 @@
 
 <script>
 import { mapGetters } from "vuex";
+import ConstraintCard from "./components/ConstraintCard";
+import FeatureInfoCard from "./components/FeatureInfoCard";
 
 export default {
+  components: {
+    "constraint-card": ConstraintCard,
+    "feature-info": FeatureInfoCard
+  },
+
   data() {
     return {
       openAll: true,
@@ -212,6 +145,7 @@ export default {
 
 <style lang="sass">
 .feature-editor
+  height: 100%
   .box
     padding: .4rem
   &--scroll-box

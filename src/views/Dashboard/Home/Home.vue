@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home box">
     <!-- <div class="tile is-vertical is-ancestor"> -->
     <nav class="level">
       <div class="level-item has-text-centered notification is-primary">

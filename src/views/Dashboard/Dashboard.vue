@@ -1,53 +1,59 @@
 <template>
-  <div class="homepage-content">
-    <section class="main-content columns" style="overflow: hidden;">
-      <aside class="column is-paddingless" :class="{'active': menu_bars}">
-        <div class="infobar">
-          <h1 class="infobar-text has-text-centered is-size-5">DyMMer Web</h1>
-        </div>
+  <div class="dashboard-content columns">
+    <!-- <section class="main-content columns"> -->
+    <aside class="column is-paddingless" :class="{'active': menu_bars}">
+      <div class="infobar">
+        <h1 class="infobar-text has-text-centered is-size-5">DyMMer Web</h1>
+      </div>
 
-        <div class="toggle-icon">
-          <i class="fas fa-chevron-circle-left"></i>
-          <i class="fas fas-hidden fa-chevron-circle-right"></i>
-        </div>
+      <div class="toggle-icon">
+        <i class="fas fa-chevron-circle-left"></i>
+        <i class="fas fas-hidden fa-chevron-circle-right"></i>
+      </div>
 
-        <div class="menu-bars" @click="menu_bars=!menu_bars">
-          <i class="fa" :class="(!menu_bars) ? 'fa-bars' : 'fa-times'" />
-        </div>
+      <div class="menu-bars" @click="menu_bars=!menu_bars">
+        <i class="fa" :class="(!menu_bars) ? 'fa-bars' : 'fa-times'" />
+      </div>
 
-        <div style="margin-top: 20px">
-          <ul class="menu-list">
-            <li>
-              <a class="has-text-white" @click="pushRouter('/home')">
-                <i class="fas fa-th-large"></i>
-                Dashboard
-              </a>
-            </li>
-          </ul>
+      <div style="margin-top: 20px">
+        <ul class="menu-list">
+          <li>
+            <a class="has-text-white" @click="pushRouter('/home')">
+              <i class="fas fa-th-large"></i>
+              Dashboard
+            </a>
+          </li>
+        </ul>
 
-          <p class="menu-label has-text-light">Feature Model</p>
-          <ul class="menu-list">
-            <li>
-              <a class="has-text-white" @click="pushRouter('feature-model-list')">
-                <i class="fas fa-table"></i>
-                SPL Repository
-              </a>
-            </li>
-            <li>
-              <a class="has-text-white" @click="pushRouter('feature-model-list')">
-                <i class="fas fa-database"></i>
-                DSPL Repository
-              </a>
-            </li>
-            <li>
-              <a class="has-text-white">
-                <i class="fas fa-database"></i>
-                Measures Dataset
-              </a>
-            </li>
-          </ul>
+        <p class="menu-label has-text-light">Feature Model</p>
+        <ul class="menu-list">
+          <li>
+            <a class="has-text-white" @click="openAddFeatureModelModal">
+              <i class="fas fa-th-large"></i>
+              Add Feature Model
+            </a>
+          </li>
+          <li>
+            <a class="has-text-white" @click="pushRouter('feature-model-list')">
+              <i class="fas fa-table"></i>
+              SPL Repository
+            </a>
+          </li>
+          <li>
+            <a class="has-text-white" @click="pushRouter('feature-model-list')">
+              <i class="fas fa-database"></i>
+              DSPL Repository
+            </a>
+          </li>
+          <li>
+            <a class="has-text-white">
+              <i class="fas fa-database"></i>
+              Measures Dataset
+            </a>
+          </li>
+        </ul>
 
-          <!-- <p
+        <!-- <p
             class="menu-label has-text-light"
             style="margin: 20px 0px 5px 8px; font-size: 0.7rem"
           >Quality Measures</p>
@@ -58,40 +64,40 @@
                 Apply Measures
               </a>
             </li>
-          </ul>-->
+        </ul>-->
 
-          <p class="menu-label has-text-light">General</p>
-          <ul class="menu-list">
-            <li>
-              <a class="has-text-white">
-                <i class="fas fa-cog"></i>
-                Account Settings
-              </a>
-            </li>
-            <li>
-              <a class="has-text-white">
-                <i class="fas fa-question"></i>
-                Help
-              </a>
-            </li>
-            <li>
-              <a class="has-text-white" @click="logout">
-                <i class="fas fa-sign-out-alt"></i>
-                Exit Dashboard
-              </a>
-            </li>
-          </ul>
-        </div>
-      </aside>
+        <p class="menu-label has-text-light">General</p>
+        <ul class="menu-list">
+          <li>
+            <a class="has-text-white">
+              <i class="fas fa-cog"></i>
+              Account Settings
+            </a>
+          </li>
+          <li>
+            <a class="has-text-white">
+              <i class="fas fa-question"></i>
+              Help
+            </a>
+          </li>
+          <li>
+            <a class="has-text-white" @click="logout">
+              <i class="fas fa-sign-out-alt"></i>
+              Exit Dashboard
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
 
-      <div class="mycontainer section column">
-        <div class="level">
+    <!-- <div class="mycontainer section column"> -->
+    <!-- <div class="level">
           <div class="level-left" :class="{'menu-bar-opened': menu_bars}">
-            <!-- <div class="level-item">
+            <div class="level-item">
               <div class="user">
                 <i class="fa fa-user"/>
               </div>
-            </div>-->
+            </div>
           </div>
           <div class="level-right">
             <div class="control">
@@ -100,18 +106,18 @@
               </button>
             </div>
           </div>
-        </div>
+    </div>-->
 
-        <div class="dashboard-pages">
-          <!-- <router-view /> -->
-          <transition name="fade" mode="out-in">
-            <router-view />
-          </transition>
-        </div>
-      </div>
-    </section>
+    <div class="dashboard-pages column">
+      <!-- <router-view /> -->
+      <transition name="fade" mode="out-in">
+        <router-view />
+      </transition>
+    </div>
+    <!-- </div> -->
+    <!-- </section> -->
 
-    <footer class="footer has-background-black-bis">
+    <!-- <footer class="footer has-background-black-bis">
       <div class="content has-text-centered">
         <p class="has-text-light">
           <strong class="has-text-light">DyMMer</strong> by
@@ -119,7 +125,7 @@
           <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
         </p>
       </div>
-    </footer>
+    </footer>-->
   </div>
 </template>
 
@@ -157,15 +163,31 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "./Dashboard";
+// html {
+//   overflow: hidden;
+// }
+.dashboard-content {
+  height: 100vh;
+  min-height: 600px;
+  overflow: hidden;
+  position: relative;
+}
+
+.columns {
+  margin: 0;
+}
 
 a.has-text-white:hover {
   color: #372f9d !important;
 }
 
 .dashboard-pages {
+  width: 100%;
+  padding: 10px 25px;
   height: 100%;
+  overflow-y: scroll;
   background-color: whitesmoke;
 
   @include phone {

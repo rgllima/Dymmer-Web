@@ -222,7 +222,8 @@ export default {
   &--scroll-box
     min-height: 500px
     height: calc(100vh - 150px)
-    overflow: scroll
+    overflow-x: hidden
+    overflow-y: scroll
   &--tile
     min-width: 220px
   &--card
