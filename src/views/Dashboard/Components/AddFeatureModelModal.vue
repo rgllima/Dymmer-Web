@@ -7,17 +7,17 @@
       <div class="card-content">
         <div v-if="!isLoading" class="tile">
           <div class="tile is-parent">
-            <button class="box">
-              <img src="../../../assets/edit-tools.svg" alt="settings">
-              <br>
+            <button class="box button" @click="createFeatureModel">
+              <img src="../../../assets/edit-tools.svg" alt="settings" />
+              <br />
               <p class="has-text-centered">Create Feature Model</p>
             </button>
           </div>
           <div class="tile is-parent">
-            <button class="box">
-              <img src="../../../assets/import.svg" alt="settings">
-              <br>
-              <p class="has-text-centered">Import XML Feature Model</p>
+            <button class="box button">
+              <img src="../../../assets/import.svg" alt="settings" />
+              <br />
+              <p class="has-text-centered">Import XML</p>
               <input
                 class="file-input"
                 type="file"
@@ -25,13 +25,13 @@
                 id="getXmlToString"
                 ref="MyXMLFile"
                 @change="getXmlToString"
-              >
+              />
             </button>
           </div>
         </div>
 
         <div v-else class="card-animation">
-          <lottie :options="defaultOptions" :height="220" :width="220"/>
+          <lottie :options="defaultOptions" :height="220" :width="220" />
           <h4>Converting!</h4>
           <p>Wait a moment...</p>
         </div>
@@ -43,6 +43,7 @@
 <script>
 import Lottie from "vue-lottie";
 import * as animationData from "@/assets/search-file-animation.json";
+import CreateFeatureModel from "./CreateFeatureModalForm";
 
 export default {
   components: {
@@ -65,6 +66,15 @@ export default {
         this.$emit("close");
       };
       reader.readAsText(file);
+    },
+
+    createFeatureModel() {
+      this.$modal.open({
+        parent: this,
+        component: CreateFeatureModel,
+        hasModalCard: true
+      });
+      this.$emit("close");
     }
   }
 };
