@@ -12,7 +12,7 @@
         </div>
 
         <div class="menu-bars" @click="menu_bars=!menu_bars">
-          <i class="fa" :class="(!menu_bars) ? 'fa-bars' : 'fa-times'"/>
+          <i class="fa" :class="(!menu_bars) ? 'fa-bars' : 'fa-times'" />
         </div>
 
         <div style="margin-top: 20px">
@@ -103,7 +103,10 @@
         </div>
 
         <div class="dashboard-pages">
-          <router-view/>
+          <!-- <router-view /> -->
+          <transition name="fade" mode="out-in">
+            <router-view />
+          </transition>
         </div>
       </div>
     </section>
@@ -121,13 +124,9 @@
 </template>
 
 <script>
-import Tree from "@/components/Tree.vue";
-import FeatureModelModal from './Components/AddFeatureModelModal'
+import FeatureModelModal from "./Components/AddFeatureModelModal";
 
 export default {
-  components: {
-    Tree
-  },
   data() {
     return {
       // showNav: false,
@@ -141,11 +140,11 @@ export default {
     },
 
     openAddFeatureModelModal() {
-        this.$modal.open({
-            parent: this,
-            component: FeatureModelModal,
-            hasModalCard: true
-        })
+      this.$modal.open({
+        parent: this,
+        component: FeatureModelModal,
+        hasModalCard: true
+      });
     },
 
     logout() {
@@ -172,5 +171,17 @@ a.has-text-white:hover {
   @include phone {
     background-color: white;
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.3s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0;
 }
 </style>

@@ -1,29 +1,36 @@
 <template>
-  <div @mouseup.prevent="mousedown">
+  <!-- <div @mouseup.prevent="mousedown"> -->
+  <div class="vtreeview-component" @mouseup.prevent="mousedown" @contextmenu.capture.prevent>
     <ul>
       <v-treeview-item
+        ref="vtreeview"
         class="v-treeview-item"
         v-for="item in value"
         :key="item.id"
-        :model="item"
+        :feature="item"
         :father_id="null"
         :treeRules="treeRules"
         :openAll="openAll"
         :searchText="searchText"
         :contextResolutions="contextResolutions"
         :contextInEdition="contextInEdition"
+        @emitAddNode="addNode"
+        @emitEditName="editName"
         @changeStatus="changeStatus"
         @selected="selected"
         @openTree="openTree"
       ></v-treeview-item>
     </ul>
-    <v-context
-      v-if="hasToolbox"
-      :show="showContext"
-      :contextItems="contextItems"
-      :mouseEvent="mouseEvent"
-      @contextSelected="contextSelected"
-    ></v-context>
+    <!-- <div> -->
+      <v-context
+        v-if="hasToolbox"
+        ref="vcontext"
+        :clickedOutside="clickedOutside"
+        :toolboxContent="toolboxContent"
+        :mouseEvent="mouseEvent"
+        @contextSelected="contextSelected"
+      ></v-context>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -32,20 +39,32 @@ import VTreeviewItem from "./VTreeviewItem.vue";
 import VContext from "../VContext/VContext.vue";
 
 export default {
-  props: ["value", "openAll", "editName", "searchText", "hasToolbox", "contextResolutions", "contextInEdition"],
+  props: [
+    "value",
+    "openAll",
+    "searchText",
+    "hasToolbox",
+    "contextResolutions",
+    "contextInEdition"
+  ],
+  components: {
+    VContext,
+    VTreeviewItem
+  },
   name: "v-treeview",
   data() {
     return {
-      showContext: false,
+      clickedOutside: false,
       mouseEvent: null,
       selectedNode: null,
-      contextItems: [],
+      parentNode: null,
+      toolboxContent: {},
       treeRules: [
         {
           type: "#",
           max_children: 6,
           max_depth: 4,
-          valid_children: ["r", "m", "o", "g", ""]
+          valid_children: ["r", "m", "o", "g", "g0", "g1", ""]
         },
         {
           type: "r",
@@ -57,13 +76,19 @@ export default {
           type: "m",
           name: "Mandatory",
           icon: "fas fa-circle",
-          valid_children: ["m", "o"]
+          valid_children: ["m", "o", "g0", "g1"]
         },
         {
           type: "o",
           name: "Optional",
           icon: "far fa-circle",
-          valid_children: ["o"]
+          valid_children: ["m", "o", "g0", "g1"]
+        },
+        {
+          type: "",
+          name: "Grouped Child",
+          icon: "fas fa-stop",
+          valid_children: ["m", "o", "g0", "g1"]
         },
         {
           type: "g",
@@ -72,94 +97,178 @@ export default {
           valid_children: [""]
         },
         {
-          type: "",
-          icon: "fas fa-stop",
+          type: "g0",
+          name: "[1,1] Group",
+          icon: "fas fa-layer-group",
+          valid_children: []
+        },
+        {
+          type: "g1",
+          name: "[1,*] Group",
+          icon: "fas fa-layer-group",
           valid_children: []
         }
       ]
     };
   },
+
   methods: {
-    changeStatus(feature){
-      this.$emit("changeFeatureStatus", feature)
+    changeStatus(feature) {
+      this.$emit("changeFeatureStatus", feature);
     },
+
     getTypeRule(type) {
       var typeRule = this.treeRules.filter(t => t.type == type)[0];
       return typeRule;
     },
+
     selected(node) {
       this.selectedNode = node;
-      this.contextItems = [];
-      var typeRule = this.getTypeRule(this.selectedNode.model.type);
-      typeRule.valid_children.map(function(type, key) {
+      this.parentNode = this.selectedNode.$parent;
+      this.toolboxContent = {};
+
+      let typeRule = this.getTypeRule(this.selectedNode.model.type);
+      let parentTypeRule = null;
+
+      if (this.parentNode.model)
+        parentTypeRule = this.getTypeRule(this.parentNode.model.type);
+
+      this.toolboxContent["node"] = this.getValidChildren(typeRule);
+      this.toolboxContent["parent"] = this.getValidChildren(parentTypeRule);
+      this.toolboxContent["type"] = this.selectedNode.model.type;
+    },
+
+    getValidChildren(rule) {
+      if (!rule) return null;
+
+      let items = [];
+      rule.valid_children.map(function(type, key) {
         var childType = this.getTypeRule(type);
         var item = {
           title: "Create " + childType.name,
           icon: childType.icon,
           type: childType
         };
-        this.contextItems.push(item);
+        items.push(item);
       }, this);
-
-      this.contextItems.push({ title: "Rename", icon: "far fa-edit" });
-      this.contextItems.push({ title: "Remove", icon: "far fa-trash-alt" });
-      this.contextItems.push({
-        title: "Create Feature Above",
-        icon: "fas fa-caret-up"
-      }); //Rever
-      this.contextItems.push({
-        title: "Create Feature Below",
-        icon: "fas fa-caret-down"
-      }); //Rever
+      return items;
     },
-    contextSelected(title) {
-      let command = title;
+
+    contextSelected(data) {
+      let node;
+      if (data.whois === "node") node = this.selectedNode;
+      else node = this.parentNode;
+
+      let command = data.title;
+
+      let newNode = {};
+      newNode["id"] = null;
+      newNode["children"] = [];
+      console.log("NODE Clicado: ", node);
+
       switch (command) {
         case "Create Mandatory":
-          var node = {
-            name: "New Mandatory Feature",
-            type: "m",
-            children: []
-          };
-          this.selectedNode.addNode(node);
+          newNode["name"] = "New Mandatory Feature";
+          newNode["type"] = "m";
+          node.addNode(newNode);
           break;
         case "Create Optional":
-          var node = {
-            name: "New Optional Feature",
-            type: "o",
-            children: []
-          };
-          this.selectedNode.addNode(node);
+          newNode["name"] = "New Optional Feature";
+          newNode["type"] = "o";
+          node.addNode(newNode);
+          break;
+        case "Create Grouped Child":
+          newNode["name"] = "New Grouped Feature";
+          newNode["type"] = "";
+          node.addNode(newNode);
+          break;
+        case "Create [1,1] Group":
+          newNode["name"] = "";
+          newNode["multiplicity"] = "1,1";
+          newNode["type"] = "g";
+          this.$emit("addNode", { parent: node.model, node: newNode });
+          break;
+        case "Create [1,*] Group":
+          newNode["name"] = "";
+          newNode["multiplicity"] = "1,*";
+          newNode["type"] = "g";
+          this.$emit("addNode", { parent: node.model, node: newNode });
           break;
         case "Rename":
           this.selectedNode.editName();
           break;
         case "Remove":
+          this.$emit("removeNode", this.selectedNode.model.id);
           break;
       }
     },
+
+    addNode(nodes) {
+      this.$emit("addNode", nodes);
+    },
+
+    editName(data) {
+      this.$emit("editName", data);
+    },
+
     openTree(node) {
       this.$emit("openTree", node);
     },
+
     mousedown(e) {
-      if (this.contextItems) {
+      console.log(e);
+      // console.log('Width do Dispositivo', e.view.window.innerWidth)
+      // console.log("pageX", e.pageX);
+      // console.log("pageY", e.pageY);
+      // console.log("clientX", e.clientX);
+      // console.log("clientY", e.clientY);
+      // console.log("layerX", e.layerX);
+      // console.log("layerY", e.layerY);
+      // console.log("offsetX", e.offsetX);
+      // console.log("offsetY", e.offsetY);
+      console.log("Mouse Click");
+
+      if (this.toolboxContent) {
         e.preventDefault();
         this.mouseEvent = {
           button: e.button,
-          pageX: e.clientX,
-          pageY: e.clientY
+          pageX: e.layerX,
+          pageY: e.layerY
         };
       }
+    },
+
+    hiddenToolbox(e) {
+      this.clickedOutside = false;
+      let vcontext = this.$refs.vcontext;
+      let target = e.target;
+
+      let vctxClickResult = vcontext.$el.contains(target);
+
+      this.$nextTick(() => {
+        this.clickedOutside = !vctxClickResult;
+        console.log(this.clickedOutside, vcontext.showContext);
+      });
     }
   },
-  components: {
-    VContext,
-    VTreeviewItem
+
+  created() {
+    if (!this.hasToolbox) return;
+    else window.addEventListener("mousedown", this.hiddenToolbox);
+  },
+
+  beforeDestroy() {
+    if (!this.hasToolbox) return;
+    else window.removeEventListener("mousedown", this.hiddenToolbox);
   }
 };
 </script>
 
 <style scoped>
+.vtreeview-component {
+  position: relative;
+}
+
 ul {
   position: relative;
 }
