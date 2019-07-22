@@ -1,14 +1,16 @@
 import Vue from "vue";
 import Router from "vue-router";
-import VueCookies from "vue-cookies";
 
 Vue.use(Router);
-Vue.use(VueCookies);
 
 const router = new Router({
   mode: "history",
   base: process.env.BASE_URL,
   routes: [
+    {
+      path: "*",
+      component: () => import("@/views/HomePage/HomePage")
+    },
     {
       path: "/",
       name: "HomePage",
