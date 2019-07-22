@@ -11,6 +11,7 @@ import {
 const state = {
   hasChanged: false,
   nextId: 1,
+  error: false,
   featureModel: {
     feature_tree: [],
     constraints: [],
@@ -21,6 +22,10 @@ const state = {
 const mutations = {
   setHasChanged: (state, payload) => {
     state.hasChanged = payload;
+  },
+
+  setError: (state, payload) => {
+    state.error = payload;
   },
 
   setFeatureModel: (state, payload) => {
