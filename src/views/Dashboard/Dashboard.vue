@@ -1,7 +1,6 @@
 <template>
   <div class="dashboard-content columns">
-    <!-- <section class="main-content columns"> -->
-    <aside class="column is-paddingless" :class="{'active': menu_bars}">
+    <aside class="sidebar column is-paddingless" :class="{'active': menu_bars}">
       <div class="dashboard-content--sidebar">
         <div class="infobar">
           <h1 class="infobar-text has-text-centered is-size-5">DyMMer Web</h1>
@@ -35,13 +34,13 @@
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('feature-model-list')">
+              <a class="has-text-white" @click="pushRouter('feature-model-list',{type:'spl'})">
                 <i class="fas fa-table"></i>
                 SPL Repository
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('feature-model-list')">
+              <a class="has-text-white" @click="pushRouter('feature-model-list', {type:'dspl'})">
                 <i class="fas fa-database"></i>
                 DSPL Repository
               </a>
@@ -137,13 +136,12 @@ import FeatureModelModal from "./Components/AddFeatureModelModal";
 export default {
   data() {
     return {
-      // showNav: false,
       menu_bars: false
     };
   },
   methods: {
-    pushRouter(route) {
-      this.$router.push(route);
+    pushRouter(route, query) {
+      this.$router.push({ path: route, query: query });
       this.menu_bars = !this.menu_bars;
     },
 
@@ -158,9 +156,6 @@ export default {
     logout() {
       this.$store.dispatch("authentication/logout");
     }
-  },
-  mounted() {
-    // this.$router.push("/home");
   }
 };
 </script>

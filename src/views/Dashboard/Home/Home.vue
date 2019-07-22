@@ -41,32 +41,23 @@ export default {
 
   computed: {
     ...mapGetters({
-      featureModelDatabase: "featureModelDatabase/getFeatureModelDatabase",
+      splList: "featureModelDatabase/getSplList",
+      dsplList: "featureModelDatabase/getDsplList",
       measureDatabase: "qualityMeasures/getMeasures"
     }),
 
     splFModels() {
-      return this.featureModelDatabase.filter(fModel => {
-        return fModel.type === "SPL";
-      }).length;
+      return this.splList.length;
     },
 
     dsplFModels() {
-      return this.featureModelDatabase.filter(fModel => {
-        return fModel.type === "DSPL";
-      }).length;
+      return this.dsplList.length;
     },
 
     measures() {
       return this.measureDatabase.length;
     }
   },
-
-//   watch: {
-//     measureDatabase() {
-//       console.log("HOME: ", this.measureDatabase);
-//     }
-//   },
 
   methods: {
     loading(component) {
@@ -77,7 +68,7 @@ export default {
   },
 
   mounted() {
-    this.$store.dispatch("featureModelDatabase/fetchFeatureModelsOnDatabase");
+    this.$store.dispatch("featureModelDatabase/fetchAllFeatureModelsOnDatabase");
     this.$store.dispatch("qualityMeasures/fetchMeasuresOnDatabase");
   }
 };
