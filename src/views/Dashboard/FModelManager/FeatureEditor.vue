@@ -15,15 +15,16 @@
             @addNode="addNode"
             @editName="editName"
             @removeNode="removeNode"
+            @swapType="swapType"
           ></v-treeview>
         </div>
-        <div class="tile is-child is-vertical" style="padding: 0 10px">
-          <div class="tile is-vertical" style="margin-top: 20px;">
-            <div class="tile is-child">
-              <feature-info :featureModel="featureModel" />
-            </div>
+        <div class="tile is-child is-vertical" style="padding-left:10px">
+          <div class="tile is-vertical">
             <div class="tile is-child">
               <constraint-card :constraints="constraints" />
+            </div>
+            <div class="tile is-child">
+              <feature-info :featureModel="featureModel" />
             </div>
           </div>
         </div>
@@ -100,15 +101,15 @@ export default {
     },
 
     addNode(data) {
-      console.log("ADDNODE", data);
       this.$store.commit("featureModel/addFeature", data);
     },
     editName(data) {
-      console.log("RENAME FUNCTION");
       this.$store.commit("featureModel/renameFeature", data);
     },
+    swapType(id) {
+      this.$store.commit("featureModel/swapFeatureType", id)
+    },
     removeNode(id) {
-      console.log("Remove: ", id);
       this.$store.commit("featureModel/deleteFeature", id);
     }
   },

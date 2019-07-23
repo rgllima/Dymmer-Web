@@ -45,13 +45,24 @@ const mutations = {
     state.hasChanged = true;
   },
 
+  swapFeatureType(state, payload) {
+    let node = getFeatureReference(payload, state.featureModel.feature_tree);
+    state.hasChanged = true;
+    if (node["multiplicity"]) {
+      if (node["multiplicity"] === "1,1") node["multiplicity"] = "1,*";
+      else if (node["multiplicity"] === "1,*") node["multiplicity"] = "1,1";
+      return;
+    }
+    if (node["type"] === "o") node["type"] = "m";
+    else if (node["type"] === "m") node["type"] = "o";
+  },
+
   renameFeature(state, payload) {
     let node = getFeatureReference(payload.id, state.featureModel.feature_tree);
 
     if (node["name"] !== payload["name"]) {
       node["name"] = payload["name"];
       state.hasChanged = true;
-      console.log(node["name"]);
     }
   },
 
@@ -93,12 +104,14 @@ const mutations = {
       }
     });
   },
+
   selectContext(state, payload) {
     state.featureModel.contexts.map(context => {
       if (context.name === payload) context["isTheCurrent"] = true;
       else context["isTheCurrent"] = false;
     });
   },
+
   changeFeatureStatus(state, payload) {
     state.featureModel.contexts.map(context => {
       if (context.isTheCurrent) {
@@ -150,7 +163,6 @@ const actions = {
   changeContext(context, data) {
     try {
       let features = runContextAnalysis(data, state.featureModel);
-      console.log("STORE", features);
 
       features.map(feature => {
         context.commit("changeFeatureStatus", feature);

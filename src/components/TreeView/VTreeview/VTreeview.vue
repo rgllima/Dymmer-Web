@@ -164,7 +164,7 @@ export default {
       let newNode = {};
       newNode["id"] = null;
       newNode["children"] = [];
-      console.log("NODE Clicado: ", node);
+      // console.log("NODE Clicado: ", node);
 
       switch (command) {
         case "Create Mandatory":
@@ -194,6 +194,9 @@ export default {
           newNode["type"] = "g";
           this.$emit("addNode", { parent: node.model, node: newNode });
           break;
+        case "swapType":
+          this.$emit("swapType", this.selectedNode.model.id);
+          break;
         case "Rename":
           this.selectedNode.editName();
           break;
@@ -216,7 +219,7 @@ export default {
     },
 
     mousedown(e) {
-      console.log(e);
+      // console.log(e);
       // console.log('Width do Dispositivo', e.view.window.innerWidth)
       // console.log("pageX", e.pageX);
       // console.log("pageY", e.pageY);
@@ -226,7 +229,7 @@ export default {
       // console.log("layerY", e.layerY);
       // console.log("offsetX", e.offsetX);
       // console.log("offsetY", e.offsetY);
-      console.log("Mouse Click");
+      // console.log("Mouse Click");
 
       if (this.toolboxContent) {
         e.preventDefault();
@@ -247,7 +250,7 @@ export default {
 
       this.$nextTick(() => {
         this.clickedOutside = !vctxClickResult;
-        console.log(this.clickedOutside, vcontext.showContext);
+        // console.log(this.clickedOutside, vcontext.showContext);
       });
     }
   },

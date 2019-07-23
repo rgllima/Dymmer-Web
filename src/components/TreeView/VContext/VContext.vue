@@ -14,13 +14,23 @@
           </span>
           <span>Create Child Feature</span>
         </li>
+
+        <li v-if="toolboxContent.type !== 'r' && toolboxContent.type !== ''" @click="action('swapType')">
+          <span class="icon">
+            <i class="fas fa-exchange-alt"></i>
+          </span>
+          <span v-if="toolboxContent.type === 'o'">Change to Mandatory</span>
+          <span v-if="toolboxContent.type === 'm'">Change to Optional</span>
+          <span v-if="toolboxContent.type === 'g'">Swap Multiplicity</span>
+        </li>
+
         <li v-if="toolboxContent.type !== 'g'" @click="action('Rename')">
           <span class="icon">
             <i class="fas fa-edit"></i>
           </span>
           <span>Rename</span>
         </li>
-        <li class="is-danger" @click="confirmeDeletion">
+        <li class="is-danger" v-if="toolboxContent.type !== 'r'" @click="confirmeDeletion">
           <span class="icon">
             <i class="fas fa-trash-alt"></i>
           </span>
@@ -86,7 +96,6 @@ export default {
 
     openOptions(whois) {
       this.data = this.toolboxContent[`${whois}`];
-      // console.log('===> ', this.toolboxContent)
       this.whoisNode = whois;
       this.$nextTick(() => {
         this.showOption = true;
@@ -96,18 +105,13 @@ export default {
 
   watch: {
     async clickedOutside() {
-      // await this.$nextTick()
-      // console.log("clickedOutside")
       if (this.clickedOutside) {
-        // console.log("Clicou Fora", this.clickedOutside, this.showContext)
         this.showContext = false;
       }
     },
 
     mouseEvent() {
-      // console.log("Vcontext - Mouse Event 1")
       if (this.mouseEvent.button === 2) {
-        // console.log("Vcontext - Mouse Event 2")
         this.menuStyle = {
           width: "210px",
           left: this.mouseEvent.pageX + "px",
@@ -119,10 +123,8 @@ export default {
           "box-shadow": "2px 2px 2px #aaa",
           "z-index": 20
         };
-        // this.$nextTick(() => {
         this.showContext = true;
         this.showOption = false;
-        // });
       }
     }
   },
