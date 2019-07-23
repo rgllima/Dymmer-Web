@@ -21,7 +21,7 @@
           <b-table
             :data="filteredList"
             default-sort-direction="asc"
-            default-sort="name"
+            default-sort="number_of_features"
             ref="loading"
           >
             <template slot-scope="props">
@@ -36,7 +36,7 @@
                 sortable
                 centered
               >{{ props.row.type }}</b-table-column>
-              <b-table-column field="numFeatures" label="Nº Features" width="120" sortable centered>
+              <b-table-column field="number_of_features" label="Nº Features" width="120" sortable centered>
                 <span class="tag is-success">{{ props.row.number_of_features }}</span>
               </b-table-column>
               <b-table-column field="creator" label="Creator" sortable>{{ props.row.creator }}</b-table-column>
@@ -87,7 +87,6 @@ export default {
 
     filteredList() {
       return this.data.filter(fmodel => {
-        console.log(fmodel.name);
         return fmodel.name.toLowerCase().includes(this.search.toLowerCase());
       });
     }
