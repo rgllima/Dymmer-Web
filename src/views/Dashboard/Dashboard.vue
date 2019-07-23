@@ -45,12 +45,6 @@
                 DSPL Repository
               </a>
             </li>
-            <li>
-              <a class="has-text-white">
-                <i class="fas fa-database"></i>
-                Measures Dataset
-              </a>
-            </li>
           </ul>
 
           <!-- <p
@@ -70,8 +64,8 @@
           <ul class="menu-list">
             <li>
               <a class="has-text-white">
-                <i class="fas fa-cog"></i>
-                Account Settings
+                <i class="fas fa-database"></i>
+                Measures Dataset
               </a>
             </li>
             <li>
