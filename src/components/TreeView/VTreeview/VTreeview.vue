@@ -70,7 +70,7 @@ export default {
           type: "r",
           name: "Root",
           icon: "fas fa-paste",
-          valid_children: ["m", "o"]
+          valid_children: ["m", "o", "g0", "g1"]
         },
         {
           type: "m",
