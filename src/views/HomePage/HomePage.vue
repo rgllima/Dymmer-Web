@@ -41,7 +41,7 @@
           </p>
         </div>
         <div id="dashboard-image">
-          <img src="../../assets/dashboard.jpg" alt="dashboard">
+          <img src="../../assets/dashboard.png" alt="dashboard">
         </div>
       </div>
     </section>
