@@ -80,7 +80,7 @@
             <v-treeview
               v-model="featureModel.feature_tree"
               :openAll="openAll"
-              :hasToolbox="false"
+              :hasToolbox="true"
               :contextResolutions="contextResolutions"
               :contextInEdition="contextInEdition"
               @changeFeatureStatus="changeFeatureStatus"

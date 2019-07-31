@@ -11,11 +11,11 @@
           <v-treeview
             :value="featureTree"
             :openAll="openAll"
-            :hasToolbox="true"
             @addNode="addNode"
             @editName="editName"
             @removeNode="removeNode"
             @swapType="swapType"
+            editorToolbox
           ></v-treeview>
         </div>
         <div class="tile is-child is-vertical" style="padding-left:10px">

@@ -23,7 +23,7 @@
     </ul>
     <!-- <div> -->
       <v-context
-        v-if="hasToolbox"
+        v-if="editorToolbox"
         ref="vcontext"
         :clickedOutside="clickedOutside"
         :toolboxContent="toolboxContent"
@@ -39,14 +39,15 @@ import VTreeviewItem from "./VTreeviewItem.vue";
 import VContext from "../VContext/VContext.vue";
 
 export default {
-  props: [
-    "value",
-    "openAll",
-    "searchText",
-    "hasToolbox",
-    "contextResolutions",
-    "contextInEdition"
-  ],
+  props: {
+    "value": Array,
+    "openAll": Boolean,
+    "searchText": String,
+    "contextToolbox": {type: Boolean, default: false},
+    "editorToolbox": {type: Boolean, default: false},
+    "contextResolutions": Array,
+    "contextInEdition": Boolean
+  },
   components: {
     VContext,
     VTreeviewItem
@@ -256,12 +257,12 @@ export default {
   },
 
   created() {
-    if (!this.hasToolbox) return;
+    if (!this.editorToolbox) return;
     else window.addEventListener("mousedown", this.hiddenToolbox);
   },
 
   beforeDestroy() {
-    if (!this.hasToolbox) return;
+    if (!this.editorToolbox) return;
     else window.removeEventListener("mousedown", this.hiddenToolbox);
   }
 };
