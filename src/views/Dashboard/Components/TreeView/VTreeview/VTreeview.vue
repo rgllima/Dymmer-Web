@@ -21,36 +21,36 @@
         @openTree="openTree"
       ></v-treeview-item>
     </ul>
-    <!-- <div> -->
-      <v-context
-        v-if="editorToolbox"
-        ref="vcontext"
-        :clickedOutside="clickedOutside"
-        :toolboxContent="toolboxContent"
-        :mouseEvent="mouseEvent"
-        @contextSelected="contextSelected"
-      ></v-context>
-    <!-- </div> -->
+
+    <editor-toolbox
+      v-if="editorToolbox"
+      ref="vcontext"
+      :clickedOutside="clickedOutside"
+      :toolboxContent="toolboxContent"
+      :mouseEvent="mouseEvent"
+      @contextSelected="contextSelected"
+    ></editor-toolbox>
+
   </div>
 </template>
 
 <script>
 import VTreeviewItem from "./VTreeviewItem.vue";
-import VContext from "../VContext/VContext.vue";
+import EditorToolbox from "../ToolBox/EditorToolbox";
 
 export default {
   props: {
-    "value": Array,
-    "openAll": Boolean,
-    "searchText": String,
-    "contextToolbox": {type: Boolean, default: false},
-    "editorToolbox": {type: Boolean, default: false},
-    "contextResolutions": Array,
-    "contextInEdition": Boolean
+    value: Array,
+    openAll: Boolean,
+    searchText: String,
+    contextToolbox: { type: Boolean, default: false },
+    editorToolbox: { type: Boolean, default: false },
+    contextResolutions: Array,
+    contextInEdition: Boolean
   },
   components: {
-    VContext,
-    VTreeviewItem
+    VTreeviewItem,
+    "editor-toolbox": EditorToolbox
   },
   name: "v-treeview",
   data() {
