@@ -1,5 +1,5 @@
 <template>
-  <div v-show="showContext && !typesAllowChanges.includes(node.model.type)" :style="menuStyle">
+  <div v-show="showContext" :style="menuStyle">
     <ul class="list-unstyled">
       <li class="is-green" @click="activeContextFeature">
         <span class="icon">
@@ -32,7 +32,6 @@ export default {
       typesAllowChanges: ["r", "g", "m"],
       whoisNode: "node",
       showContext: false,
-      showOption: false,
       menuStyle: null,
       multiplicity: null,
       feature: {}
@@ -41,7 +40,6 @@ export default {
 
   methods: {
     closeMenu() {
-      this.showOption = false;
       this.showContext = false;
     },
 
@@ -75,11 +73,6 @@ export default {
       father["multiplicity"] = this.node.parent.multiplicity;
 
       this.feature["father"] = father;
-    },
-
-    action(title) {
-      this.$emit("contextSelected", { title: title, whois: this.whoisNode });
-      this.closeMenu();
     }
   },
 
@@ -92,9 +85,11 @@ export default {
     },
 
     mouseEvent() {
-      // console.log("Conteúdo do Toolbox: ", this.node, this.node.parent.multiplicity);
-      this.multiplicity = this.node.parent.multiplicity;
       if (this.mouseEvent.button === 2) {
+        if (this.typesAllowChanges.includes(this.node.model.type)) return;
+        console.log("Conteúdo do Toolbox: ", this.node);
+        this.multiplicity = this.node.parent.multiplicity;
+
         this.menuStyle = {
           width: "210px",
           left: this.mouseEvent.pageX + "px",
@@ -107,7 +102,6 @@ export default {
           "z-index": 20
         };
         this.showContext = true;
-        this.showOption = false;
       }
     }
   }

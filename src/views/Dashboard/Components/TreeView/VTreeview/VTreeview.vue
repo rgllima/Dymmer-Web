@@ -1,5 +1,4 @@
 <template>
-  <!-- <div @mouseup.prevent="mousedown"> -->
   <div class="vtreeview-component" @mouseup.prevent="mousedown" @contextmenu.capture.prevent>
     <ul>
       <v-treeview-item
@@ -33,11 +32,9 @@
 
     <context-toolbox
       v-if="contextToolbox && contextInEdition"
-      ref="vcontext"
       :clickedOutside="clickedOutside"
       :node="node"
       :mouseEvent="mouseEvent"
-      @contextSelected="contextSelected"
       @changeStatus="changeStatus"
     ></context-toolbox>
   </div>
@@ -147,11 +144,14 @@ export default {
 
       this.node["model"] = this.selectedNode.model;
       this.node["validChildren"] = this.getValidChildren(typeRule);
-      this.node["parent"] = this.parentNode.model;
 
-      this.node.parent
-        ? (this.node.parent["validChildren"] = this.getValidChildren(parentTypeRule))
-        : null;
+
+      if (this.parentNode.model) {
+        this.node["parent"] = JSON.parse(JSON.stringify(this.parentNode.model));
+        this.node.parent["validChildren"] = this.getValidChildren(parentTypeRule)
+      } else {
+        this.node["parent"] = null
+      }
     },
 
     getValidChildren(rule) {
