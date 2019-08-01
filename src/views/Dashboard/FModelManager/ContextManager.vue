@@ -1,5 +1,8 @@
 <template>
   <div class="context-manager">
+    <div class="context-manager--help">
+      <i class="fas fa-question"></i>
+    </div>
     <b-modal :active.sync="modalActive" :width="300">
       <div class="box">
         <div class="field">
@@ -80,10 +83,10 @@
             <v-treeview
               v-model="featureModel.feature_tree"
               :openAll="openAll"
-              :hasToolbox="true"
               :contextResolutions="contextResolutions"
               :contextInEdition="contextInEdition"
               @changeFeatureStatus="changeFeatureStatus"
+              contextToolbox
             ></v-treeview>
           </div>
 
@@ -119,6 +122,17 @@ export default {
     contextInEdition: false,
     contextResolutions: []
   }),
+
+  watch: {
+    contexts: {
+      handler: function(newValue) {
+        this.contextResolutions = this.contexts.filter(
+          context => context.isTheCurrent
+        )[0].resolutions;
+      },
+      deep: true
+    }
+  },
 
   computed: {
     ...mapGetters({
@@ -219,6 +233,23 @@ export default {
     padding: .4rem
   .animation-content
     overflow: hidden
+  &--help
+    width: 40px
+    height: 40px
+    background: #41a080
+    border-radius: 50%
+    position: absolute
+    bottom: 30px
+    right: 50px
+    align-items: center
+    display: flex
+    animation: pulse 2s infinite
+    cursor: pointer
+    z-index: 25
+    i
+      margin: 0 auto
+      color: white
+      font-size: 1.5rem
   &--scroll-box
     min-height: 500px
     height: calc(100vh - 150px)

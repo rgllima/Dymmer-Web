@@ -26,16 +26,26 @@
       v-if="editorToolbox"
       ref="vcontext"
       :clickedOutside="clickedOutside"
-      :toolboxContent="toolboxContent"
+      :node="node"
       :mouseEvent="mouseEvent"
       @contextSelected="contextSelected"
     ></editor-toolbox>
 
+    <context-toolbox
+      v-if="contextToolbox && contextInEdition"
+      ref="vcontext"
+      :clickedOutside="clickedOutside"
+      :node="node"
+      :mouseEvent="mouseEvent"
+      @contextSelected="contextSelected"
+      @changeStatus="changeStatus"
+    ></context-toolbox>
   </div>
 </template>
 
 <script>
 import VTreeviewItem from "./VTreeviewItem.vue";
+import ContextToolbox from "../ToolBox/ContextToolbox";
 import EditorToolbox from "../ToolBox/EditorToolbox";
 
 export default {
@@ -50,6 +60,7 @@ export default {
   },
   components: {
     VTreeviewItem,
+    "context-toolbox": ContextToolbox,
     "editor-toolbox": EditorToolbox
   },
   name: "v-treeview",
@@ -59,7 +70,7 @@ export default {
       mouseEvent: null,
       selectedNode: null,
       parentNode: null,
-      toolboxContent: {},
+      node: { model: {} },
       treeRules: [
         {
           type: "#",
@@ -126,7 +137,7 @@ export default {
     selected(node) {
       this.selectedNode = node;
       this.parentNode = this.selectedNode.$parent;
-      this.toolboxContent = {};
+      this.node = {};
 
       let typeRule = this.getTypeRule(this.selectedNode.model.type);
       let parentTypeRule = null;
@@ -134,9 +145,13 @@ export default {
       if (this.parentNode.model)
         parentTypeRule = this.getTypeRule(this.parentNode.model.type);
 
-      this.toolboxContent["node"] = this.getValidChildren(typeRule);
-      this.toolboxContent["parent"] = this.getValidChildren(parentTypeRule);
-      this.toolboxContent["type"] = this.selectedNode.model.type;
+      this.node["model"] = this.selectedNode.model;
+      this.node["validChildren"] = this.getValidChildren(typeRule);
+      this.node["parent"] = this.parentNode.model;
+
+      this.node.parent
+        ? (this.node.parent["validChildren"] = this.getValidChildren(parentTypeRule))
+        : null;
     },
 
     getValidChildren(rule) {
@@ -232,7 +247,7 @@ export default {
       // console.log("offsetY", e.offsetY);
       // console.log("Mouse Click");
 
-      if (this.toolboxContent) {
+      if (this.node) {
         e.preventDefault();
         this.mouseEvent = {
           button: e.button,

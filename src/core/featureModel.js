@@ -31,7 +31,7 @@ function getLastFeatureId(feature_tree) {
 
   for (const child of feature_tree.children) {
     let b = getLastFeatureId(child);
-    console.log("b: ", b, "id:", id);
+    // console.log("b: ", b, "id:", id);
     if (b > id) id = b;
   }
   return id;

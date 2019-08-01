@@ -1,8 +1,8 @@
 /**
- * Las modify -> july 07 2019
+ * Las modify -> july 31 2019
  * This code is very complex then it has a exhaustive documentation to guide future
- * maintenance. Perhaps the comments being very ugly, but it are necessary to avoid the
- * developers spends a lot of time understanding how it works.
+ * maintenance. The comments are necessary to avoid the developers spends a lot of
+ * time understanding how it works.
  */
 
 /**
@@ -14,7 +14,7 @@ function runContextAnalysis(feature, featureModel) {
   let context = searchCurrentContext(featureModel.contexts);
   let father = searchFather(feature, featureModel.feature_tree[0]);
 
-  console.log("C: ", feature, "F: ", feature.father, "Father: ", father);
+  // console.log("C: ", feature, "F: ", feature.father, "Father: ", father);
 
   let grandfather = searchGrandfather(
     feature.father,
@@ -35,7 +35,7 @@ function runContextAnalysis(feature, featureModel) {
     case "g":
       if (!verifyHierarchyIsChecked(grandfather, context))
         throw "You cannot enable this feature! Please check the ancestors!";
-      return analyseGroupedFeatures(feature, grandfather);
+      return analyseGroupedFeatures(feature, grandfather, context);
     case "m":
       if (!verifyHierarchyIsChecked(feature.father, context))
         throw "You cannot enable this feature! Please check the ancestors!";
@@ -53,23 +53,35 @@ function runContextAnalysis(feature, featureModel) {
  * @param {*} feature
  * @param {*} grandfather
  */
-function analyseGroupedFeatures(feature, grandfather) {
+function analyseGroupedFeatures(feature, grandfather, context) {
   let response = [];
-  let child_feature = null;
+  // let child_feature = null;
+  console.log("Context: ", context.resolutions);
 
   grandfather.children[0].children.map(child => {
     if (child.id !== feature.id) {
-      if (feature.father.multiplicity === "1,1")
+      let get_feature = context.resolutions.filter(
+        ftr => ftr.feature_id === child.id
+      )[0];
+
+      if (feature.father.multiplicity === "1,1" && get_feature) {
         response.push({ id: child.id, status: false });
+        response = response.concat(changeChildStatusToFalse(child));
+      }
     } else {
       response.push({ id: child.id, status: feature.status });
-      child_feature = child;
+      // child_feature = child;
+      response = response.concat(changeMandatoryFeatureToTrue(child));
     }
   });
 
-  if (!feature.status && child_feature) {
-    response = response.concat(changeChildStatusToFalse(child_feature));
-  }
+  // if (child_feature) {
+  //   if (!feature.status) {
+  //     response = response.concat(changeChildStatusToFalse(child_feature));
+  //   } else {
+  //     response = response.concat(changeMandatoryFeatureToTrue(child_feature));
+  //   }
+  // }
 
   return response;
 }
@@ -99,7 +111,7 @@ function analyseOptionalFeatures(feature, father) {
 }
 
 /**
- * This function verify if the hierarchy features are checked
+ * This function verify if the ancestor features are activated
  * @param {*} ancestral
  * @param {*} context
  */
@@ -113,7 +125,7 @@ function verifyHierarchyIsChecked(ancestral, context) {
 }
 
 /**
- * This function search the feature father of any feature
+ * This function search the feature father from any feature
  * @param {*} child
  * @param {*} feature_tree
  */
@@ -129,7 +141,7 @@ function searchFather(child, feature_tree) {
 }
 
 /**
- * This function search the feature grandfather of any feature
+ * This function search the feature grandfather from any feature
  * @param {*} father
  * @param {*} feature_tree
  */

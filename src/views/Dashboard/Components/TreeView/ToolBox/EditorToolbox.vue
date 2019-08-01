@@ -2,7 +2,7 @@
   <div v-show="showContext" :style="menuStyle">
     <div v-show="!showOption">
       <ul class="list-unstyled">
-        <li v-if="toolboxContent.parent" @mousedown="openOptions('parent')">
+        <li v-if="node.parent" @mousedown="openOptions('parent')">
           <span class="icon">
             <i class="fas fa-caret-up"></i>
           </span>
@@ -15,22 +15,22 @@
           <span>Create Child Feature</span>
         </li>
 
-        <li v-if="toolboxContent.type !== 'r' && toolboxContent.type !== ''" @click="action('swapType')">
+        <li v-if="node.model.type !== 'r' && node.model.type !== ''" @click="action('swapType')">
           <span class="icon">
             <i class="fas fa-exchange-alt"></i>
           </span>
-          <span v-if="toolboxContent.type === 'o'">Change to Mandatory</span>
-          <span v-if="toolboxContent.type === 'm'">Change to Optional</span>
-          <span v-if="toolboxContent.type === 'g'">Swap Multiplicity</span>
+          <span v-if="node.model.type === 'o'">Change to Mandatory</span>
+          <span v-if="node.model.type === 'm'">Change to Optional</span>
+          <span v-if="node.model.type === 'g'">Swap Multiplicity</span>
         </li>
 
-        <li v-if="toolboxContent.type !== 'g'" @click="action('Rename')">
+        <li v-if="node.model.type !== 'g'" @click="action('Rename')">
           <span class="icon">
             <i class="fas fa-edit"></i>
           </span>
           <span>Rename</span>
         </li>
-        <li class="is-danger" v-if="toolboxContent.type !== 'r'" @click="confirmeDeletion">
+        <li class="is-danger" v-if="node.model.type !== 'r'" @click="confirmeDeletion">
           <span class="icon">
             <i class="fas fa-trash-alt"></i>
           </span>
@@ -60,7 +60,7 @@
 
 <script>
 export default {
-  props: ["treeTypes", "toolboxContent", "mouseEvent", "clickedOutside"],
+  props: ["treeTypes", "node", "mouseEvent", "clickedOutside"],
 
   data() {
     return {
@@ -95,7 +95,8 @@ export default {
     },
 
     openOptions(whois) {
-      this.data = this.toolboxContent[`${whois}`];
+      if (whois === "parent") this.data = this.node["parent"]["validChildren"];
+      else this.data = this.node["validChildren"];
       this.whoisNode = whois;
       this.$nextTick(() => {
         this.showOption = true;
@@ -130,7 +131,7 @@ export default {
   },
 
   mounted() {
-    this.data = this.toolboxContent.node;
+    this.data = this.node.validChildren;
   }
 };
 </script>

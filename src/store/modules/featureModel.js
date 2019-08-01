@@ -127,6 +127,15 @@ const mutations = {
         else feature.status = payload.status;
       }
     });
+  },
+
+  discardContextFeature(state, payload) {
+    state.featureModel.contexts.map(context => {
+      if (context.isTheCurrent)
+        context.resolutions = context.resolutions.filter(
+          feature => feature.feature_id !== payload.id
+        );
+    });
   }
 };
 
@@ -163,10 +172,17 @@ const actions = {
   changeContext(context, data) {
     try {
       let features = runContextAnalysis(data, state.featureModel);
+      console.log("Store:", data, "Status: ", typeof data.status == "boolean");
 
-      features.map(feature => {
-        context.commit("changeFeatureStatus", feature);
-      });
+      if (typeof data.status == "boolean") {
+        features.map(feature => {
+          context.commit("changeFeatureStatus", feature);
+        });
+      } else {
+        features.map(feature => {
+          context.commit("discardContextFeature", feature);
+        });
+      }
 
       context.commit("setHasChanged", true);
     } catch (error) {
