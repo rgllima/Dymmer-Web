@@ -5,6 +5,11 @@
  * time understanding how it works.
  */
 
+/** IMPORTANT:
+ * We use 3 values to represent the actions on the context: true is used to activate a feature,
+ * 'false' is used to disable a feature and 'null' is used to remove the feature from context.
+ */
+
 /**
  * Check 'feature' type to execute a specific code for it
  * @param {*} feature
@@ -27,23 +32,24 @@ function runContextAnalysis(feature, featureModel) {
    */
 
   switch (feature.father.type) {
-    case "": // This execute the same code when 'type' is an empty string => ""
-    case "o": // or 'type' is the 'o' string
+    case "": // This execute the same code when 'type' is an empty string => "" or 'type' is the 'o' string.
+    case "o":
       if (!verifyHierarchyIsChecked(feature, feature.father, context))
         throw "You cannot enable this feature! Please check the ancestors!";
       return analyseOptionalFeatures(feature, father, context);
+
     case "g":
       if (!verifyHierarchyIsChecked(feature, grandfather, context))
         throw "You cannot enable this feature! Please check the ancestors!";
-      return analyseGroupedFeatures(feature, grandfather, context);
+      return analyseGroupedFeatures(feature, father, context);
+
     case "m":
       if (!verifyHierarchyIsChecked(feature, feature.father, context))
         throw "You cannot enable this feature! Please check the ancestors!";
       return analyseOptionalFeatures(feature, father, context);
+
     case "r":
       return analyseOptionalFeatures(feature, father, context);
-    default:
-      break;
   }
   return [];
 }
@@ -53,26 +59,26 @@ function runContextAnalysis(feature, featureModel) {
  * @param {*} feature
  * @param {*} grandfather
  */
-function analyseGroupedFeatures(feature, grandfather, context) {
+function analyseGroupedFeatures(feature, father, context) {
   let response = [];
+  // let ft_type_boolean = typeof feature.status === "boolean" ? true : false;
+  let multiplicity = feature.father.multiplicity;
 
-  grandfather.children[0].children.map(child => {
+  father.children.map(child => {
     if (child.id !== feature.id) {
-      let get_feature = context.resolutions.filter(
-        ftr => ftr.feature_id === child.id
-      )[0];
+      let ftExists = checkIfFeatureExistsInTheContext(child, context);
 
-      if (
-        feature.father.multiplicity === "1,1" &&
-        get_feature &&
-        typeof feature.status === "boolean"
-      ) {
+      console.log("Ft: ", feature.id, "Cld: ", child.id, "Ext: ", ftExists);
+
+      if (multiplicity === "1,1" && ftExists && feature.status) {
         response.push({ id: child.id, status: false });
         response = response.concat(changeChildStatusToFalse(child, context));
       }
     } else {
       response.push({ id: child.id, status: feature.status });
-      response = response.concat(changeMandatoryFeatureToTrue(child));
+      if (feature.status)
+        response = response.concat(changeMandatoryFeatureToTrue(child));
+      else response = response.concat(changeChildStatusToFalse(child, context));
     }
   });
   return response;
@@ -95,7 +101,10 @@ function analyseOptionalFeatures(feature, father, context) {
   if (child_feature) {
     if (feature.status)
       response = response.concat(changeMandatoryFeatureToTrue(child_feature));
-    else response = response.concat(changeChildStatusToFalse(child_feature, context));
+    else
+      response = response.concat(
+        changeChildStatusToFalse(child_feature, context)
+      );
   }
 
   response.push({ id: feature.id, status: feature.status });
@@ -166,11 +175,10 @@ function searchCurrentContext(contexts) {
 function changeChildStatusToFalse(father, context) {
   let response = [];
   father.children.map(child => {
-    let get_feature = context.resolutions.filter(
-      ftr => ftr.feature_id === child.id
-    )[0];
+    let ftExists = checkIfFeatureExistsInTheContext(child, context);
 
-    if (child.type !== "g" && get_feature) response.push({ id: child.id, status: false });
+    if (child.type !== "g" && ftExists)
+      response.push({ id: child.id, status: false });
     response = response.concat(changeChildStatusToFalse(child, context));
   });
   return response;
@@ -189,6 +197,10 @@ function changeMandatoryFeatureToTrue(father) {
     }
   });
   return response;
+}
+
+function checkIfFeatureExistsInTheContext(feature, context) {
+  return context.resolutions.filter(ftr => ftr.feature_id === feature.id)[0];
 }
 
 export { runContextAnalysis };

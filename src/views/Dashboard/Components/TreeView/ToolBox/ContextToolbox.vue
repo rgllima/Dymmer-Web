@@ -7,13 +7,13 @@
         </span>
         <span>Active Feature</span>
       </li>
-      <li class="is-danger" v-if="multiplicity !== '1,1'" @click="desactiveContextFeature">
+      <li class="is-danger" v-if="node.model.type !== 'm'" @click="desactiveContextFeature">
         <span class="icon">
           <i class="fas fa-times"></i>
         </span>
         <span>Desactive Feature</span>
       </li>
-      <li @click="discardContextFeature">
+      <li v-if="node.model.type !== 'm'" @click="discardContextFeature">
         <span class="icon">
           <i class="fas fa-trash-alt"></i>
         </span>
@@ -29,7 +29,7 @@ export default {
 
   data() {
     return {
-      typesAllowChanges: ["r", "g", "m"],
+      typesForbiddenChanges: ["r", "g"],
       whoisNode: "node",
       showContext: false,
       menuStyle: null,
@@ -86,7 +86,7 @@ export default {
 
     mouseEvent() {
       if (this.mouseEvent.button === 2) {
-        if (this.typesAllowChanges.includes(this.node.model.type)) return;
+        if (this.typesForbiddenChanges.includes(this.node.model.type)) return;
         console.log("Conteúdo do Toolbox: ", this.node);
         this.multiplicity = this.node.parent.multiplicity;
 

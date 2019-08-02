@@ -42,8 +42,9 @@ const mutations = {
     let index = (state.nextId += 1);
     payload.node["id"] = `${payload.parent.id}_${index}`;
     node.children.push(payload.node);
+    state.featureModel.number_of_features++;
     state.hasChanged = true;
-    console.log("[STORE] - AddFeature")
+    console.log("[STORE] - AddFeature");
   },
 
   swapFeatureType(state, payload) {
