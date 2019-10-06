@@ -7,6 +7,9 @@
           <a href="https://www.quixada.ufc.br/">Universidade Federal do Ceará - Campus Quixadá</a>. The source code is licensed
           <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
         </p>
+        <p class="has-text-light">
+          Images By https://icons8.com
+        </p>
       </div>
     </footer>
   </section>

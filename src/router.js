@@ -50,6 +50,17 @@ const router = new Router({
           path: "/fmodel-manager",
           name: "FModelManager",
           component: () => import("@/views/Dashboard/FModelManager/Index")
+        },
+        {
+          path: "/measures-dataset",
+          name: "MeasuresDataset",
+          component: () =>
+            import("@/views/Dashboard/MeasuresDataset/MeasuresDataset")
+        },
+        {
+          path: "/help",
+          name: "Help",
+          component: () => import("@/views/Dashboard/Help/Help")
         }
       ]
     }

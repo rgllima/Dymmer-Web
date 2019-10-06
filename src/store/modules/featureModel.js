@@ -48,7 +48,7 @@ const mutations = {
   },
 
   swapFeatureType(state, payload) {
-    console.log("[STORE] - Swap Feature")
+    console.log("[STORE] - Swap Feature");
     let node = getFeatureReference(payload, state.featureModel.feature_tree);
     state.hasChanged = true;
     if (node["multiplicity"]) {
@@ -61,7 +61,7 @@ const mutations = {
   },
 
   renameFeature(state, payload) {
-    console.log("[STORE] - RenameFeature")
+    console.log("[STORE] - RenameFeature");
     let node = getFeatureReference(payload.id, state.featureModel.feature_tree);
 
     if (node["name"] !== payload["name"]) {
@@ -71,7 +71,7 @@ const mutations = {
   },
 
   deleteFeature(state, payload) {
-    console.log("[STORE] - DeleteFeature")
+    console.log("[STORE] - DeleteFeature");
     let feature_tree = state.featureModel.feature_tree;
     if (payload === feature_tree[0].id) return;
 
@@ -84,14 +84,14 @@ const mutations = {
   },
 
   addContext(state, payload) {
-    console.log("[STORE] - AddContext")
+    console.log("[STORE] - AddContext");
     state.featureModel.contexts.push(payload);
     if (state.featureModel.type === "SPL") state.featureModel.type = "DSPL";
     state.hasChanged = true;
   },
 
   deleteContext(state) {
-    console.log("[STORE] - DeleteContext")
+    console.log("[STORE] - DeleteContext");
     state.featureModel.contexts = state.featureModel.contexts.filter(
       context => {
         return !context.isTheCurrent;
@@ -104,7 +104,7 @@ const mutations = {
   },
 
   renameContext(state, payload) {
-    console.log("[STORE] - RenameFeature")
+    console.log("[STORE] - RenameFeature");
     state.featureModel.contexts.map(context => {
       if (context.isTheCurrent) {
         context.name = payload;
@@ -114,7 +114,7 @@ const mutations = {
   },
 
   selectContext(state, payload) {
-    console.log("[STORE] - SelectContext")
+    console.log("[STORE] - SelectContext");
     state.featureModel.contexts.map(context => {
       if (context.name === payload) context["isTheCurrent"] = true;
       else context["isTheCurrent"] = false;
@@ -122,7 +122,7 @@ const mutations = {
   },
 
   changeFeatureStatus(state, payload) {
-    console.log("[STORE] - Change FT Status")
+    console.log("[STORE] - Change FT Status");
     state.featureModel.contexts.map(context => {
       if (context.isTheCurrent) {
         let feature = context.resolutions.filter(
@@ -140,13 +140,20 @@ const mutations = {
   },
 
   discardContextFeature(state, payload) {
-    console.log("[STORE] - Delete Feature from Context")
+    console.log("[STORE] - Delete Feature from Context");
     state.featureModel.contexts.map(context => {
       if (context.isTheCurrent)
         context.resolutions = context.resolutions.filter(
           feature => feature.feature_id !== payload.id
         );
     });
+  },
+
+  saveConstraints(state, payload) {
+    console.log(state.featureModel.constraints);
+    console.log(payload);
+    state.featureModel.constraints = payload;
+    state.hasChanged = true;
   }
 };
 

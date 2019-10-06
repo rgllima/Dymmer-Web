@@ -1,5 +1,13 @@
 <template>
   <div class="feature-editor">
+    <b-modal :active.sync="constraintModalActive" has-modal-card full-screen :can-cancel="false">
+      <constraint-modal
+        :featureList="featureList"
+        :constraints="constraints"
+        @saveConstraints="saveConstraints"
+      />
+    </b-modal>
+
     <div class="tile is-ancestor">
       <div class="tile is-parent">
         <div class="tile is-child is-vertical feature-editor--scroll-box box">
@@ -21,7 +29,20 @@
         <div class="tile is-child is-vertical" style="padding-left:10px">
           <div class="tile is-vertical">
             <div class="tile is-child">
-              <constraint-card :constraints="constraints" />
+              <b-collapse class="card">
+                <div slot="trigger" slot-scope="props" class="card-header" style="width: 100%">
+                  <p class="card-header-title has-text-centered">Cross-Tree Constraints</p>
+                  <a class="card-header-icon">
+                    <b-icon pack="fas" :icon="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></b-icon>
+                  </a>
+                </div>
+                <div class="card__button">
+                  <button class="button is-small is-primary" @click="constraintModalActive=true">
+                    <p>Edit Constraints</p>
+                  </button>
+                </div>
+                <constraint-card :isEditing="false" :constraints="constraints" />
+              </b-collapse>
             </div>
             <div class="tile is-child">
               <feature-info :featureModel="featureModel" />
@@ -37,18 +58,22 @@
 import { mapGetters } from "vuex";
 import ConstraintCard from "./components/ConstraintCard";
 import FeatureInfoCard from "./components/FeatureInfoCard";
+import EditConstraintModal from "./components/editConstraintModal";
 
 export default {
   components: {
     "constraint-card": ConstraintCard,
-    "feature-info": FeatureInfoCard
+    "feature-info": FeatureInfoCard,
+    "constraint-modal": EditConstraintModal
   },
 
   data() {
     return {
       openAll: true,
       featureTree: [],
-      constraints: []
+      featureList: [],
+      constraints: [],
+      constraintModalActive: false
     };
   },
 
@@ -64,6 +89,7 @@ export default {
 
         for (const key in conKeys) {
           let id = conKeys[key].replace(/[\s\W-]+/g, "");
+
           let ftName = await this.searchNameConstraint(
             this.featureModel.feature_tree[0],
             id
@@ -71,18 +97,21 @@ export default {
           let ftNameReplaced = conKeys[key]
             .replace(`${id}`, ` ${ftName}`)
             .trim();
-          ftNameReplaced = ftNameReplaced.replace(`~`, `NOT`);
-          conFeatures.push(ftNameReplaced);
+
+          let ftSplitted = ftNameReplaced.split(" ");
+
+          if (ftSplitted[0] === "~")
+            conFeatures.push({
+              val: false,
+              feature: ftNameReplaced.replace(`~ `, ``),
+              id: id
+            });
+          else conFeatures.push({ val: true, feature: ftNameReplaced, id: id });
         }
-
-        let definitiveConstraint = "";
-
-        for (const key in conFeatures) {
-          definitiveConstraint += conFeatures[key];
-          if (key < conFeatures.length - 1) definitiveConstraint += " OR ";
-        }
-
-        this.constraints.push(definitiveConstraint);
+        this.constraints.push({
+          name: ftConstraints[index].name,
+          list: conFeatures
+        });
       }
     },
 
@@ -100,6 +129,15 @@ export default {
       return a;
     },
 
+    createFeatureList(feature_tree) {
+      for (const node of feature_tree.children) {
+        let { name, id, type } = node;
+        if (node.type !== "g" && node.type !== "m")
+          this.featureList.push({ name, id, type });
+        this.createFeatureList(node);
+      }
+    },
+
     addNode(data) {
       this.$store.commit("featureModel/addFeature", data);
     },
@@ -107,10 +145,26 @@ export default {
       this.$store.commit("featureModel/renameFeature", data);
     },
     swapType(id) {
-      this.$store.commit("featureModel/swapFeatureType", id)
+      this.$store.commit("featureModel/swapFeatureType", id);
     },
     removeNode(id) {
       this.$store.commit("featureModel/deleteFeature", id);
+    },
+
+    async saveConstraints(payload) {
+      let constraints = [];
+      payload.map(cts => {
+        let value = "";
+
+        for (const i in cts.list) {
+          if (!cts.list[i].val) value += "~";
+          value += cts.list[i].id;
+          if (i < cts.list.length-1) value += " or ";
+        }
+
+        constraints.push({ name: cts.name, value: value });
+      });
+      await this.$store.commit("featureModel/saveConstraints", constraints);
     }
   },
 
@@ -126,6 +180,10 @@ export default {
         this.featureTree = JSON.parse(
           JSON.stringify(this.featureModel.feature_tree)
         );
+        this.constraints = [];
+        this.featureList = [];
+        this.generateVisualConstraints();
+        this.createFeatureList(this.featureModel.feature_tree[0]);
       },
       deep: true
     }
@@ -136,6 +194,7 @@ export default {
       this.$router.push("/home");
     } else {
       this.generateVisualConstraints();
+      this.createFeatureList(this.featureModel.feature_tree[0]);
       this.featureTree = JSON.parse(
         JSON.stringify(this.featureModel.feature_tree)
       );
@@ -147,6 +206,8 @@ export default {
 <style lang="sass">
 .feature-editor
   height: 100%
+  .animation-content
+    padding: 0
   .box
     padding: .4rem
   &--scroll-box
@@ -154,4 +215,8 @@ export default {
     height: calc(100vh - 150px)
     overflow-x: hidden
     overflow-y: scroll
+.card__button
+  margin-top: 10px
+  margin-right: 10px
+  text-align: right
 </style>

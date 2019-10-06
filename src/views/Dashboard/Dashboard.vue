@@ -63,17 +63,21 @@
           <p class="menu-label has-text-light">General</p>
           <ul class="menu-list">
             <li>
-              <a class="has-text-white">
+              <a class="has-text-white" @click="pushRouter('/measures-dataset')">
                 <i class="fas fa-database"></i>
                 Measures Dataset
               </a>
             </li>
             <li>
-              <a class="has-text-white">
+              <a class="has-text-white" @click="pushRouter('/help')">
                 <i class="fas fa-question"></i>
                 Help
               </a>
             </li>
+          </ul>
+
+          <p class="menu-label has-text-light"></p>
+          <ul class="menu-list">
             <li>
               <a class="has-text-white" @click="logout">
                 <i class="fas fa-sign-out-alt"></i>
