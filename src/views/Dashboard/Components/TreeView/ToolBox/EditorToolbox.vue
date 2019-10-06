@@ -2,7 +2,7 @@
   <div v-show="showContext" :style="menuStyle">
     <div v-show="!showOption">
       <ul class="list-unstyled">
-        <li v-if="toolboxContent.parent" @mousedown="openOptions('parent')">
+        <li v-if="node.parent" @mousedown="openOptions('parent')">
           <span class="icon">
             <i class="fas fa-caret-up"></i>
           </span>
@@ -14,13 +14,23 @@
           </span>
           <span>Create Child Feature</span>
         </li>
-        <li v-if="toolboxContent.type !== 'g'" @click="action('Rename')">
+
+        <li v-if="node.model.type !== 'r' && node.model.type !== ''" @click="action('swapType')">
+          <span class="icon">
+            <i class="fas fa-exchange-alt"></i>
+          </span>
+          <span v-if="node.model.type === 'o'">Change to Mandatory</span>
+          <span v-if="node.model.type === 'm'">Change to Optional</span>
+          <span v-if="node.model.type === 'g'">Swap Multiplicity</span>
+        </li>
+
+        <li v-if="node.model.type !== 'g'" @click="action('Rename')">
           <span class="icon">
             <i class="fas fa-edit"></i>
           </span>
           <span>Rename</span>
         </li>
-        <li class="is-danger" @click="confirmeDeletion">
+        <li class="is-danger" v-if="node.model.type !== 'r'" @click="confirmeDeletion">
           <span class="icon">
             <i class="fas fa-trash-alt"></i>
           </span>
@@ -50,7 +60,7 @@
 
 <script>
 export default {
-  props: ["treeTypes", "toolboxContent", "mouseEvent", "clickedOutside"],
+  props: ["treeTypes", "node", "mouseEvent", "clickedOutside"],
 
   data() {
     return {
@@ -85,8 +95,8 @@ export default {
     },
 
     openOptions(whois) {
-      this.data = this.toolboxContent[`${whois}`];
-      // console.log('===> ', this.toolboxContent)
+      if (whois === "parent") this.data = this.node["parent"]["validChildren"];
+      else this.data = this.node["validChildren"];
       this.whoisNode = whois;
       this.$nextTick(() => {
         this.showOption = true;
@@ -96,18 +106,13 @@ export default {
 
   watch: {
     async clickedOutside() {
-      // await this.$nextTick()
-      // console.log("clickedOutside")
       if (this.clickedOutside) {
-        // console.log("Clicou Fora", this.clickedOutside, this.showContext)
         this.showContext = false;
       }
     },
 
     mouseEvent() {
-      // console.log("Vcontext - Mouse Event 1")
       if (this.mouseEvent.button === 2) {
-        // console.log("Vcontext - Mouse Event 2")
         this.menuStyle = {
           width: "210px",
           left: this.mouseEvent.pageX + "px",
@@ -119,16 +124,14 @@ export default {
           "box-shadow": "2px 2px 2px #aaa",
           "z-index": 20
         };
-        // this.$nextTick(() => {
         this.showContext = true;
         this.showOption = false;
-        // });
       }
     }
   },
 
   mounted() {
-    this.data = this.toolboxContent.node;
+    this.data = this.node.validChildren;
   }
 };
 </script>

@@ -5,7 +5,8 @@ const state = {
   measures: [],
   valeThresholds: [],
   computedMeasures: [],
-  groupedMeasuresThresholds: []
+  groupedMeasuresThresholds: [],
+  isUpdate: false
 };
 
 const mutations = {
@@ -23,16 +24,22 @@ const mutations = {
   },
   resetGroupedMeasuresThresholds: state => {
     state.groupedMeasuresThresholds = [];
+  },
+  setIsUpdate(state, payload) {
+    state.isUpdate = payload;
   }
 };
 
 const actions = {
   fetchMeasuresOnDatabase: async context => {
+    if (state.isUpdate) return;
+
     let url = `${dymmerServer.getUrl()}/qualitymeasures/list`;
     await axios
       .get(url)
       .then(response => {
         context.commit("setMeasures", response.data.qualityMeasureList);
+        context.commit("setIsUpdate", true);
       })
       .catch(err => console.log(err));
   },

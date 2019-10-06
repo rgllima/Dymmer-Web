@@ -90,7 +90,7 @@ export default {
 
   methods: {
     async applyMeasures() {
-      if (!this.selectedContext) {
+      if (!this.selectedContext && this.featureModel.type === "DSPL") {
         this.showMessage("Please, select a context name!", "is-danger");
         return;
       }
@@ -132,7 +132,7 @@ export default {
   },
 
   mounted() {
-    console.log("CONTEXT: ", this.contexts);
+    console.log("CONTEXT: ", this.featureModel);
   }
 };
 </script>

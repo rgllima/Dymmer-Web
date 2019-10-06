@@ -1,5 +1,4 @@
 <template>
-  <!-- <div @mouseup.prevent="mousedown"> -->
   <div class="vtreeview-component" @mouseup.prevent="mousedown" @contextmenu.capture.prevent>
     <ul>
       <v-treeview-item
@@ -21,35 +20,45 @@
         @openTree="openTree"
       ></v-treeview-item>
     </ul>
-    <!-- <div> -->
-      <v-context
-        v-if="hasToolbox"
-        ref="vcontext"
-        :clickedOutside="clickedOutside"
-        :toolboxContent="toolboxContent"
-        :mouseEvent="mouseEvent"
-        @contextSelected="contextSelected"
-      ></v-context>
-    <!-- </div> -->
+
+    <editor-toolbox
+      v-if="editorToolbox"
+      ref="vcontext"
+      :clickedOutside="clickedOutside"
+      :node="node"
+      :mouseEvent="mouseEvent"
+      @contextSelected="contextSelected"
+    ></editor-toolbox>
+
+    <context-toolbox
+      v-if="contextToolbox && contextInEdition"
+      :clickedOutside="clickedOutside"
+      :node="node"
+      :mouseEvent="mouseEvent"
+      @changeStatus="changeStatus"
+    ></context-toolbox>
   </div>
 </template>
 
 <script>
 import VTreeviewItem from "./VTreeviewItem.vue";
-import VContext from "../VContext/VContext.vue";
+import ContextToolbox from "../ToolBox/ContextToolbox";
+import EditorToolbox from "../ToolBox/EditorToolbox";
 
 export default {
-  props: [
-    "value",
-    "openAll",
-    "searchText",
-    "hasToolbox",
-    "contextResolutions",
-    "contextInEdition"
-  ],
+  props: {
+    value: Array,
+    openAll: Boolean,
+    searchText: String,
+    contextToolbox: { type: Boolean, default: false },
+    editorToolbox: { type: Boolean, default: false },
+    contextResolutions: Array,
+    contextInEdition: Boolean
+  },
   components: {
-    VContext,
-    VTreeviewItem
+    VTreeviewItem,
+    "context-toolbox": ContextToolbox,
+    "editor-toolbox": EditorToolbox
   },
   name: "v-treeview",
   data() {
@@ -58,7 +67,7 @@ export default {
       mouseEvent: null,
       selectedNode: null,
       parentNode: null,
-      toolboxContent: {},
+      node: { model: {} },
       treeRules: [
         {
           type: "#",
@@ -70,7 +79,7 @@ export default {
           type: "r",
           name: "Root",
           icon: "fas fa-paste",
-          valid_children: ["m", "o"]
+          valid_children: ["m", "o", "g0", "g1"]
         },
         {
           type: "m",
@@ -125,7 +134,7 @@ export default {
     selected(node) {
       this.selectedNode = node;
       this.parentNode = this.selectedNode.$parent;
-      this.toolboxContent = {};
+      this.node = {};
 
       let typeRule = this.getTypeRule(this.selectedNode.model.type);
       let parentTypeRule = null;
@@ -133,9 +142,16 @@ export default {
       if (this.parentNode.model)
         parentTypeRule = this.getTypeRule(this.parentNode.model.type);
 
-      this.toolboxContent["node"] = this.getValidChildren(typeRule);
-      this.toolboxContent["parent"] = this.getValidChildren(parentTypeRule);
-      this.toolboxContent["type"] = this.selectedNode.model.type;
+      this.node["model"] = this.selectedNode.model;
+      this.node["validChildren"] = this.getValidChildren(typeRule);
+
+
+      if (this.parentNode.model) {
+        this.node["parent"] = JSON.parse(JSON.stringify(this.parentNode.model));
+        this.node.parent["validChildren"] = this.getValidChildren(parentTypeRule)
+      } else {
+        this.node["parent"] = null
+      }
     },
 
     getValidChildren(rule) {
@@ -164,7 +180,7 @@ export default {
       let newNode = {};
       newNode["id"] = null;
       newNode["children"] = [];
-      console.log("NODE Clicado: ", node);
+      // console.log("NODE Clicado: ", node);
 
       switch (command) {
         case "Create Mandatory":
@@ -194,6 +210,9 @@ export default {
           newNode["type"] = "g";
           this.$emit("addNode", { parent: node.model, node: newNode });
           break;
+        case "swapType":
+          this.$emit("swapType", this.selectedNode.model.id);
+          break;
         case "Rename":
           this.selectedNode.editName();
           break;
@@ -216,7 +235,7 @@ export default {
     },
 
     mousedown(e) {
-      console.log(e);
+      // console.log(e);
       // console.log('Width do Dispositivo', e.view.window.innerWidth)
       // console.log("pageX", e.pageX);
       // console.log("pageY", e.pageY);
@@ -226,9 +245,9 @@ export default {
       // console.log("layerY", e.layerY);
       // console.log("offsetX", e.offsetX);
       // console.log("offsetY", e.offsetY);
-      console.log("Mouse Click");
+      // console.log("Mouse Click");
 
-      if (this.toolboxContent) {
+      if (this.node) {
         e.preventDefault();
         this.mouseEvent = {
           button: e.button,
@@ -247,18 +266,18 @@ export default {
 
       this.$nextTick(() => {
         this.clickedOutside = !vctxClickResult;
-        console.log(this.clickedOutside, vcontext.showContext);
+        // console.log(this.clickedOutside, vcontext.showContext);
       });
     }
   },
 
   created() {
-    if (!this.hasToolbox) return;
+    if (!this.editorToolbox) return;
     else window.addEventListener("mousedown", this.hiddenToolbox);
   },
 
   beforeDestroy() {
-    if (!this.hasToolbox) return;
+    if (!this.editorToolbox) return;
     else window.removeEventListener("mousedown", this.hiddenToolbox);
   }
 };

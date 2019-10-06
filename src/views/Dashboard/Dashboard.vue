@@ -1,7 +1,7 @@
 <template>
-  <div class="homepage-content">
-    <section class="main-content columns" style="overflow: hidden;">
-      <aside class="column is-paddingless" :class="{'active': menu_bars}">
+  <div class="dashboard-content columns">
+    <aside class="sidebar column is-paddingless" :class="{'active': menu_bars}">
+      <div class="dashboard-content--sidebar">
         <div class="infobar">
           <h1 class="infobar-text has-text-centered is-size-5">DyMMer Web</h1>
         </div>
@@ -28,21 +28,21 @@
           <p class="menu-label has-text-light">Feature Model</p>
           <ul class="menu-list">
             <li>
-              <a class="has-text-white" @click="pushRouter('feature-model-list')">
+              <a class="has-text-white" @click="openAddFeatureModelModal">
+                <i class="fas fa-th-large"></i>
+                Add Feature Model
+              </a>
+            </li>
+            <li>
+              <a class="has-text-white" @click="pushRouter('feature-model-list',{type:'spl'})">
                 <i class="fas fa-table"></i>
                 SPL Repository
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('feature-model-list')">
+              <a class="has-text-white" @click="pushRouter('feature-model-list', {type:'dspl'})">
                 <i class="fas fa-database"></i>
                 DSPL Repository
-              </a>
-            </li>
-            <li>
-              <a class="has-text-white">
-                <i class="fas fa-database"></i>
-                Measures Dataset
               </a>
             </li>
           </ul>
@@ -63,17 +63,21 @@
           <p class="menu-label has-text-light">General</p>
           <ul class="menu-list">
             <li>
-              <a class="has-text-white">
-                <i class="fas fa-cog"></i>
-                Account Settings
+              <a class="has-text-white" @click="pushRouter('/measures-dataset')">
+                <i class="fas fa-database"></i>
+                Measures Dataset
               </a>
             </li>
             <li>
-              <a class="has-text-white">
+              <a class="has-text-white" @click="pushRouter('/help')">
                 <i class="fas fa-question"></i>
                 Help
               </a>
             </li>
+          </ul>
+
+          <p class="menu-label has-text-light"></p>
+          <ul class="menu-list">
             <li>
               <a class="has-text-white" @click="logout">
                 <i class="fas fa-sign-out-alt"></i>
@@ -82,16 +86,17 @@
             </li>
           </ul>
         </div>
-      </aside>
+      </div>
+    </aside>
 
-      <div class="mycontainer section column">
-        <div class="level">
+    <!-- <div class="mycontainer section column"> -->
+    <!-- <div class="level">
           <div class="level-left" :class="{'menu-bar-opened': menu_bars}">
-            <!-- <div class="level-item">
+            <div class="level-item">
               <div class="user">
                 <i class="fa fa-user"/>
               </div>
-            </div>-->
+            </div>
           </div>
           <div class="level-right">
             <div class="control">
@@ -100,18 +105,18 @@
               </button>
             </div>
           </div>
-        </div>
+    </div>-->
 
-        <div class="dashboard-pages">
-          <!-- <router-view /> -->
-          <transition name="fade" mode="out-in">
-            <router-view />
-          </transition>
-        </div>
-      </div>
-    </section>
+    <div class="dashboard-pages column">
+      <!-- <router-view /> -->
+      <transition name="fade" mode="out-in">
+        <router-view />
+      </transition>
+    </div>
+    <!-- </div> -->
+    <!-- </section> -->
 
-    <footer class="footer has-background-black-bis">
+    <!-- <footer class="footer has-background-black-bis">
       <div class="content has-text-centered">
         <p class="has-text-light">
           <strong class="has-text-light">DyMMer</strong> by
@@ -119,7 +124,7 @@
           <a href="http://opensource.org/licenses/mit-license.php">MIT</a>.
         </p>
       </div>
-    </footer>
+    </footer>-->
   </div>
 </template>
 
@@ -129,13 +134,12 @@ import FeatureModelModal from "./Components/AddFeatureModelModal";
 export default {
   data() {
     return {
-      // showNav: false,
       menu_bars: false
     };
   },
   methods: {
-    pushRouter(route) {
-      this.$router.push(route);
+    pushRouter(route, query) {
+      this.$router.push({ path: route, query: query });
       this.menu_bars = !this.menu_bars;
     },
 
@@ -150,38 +154,10 @@ export default {
     logout() {
       this.$store.dispatch("authentication/logout");
     }
-  },
-  mounted() {
-    // this.$router.push("/home");
   }
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "./Dashboard";
-
-a.has-text-white:hover {
-  color: #372f9d !important;
-}
-
-.dashboard-pages {
-  height: 100%;
-  background-color: whitesmoke;
-
-  @include phone {
-    background-color: white;
-  }
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition-duration: 0.3s;
-  transition-property: opacity;
-  transition-timing-function: ease;
-}
-
-.fade-enter,
-.fade-leave-active {
-  opacity: 0;
-}
 </style>

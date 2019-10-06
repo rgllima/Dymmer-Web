@@ -15,7 +15,7 @@
               <p
                 id="mysubtitle"
                 class="subtitle has-text-light"
-              >The tool collects a large number of quality measures to support the maintainability evaluation of the features model, 40 measurements in total, uses specific measures for LPSD feature models.</p>
+              >The tool collects a large number of quality measures to support the maintainability evaluation of the features model, 40 measurements in total, uses specific measures for DSPL feature models.</p>
               <div class="buttons">
                 <a class="button is-success" @click="openDashboard">GET STARTED</a>
               </div>
@@ -41,7 +41,7 @@
           </p>
         </div>
         <div id="dashboard-image">
-          <img src="../../assets/dashboard.jpg" alt="dashboard">
+          <img src="../../assets/dashboard.png" alt="dashboard">
         </div>
       </div>
     </section>
@@ -52,9 +52,9 @@
           <div class="tile is-parent">
             <div class="tile is-child">
               <div class="tile is-child">
-                <!-- <div id="animation">
-                  <lottie id="my-lottie" :options="engeneerAnimation"/>
-                </div>-->
+                <div class="image">
+                  <img src="../../assets/clip-programming.png" alt="clip-programming">
+                </div>
               </div>
             </div>
           </div>
@@ -120,9 +120,9 @@
           </div>
           <div class="tile is-parent">
             <div class="tile is-child">
-              <!-- <div id="animation">
-                <lottie id="my-lottie" :options="engeneerAnimation"/>
-              </div>-->
+              <div class="image">
+                <img src="../../assets/hugo-message-sent.png" alt="hugo-message-sent">
+              </div>
             </div>
           </div>
         </div>
@@ -131,19 +131,6 @@
     <section>
       <futer/>
     </section>
-    <!-- <section id="dymmer-footer">
-      <footer class="footer" style="background-color: transparent">
-        <div class="content has-text-centered">
-          <p class="has-text-light">
-            <strong class="has-text-light">DyMMer</strong> by
-            <a href="https://www.quixada.ufc.br/">Universidade Federal do Ceará - Campus Quixadá</a>. The source code is licensed
-            <a
-              href="http://opensource.org/licenses/mit-license.php"
-            >MIT</a>.
-          </p>
-        </div>
-      </footer>
-    </section>-->
   </div>
 </template>
 
@@ -153,7 +140,6 @@ import * as engeneer from "@/assets/engeneer_animation.json";
 
 import Navbar from "@/components/Navbar/Navbar";
 import Footer from "@/components/Footer/Footer";
-import SignIn from "@/views/SignIn/SignIn";
 
 export default {
   components: {
@@ -233,10 +219,8 @@ export default {
     background-size: cover;
     min-height: 650px;
 
-    #animation {
-      max-width: 450px;
-      max-height: 450px;
-      margin: 30px auto;
+    .image {
+      padding-top: 30px;
     }
 
     #mytitle {
@@ -253,21 +237,11 @@ export default {
     z-index: 1;
     position: relative;
     padding-top: 140px;
-    background-image: url("../../assets/background-3.svg");
+    // background-image: url("../../assets/background-3.svg");
     background-position: center top;
     background-size: cover;
     min-height: 700px;
   }
-
-  // #dymmer-footer {
-  //   margin-top: -135px;
-  //   z-index: 1;
-  //   position: relative;
-  //   padding-top: 150px;
-  //   background-image: url("../../assets/background-4.svg");
-  //   background-position: center top;
-  //   background-size: cover;
-  // }
 }
 @media only screen and (max-width: 1087px) {
   .container {

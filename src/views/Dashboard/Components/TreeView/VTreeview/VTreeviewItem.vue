@@ -8,26 +8,12 @@
       <i v-if="icon" class="far" :class="icon" ></i>
     </span>
 
-    <span v-if="(!forbidenChangeTypes.includes(model.type) && contextInEdition )">
-      <span v-if="!allowChangeContext" class="btn-icon edit-icon blue" @click="discardFeatureStatus">
-        <i  class="fas fa-redo-alt"></i>
-      </span>
-
-      <span v-if="allowChangeContext" class="btn-icon edit-icon green" @click="changeFeatureStatus(true)">
+    <span >
+      <span v-if="contextStatus === 'activeItem'" class="edit-icon green">
         <i class="fas fa-check"></i>
       </span>
 
-      <span v-if="allowChangeContext" class="btn-icon edit-icon danger" @click="changeFeatureStatus(false)">
-        <i class="fas fa-times"></i>
-      </span>
-    </span>
-
-    <span v-if="!contextInEdition">
-      <span v-if="contextStatus == 'selectedItem'" class="edit-icon green">
-        <i class="fas fa-check"></i>
-      </span>
-
-      <span v-if="contextStatus == 'ignoredItem'" class="edit-icon danger">
+      <span v-if="contextStatus === 'desactiveItem'" class="edit-icon danger">
         <i class="fas fa-times"></i>
       </span>
     </span>
@@ -43,8 +29,7 @@
         :father="{id: model.id, type: model.type, multiplicity: model.multiplicity}"
         :treeRules="treeRules" :openAll="openAll" @emitAddNode="emitAddNode" @emitEditName="emitEditName"
         @selected="selected" :searchText="searchText" :contextResolutions="contextResolutions"
-        :contextInEdition="contextInEdition" @openTree="openTree"
-        @changeStatus="changeStatus">
+        @openTree="openTree">
         </v-treeview-item>
       </ul>
     </div>
@@ -54,24 +39,25 @@
 <script>
 export default {
   name: 'v-treeview-item',
-  props: ['feature', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions', 'contextInEdition'],
+  props: ['feature', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions'],
   data() {
     return {
       forbidenChangeTypes: ["r", "g", "m"],
       open: false,
       checked: null,
       edit: false,
-      model: null,
-      allowChangeContext: false
+      model: null
     }
   },
   computed: {
     isFolder() {
       return this.model.children && this.model.children.length
     },
+
     icon() {
       return this.getTypeRule(this.model.type).icon
     },
+
     isSearchText() {
       if (this.searchText && this.searchText != '') {
         if (
@@ -84,6 +70,7 @@ export default {
         } else return false
       }
     },
+
     contextStatus() {
       if (!this.contextResolutions || this.contextResolutions.length === 0)
         return ''
@@ -92,53 +79,38 @@ export default {
       let context = this.contextResolutions.filter(resolution => (resolution.feature_id === this.model.id))[0]
 
       if (context)
-        if (context.status) return 'selectedItem'
-        else return 'ignoredItem'
-      else return ''
+        if (context.status) return 'activeItem'
+        else return 'desactiveItem'
+      return 'ignoredItem'
     },
   },
   methods: {
-    discardFeatureStatus(){
-      this.allowChangeContext = true
-    },
-    changeFeatureStatus(status){
-      this.allowChangeContext = false
-      this.$emit("changeStatus", {
-        id: this.model.id,
-        type: this.model.type,
-        status: status,
-        father: this.father
-      })
-    },
-    changeStatus(node){
-      this.$emit("changeStatus", node)
-    },
     getTypeRule(type) {
       var typeRule = this.treeRules.filter(t => t.type == type)[0]
       return typeRule
     },
+
     blur(e) {
-      // console.log('BLUR: ', e, !this.model.id)
-      if (e.type === 'keyup') console.log("OPAAAS")
-
       this.edit = false
-      // console.log("AKI QUE A MÁGICA ACONTECE")
-
       if (!this.model.id)
         this.$emit("emitAddNode", {parent: this.$parent.model, node: this.model})
       else this.$emit("emitEditName", {id: this.model.id, name: this.model.name})
     },
+
     emitAddNode(data) {
       this.$emit("emitAddNode", data)
     },
+
     emitEditName(data) {
       this.$emit("emitEditName", data)
     },
+
     selected(node) {
       this.checked = null
       this.checked = this.model.id
       this.$emit('selected', node)
     },
+
     openTree(node) {
       this.open = true
       this.$emit('openTree', node)
@@ -180,11 +152,7 @@ export default {
   watch: {
     feature() {
       this.model = this.feature
-      console.log("Feature Mudou")
-    },
-
-    contextInEdition() {
-      this.allowChangeContext = false
+      // console.log("Feature Mudou")
     },
 
     openAll(openAll) {
@@ -243,14 +211,20 @@ ul label:before {
   color: #cc0000;
 }
 
-.selectedItem {
+.activeItem {
   background-color: #d3ffce;
   padding: 0 7px;
   border-radius: 10px;
 }
 
-.ignoredItem {
+.desactiveItem {
   background-color: #ffe4e1;
+  padding: 0 7px;
+  border-radius: 10px;
+}
+
+.ignoredItem {
+  text-decoration: line-through;
   padding: 0 7px;
   border-radius: 10px;
 }

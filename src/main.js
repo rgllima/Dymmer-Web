@@ -9,7 +9,7 @@ import Buefy from "buefy";
 import "buefy/dist/buefy.css";
 Vue.use(Buefy);
 
-import VTreeView from "@/components/TreeView/VTreeview/VTreeview";
+import VTreeView from "@/views/Dashboard/Components/TreeView/VTreeview/VTreeview";
 Vue.component("v-treeview", VTreeView);
 
 Vue.config.productionTip = false;

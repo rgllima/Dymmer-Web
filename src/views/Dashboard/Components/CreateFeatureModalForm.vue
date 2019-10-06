@@ -192,4 +192,13 @@ export default {
   min-height: 300px
 .create-feature-modal
   overflow-y: scroll
+  .control
+    textarea
+      max-height: 80px
+      min-height: 80px
+      resize: none
+  .modal-card
+    padding: 10px
+  .button
+    margin-bottom: 10px
 </style>

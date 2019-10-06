@@ -2,20 +2,40 @@
   <div class="fmodel-status box">
     <div class="tile">
       <div class="tile is-ancestor">
+        <div class="tile fmodel-status--img" @click="back">
+          <img src="../../../assets/left-arrow.svg" alt="arrow">
+        </div>
         <div class="tile is-parent is-vertical">
-          <div>
-            <h1>{{featureModel.name}}</h1>
+          <div class="tile">
+            <h1><strong>Title: </strong>{{featureModel.name}}</h1>
             <!-- <input class="input" type="text"> -->
           </div>
-          <div class="dropdown is-hoverable">
-            <div class="dropdown-trigger">
-              <a aria-haspopup="true" aria-controls="dropdown-menu">
-                <span>FILE</span>
-              </a>
+          <div class="tile">
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <a aria-haspopup="true" aria-controls="dropdown-menu">
+                  <span>FEATURE MODEL</span>
+                </a>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">Export to XML With Contexts</a>
+                  <a href="#" class="dropdown-item">Export to XML Without Contexts</a>
+                </div>
+              </div>
             </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                <a href="#" class="dropdown-item">Itens</a>
+
+            <div class="dropdown is-hoverable">
+              <div class="dropdown-trigger">
+                <a aria-haspopup="true" aria-controls="dropdown-menu">
+                  <span>MEASURES</span>
+                </a>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">Export Result to XLS</a>
+                  <a href="#" class="dropdown-item">Export Result to PDF</a>
+                </div>
               </div>
             </div>
           </div>
@@ -54,6 +74,10 @@ export default {
   methods: {
     saveFeatureModel() {
       this.$store.dispatch("featureModel/saveFeatureModelOnDatabase");
+    },
+
+    back() {
+      this.$router.go(-1)
     }
   }
 };
@@ -70,6 +94,22 @@ export default {
   padding: 5px 10px
   margin-bottom: 5px
   box-sizing: border-box
+  max-height: 56px
+  .dropdown
+    margin-top: 4px
+    span
+      font-size: .85rem
+  &--img
+    margin-top: 7px
+    margin-left: 2px
+    background: #333366
+    max-width: 40px
+    position: relative
+    display: block
+    max-height: 56px
+    padding-top: 8px
+    cursor: pointer
+    border-radius: 5px 0 0 5px
   &--changes
     display: flex
     justify-content: flex-end

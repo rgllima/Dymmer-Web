@@ -1,14 +1,22 @@
 import axios from "axios";
+import dymmerServer from "../../util/dymmer-server";
 
 const state = {
-  featureModelDatabase: [],
-  apiURL: `https://dymmer-web-backend.herokuapp.com`,
+  splList: [],
+  dsplList: [],
+  isUpdate: false,
   error: null
 };
 
 const mutations = {
-  setFeatureModelDatabase: (state, payload) => {
-    state.featureModelDatabase = payload;
+  setSplList: (state, payload) => {
+    state.splList = payload;
+  },
+  setDsplList: (state, payload) => {
+    state.dsplList = payload;
+  },
+  setIsUpdate(state, payload) {
+    state.isUpdate = payload;
   },
   setError(state, payload) {
     state.error = payload;
@@ -16,9 +24,13 @@ const mutations = {
 };
 
 const actions = {
-  fetchFeatureModelsOnDatabase: async context => {
+  fetchAllFeatureModelsOnDatabase: async context => {
+    if (state.isUpdate) return;
+
+    let url = `${dymmerServer.getUrl()}/featuremodels/list`;
+
     await axios
-      .get(`${state.apiURL}/featuremodels/list`)
+      .get(url)
       .then(response => {
         let ftm = [];
         response.data.featureModelList.map(featureModel => {
@@ -26,15 +38,21 @@ const actions = {
           fmodel["_id"] = featureModel._id;
           ftm.push(fmodel);
         });
-        console.log(JSON.parse(JSON.stringify(ftm)))
-        context.commit("setFeatureModelDatabase", ftm);
+
+        let splList = ftm.filter(fmodel => fmodel.type === "SPL");
+        let dsplList = ftm.filter(fmodel => fmodel.type === "DSPL");
+
+        context.commit("setSplList", splList);
+        context.commit("setDsplList", dsplList);
+        context.commit("setIsUpdate", true);
       })
       .catch(err => console.log(err));
   }
 };
 
 const getters = {
-  getFeatureModelDatabase: state => state.featureModelDatabase
+  getSplList: state => state.splList,
+  getDsplList: state => state.dsplList
 };
 
 export default {

@@ -58,7 +58,8 @@ export default {
 
 <style lang="sass">
 .fmodel
-  width: calc(100% - 40px)
+  max-height: 100%
+  width: 100%
   margin: 0 auto
   &-tabs
     .tab-content
