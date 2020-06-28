@@ -1,7 +1,8 @@
 .DS_Store
 node_modules
-/dist
-/test_files
+dist
+test_files
+github-dymmer
 
 # local env files
 .env.local

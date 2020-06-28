@@ -47,7 +47,13 @@
           </div>
           <div class="fmodel-status--changes" v-else>
             <p>There are unsaved changes</p>
-            <button class="button fmodel-status--save-btn" @click="saveFeatureModel">Save Model</button>
+            <button
+              :class="{ 'is-loading': saving }"
+              class="button fmodel-status--save-btn"
+              @click="saveFeatureModel"
+            >
+              Save Model
+            </button>
           </div>
         </div>
       </div>
@@ -60,6 +66,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      saving: false,
       featureModelControl: {}
     };
   },
@@ -72,12 +79,16 @@ export default {
   },
 
   methods: {
-    saveFeatureModel() {
-      this.$store.dispatch("featureModel/saveFeatureModelOnDatabase");
+    async saveFeatureModel() {
+      if (!this.saving) {
+        this.saving = true;
+        await this.$store.dispatch("featureModel/updateFeatureModelOnDatabase");
+        this.saving = false;
+      }
     },
 
     back() {
-      this.$router.go(-1)
+      this.$router.go(-1);
     }
   }
 };

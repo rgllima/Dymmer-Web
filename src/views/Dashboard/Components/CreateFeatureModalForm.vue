@@ -100,7 +100,13 @@
         <a class="button is-danger" @click="$emit('close')">Cancel</a>
       </p>
       <p class="control">
-        <button class="button is-primary" @click="createFModel">Create Feature Model</button>
+        <button
+          :class="{ 'is-loading': loading }"
+          class="button is-primary"
+          @click="createFModel"
+        >
+          Create Feature Model
+        </button>
       </p>
     </div>
   </div>
@@ -110,6 +116,7 @@
 export default {
   data() {
     return {
+      loading: false,
       fModel: {
         name: "",
         description: "",
@@ -141,16 +148,22 @@ export default {
 
   methods: {
     async createFModel() {
-      console.log(this.fModel);
-      let hasIssues = this.validateFModel();
+      if (!this.loading) {
+        console.log(this.fModel);
+        let hasIssues = this.validateFModel();
 
-      if (hasIssues) return this.notifyUser(hasIssues);
+        if (hasIssues) return this.notifyUser(hasIssues);
 
-      this.fModel.feature_tree[0].name = this.fModel.name;
-      await this.$store.commit("featureModel/setFeatureModel", this.fModel);
-      this.$store.commit("featureModel/setHasChanged", true);
-      this.$emit("close");
-      this.$router.push("/fmodel-manager");
+        this.fModel.feature_tree[0].name = this.fModel.name;
+
+        this.loading = true;
+        await this.$store.dispatch(
+          "featureModel/createFeatureModelOnDatabase",
+          this.fModel
+        );
+        this.loading = false;
+        this.$emit("close");
+      }
     },
 
     validateFModel() {

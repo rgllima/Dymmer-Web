@@ -125,10 +125,9 @@ export default {
 
   watch: {
     contexts: {
-      handler: function(newValue) {
-        this.contextResolutions = this.contexts.filter(
-          context => context.isTheCurrent
-        )[0].resolutions;
+      handler: function() {
+        let context = this.contexts.filter(context => context.isTheCurrent);
+        this.contextResolutions = context[0] ? context[0].resolutions : [];
       },
       deep: true
     }
@@ -217,10 +216,6 @@ export default {
       });
     }
   },
-
-  mounted() {
-    if (this.featureModel.feature_tree.length === 0) this.$router.push("/home");
-  }
 };
 </script>
 
