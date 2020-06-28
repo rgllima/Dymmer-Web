@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
@@ -13,7 +13,7 @@ export default {
 <style>
 @import url("https://fonts.googleapis.com/css?family=Raleway&display=swap");
 #app {
-  font-family: 'Raleway', sans-serif;
+  font-family: "Raleway", sans-serif;
   line-height: 1.35;
 }
 </style>

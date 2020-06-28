@@ -4,7 +4,7 @@ import Router from "vue-router";
 Vue.use(Router);
 
 const router = new Router({
-  mode: "history",
+  mode: "hash",
   base: process.env.BASE_URL,
   routes: [
     {
@@ -47,7 +47,7 @@ const router = new Router({
           component: () => import("@/views/Dashboard/FModelList/FModelList")
         },
         {
-          path: "/fmodel-manager",
+          path: "/fmodel-manager/:id?",
           name: "FModelManager",
           component: () => import("@/views/Dashboard/FModelManager/Index")
         },

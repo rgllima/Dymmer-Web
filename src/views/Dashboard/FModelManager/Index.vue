@@ -1,21 +1,49 @@
 <template>
   <div class="fmodel">
     <div class="fmodel--status">
-      <fmodel-control/>
+      <fmodel-control />
     </div>
 
-    <div class="fmodel--tabs">
-      <b-tabs class="fmodel-tabs" type="is-boxed" expanded>
-        <b-tab-item class="fmodel-item" label="Feature Editor" icon-pack="fas" icon="edit">
-          <feature-editor/>
-        </b-tab-item>
-        <b-tab-item class="fmodel-item" label="Context Manager" icon-pack="fas" icon="align-justify">
-          <context-manager/>
-        </b-tab-item>
-        <b-tab-item class="fmodel-item" label="Apply Measures" icon-pack="fas" icon="square-root-alt">
-          <apply-measures/>
-        </b-tab-item>
-      </b-tabs>
+    <div v-if="loading" class="loading">
+      <b-loading :is-full-page="false" :active="true">
+        <b-icon
+          pack="fas"
+          icon="sync-alt"
+          size="is-large"
+          custom-class="fa-spin"
+        ></b-icon>
+      </b-loading>
+    </div>
+
+    <div v-else class="content">
+      <div class="fmodel--tabs">
+        <b-tabs class="fmodel-tabs" type="is-boxed" expanded>
+          <b-tab-item
+            class="fmodel-item"
+            label="Feature Editor"
+            icon-pack="fas"
+            icon="edit"
+          >
+            <feature-editor />
+          </b-tab-item>
+          <b-tab-item
+            class="fmodel-item"
+            label="Context Manager"
+            icon-pack="fas"
+            icon="align-justify"
+          >
+            <context-manager />
+          </b-tab-item>
+          <b-tab-item
+            class="fmodel-item"
+            label="Apply Measures"
+            icon-pack="fas"
+            icon="square-root-alt"
+          >
+            <apply-measures />
+          </b-tab-item>
+        </b-tabs>
+      </div>
     </div>
   </div>
 </template>
@@ -24,7 +52,7 @@
 import FeatureEditor from "./FeatureEditor";
 import ContextManager from "./ContextManager";
 import ApplyMeasures from "./ApplyMeasures";
-import FModelControl from "./FModelControl"
+import FModelControl from "./FModelControl";
 import { mapGetters } from "vuex";
 
 export default {
@@ -35,10 +63,13 @@ export default {
     "fmodel-control": FModelControl
   },
 
-  data: () => ({}),
+  data: () => ({
+    loading: true
+  }),
 
   computed: {
     ...mapGetters({
+      featureModel: "featureModel/getFeatureModel",
       error: "featureModel/getError"
     })
   },
@@ -51,6 +82,31 @@ export default {
           type: "is-danger"
         });
       this.$store.commit("featureModel/setError", null);
+    }
+  },
+
+  methods: {
+    async fetchFeatureModel(id) {
+      console.log(id);
+      await this.$store.dispatch(
+        "featureModel/fetchFeatureModelOnDatabase",
+        id
+      );
+
+      if (this.featureModel.feature_tree.length === 0) {
+        this.$router.push("/home");
+      }
+      this.loading = false;
+    }
+  },
+
+  mounted() {
+    let { id } = this.$route.params;
+
+    if (this.featureModel.feature_tree.length === 0) {
+      this.fetchFeatureModel(id);
+    } else {
+      this.loading = false;
     }
   }
 };

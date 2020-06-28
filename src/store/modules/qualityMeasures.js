@@ -67,15 +67,14 @@ const actions = {
   },
 
   fetchComputedMeasures: async (context, obj) => {
-    let url = `${dymmerServer.getUrl()}/qualitymeasures/apply/${
-      obj.featureModel._id
-    }`;
+    let url = `${dymmerServer.getUrl()}/qualitymeasures/apply`;
 
     await axios({
       method: "post",
       url: url,
       data: {
-        measures: obj.measures
+        measures: obj.measures,
+        featureModel: obj.featureModel
       }
     })
       .then(response => {

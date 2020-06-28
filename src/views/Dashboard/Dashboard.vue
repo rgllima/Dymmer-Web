@@ -34,13 +34,13 @@
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('feature-model-list',{type:'spl'})">
+              <a class="has-text-white" @click="pushRouter('/feature-model-list',{type:'spl'})">
                 <i class="fas fa-table"></i>
                 SPL Repository
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('feature-model-list', {type:'dspl'})">
+              <a class="has-text-white" @click="pushRouter('/feature-model-list', {type:'dspl'})">
                 <i class="fas fa-database"></i>
                 DSPL Repository
               </a>

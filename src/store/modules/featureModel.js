@@ -183,8 +183,7 @@ const actions = {
     context.commit("qualityMeasures/resetGroupedMeasuresThresholds", null, {
       root: true
     });
-
-    router.push("/fmodel-manager");
+    router.push(`/fmodel-manager/${data["_id"]}`);
   },
 
   changeContext(context, data) {
@@ -202,16 +201,52 @@ const actions = {
         });
       }
 
-      // console.log("Store FModel: ", JSON.stringify(state.featureModel.feature_tree));
-
       context.commit("setHasChanged", true);
     } catch (error) {
       context.commit("setError", error);
     }
   },
 
-  saveFeatureModelOnDatabase: async context => {
-    context.commit("setHasChanged", false);
+  createFeatureModelOnDatabase: async (context, payload) => {
+    let url = `${dymmerServer.getUrl()}/featuremodels/create`;
+    await axios
+      .post(url, { featureModelJson: JSON.stringify(payload) })
+      .then(res => {
+        let fModel = JSON.parse(res.data.newFeatureModel.featureModelJson);
+        fModel["_id"] = res.data.newFeatureModel["_id"];
+
+        context.commit("setFeatureModel", fModel);
+        context.commit("setHasChanged", false);
+        context.commit("qualityMeasures/resetGroupedMeasuresThresholds", null, {
+          root: true
+        });
+        router.push(`/fmodel-manager/${fModel["_id"]}`);
+      });
+  },
+
+  updateFeatureModelOnDatabase: async context => {
+    let fModel = state.featureModel;
+    let url = `${dymmerServer.getUrl()}/featuremodels/update/${fModel["_id"]}`;
+    await axios
+      .put(url, { featureModelJson: JSON.stringify(fModel) })
+      .then(res => {
+        let data = JSON.parse(res.data.updatedFeatureModel.featureModelJson);
+        context.commit("setFeatureModel", data);
+        context.commit("setHasChanged", false);
+      });
+  },
+
+  fetchFeatureModelOnDatabase: async (context, payload) => {
+    let url = `${dymmerServer.getUrl()}/featuremodels/get/${payload}`;
+    await axios
+      .get(url)
+      .then(res => {
+        let data = JSON.parse(res.data.returnedFeatureModel.featureModelJson);
+        context.commit("setFeatureModel", data);
+      })
+      .catch(err => {
+        console.log(err.message);
+      });
   }
 };
 
