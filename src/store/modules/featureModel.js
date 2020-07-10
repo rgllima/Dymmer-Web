@@ -167,7 +167,7 @@ const actions = {
       .then(res => {
         console.log(JSON.parse(JSON.stringify(res.data)));
         context.commit("setFeatureModel", res.data);
-        context.commit("setHasChanged", false);
+        context.commit("setHasChanged", true);
         context.commit("qualityMeasures/resetGroupedMeasuresThresholds", null, {
           root: true
         });
@@ -226,14 +226,26 @@ const actions = {
 
   updateFeatureModelOnDatabase: async context => {
     let fModel = state.featureModel;
-    let url = `${dymmerServer.getUrl()}/featuremodels/update/${fModel["_id"]}`;
-    await axios
-      .put(url, { featureModelJson: JSON.stringify(fModel) })
-      .then(res => {
-        let data = JSON.parse(res.data.updatedFeatureModel.featureModelJson);
-        context.commit("setFeatureModel", data);
-        context.commit("setHasChanged", false);
+
+    if (!fModel["_id"]) {
+      let type = "SPL";
+      if (fModel.contexts.length) {
+        type = "DSPL";
+      }
+      await context.dispatch("createFeatureModelOnDatabase", {
+        ...fModel,
+        type: type
       });
+    } else {
+      let url = `${dymmerServer.getUrl()}/featuremodels/update/${fModel["_id"]}`;
+      await axios
+        .put(url, { featureModelJson: JSON.stringify(fModel) })
+        .then(res => {
+          let data = JSON.parse(res.data.updatedFeatureModel.featureModelJson);
+          context.commit("setFeatureModel", data);
+          context.commit("setHasChanged", false);
+        });
+    }
   },
 
   fetchFeatureModelOnDatabase: async (context, payload) => {
