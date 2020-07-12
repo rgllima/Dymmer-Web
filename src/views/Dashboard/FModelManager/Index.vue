@@ -1,7 +1,7 @@
 <template>
   <div class="fmodel">
     <div class="fmodel--status">
-      <fmodel-control />
+      <fmodel-control @setLoading="setLoading" />
     </div>
 
     <div v-if="loading" class="loading">
@@ -97,6 +97,10 @@ export default {
         this.$router.push("/home");
       }
       this.loading = false;
+    },
+
+    setLoading(value) {
+      this.loading = value;
     }
   },
 

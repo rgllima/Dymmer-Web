@@ -64,6 +64,7 @@ const actions = {
     });
 
     context.commit("setGroupedMeasuresThresholds", groupedMeasuresThresholds);
+    console.log(state.groupedMeasuresThresholds);
   },
 
   fetchComputedMeasures: async (context, obj) => {
@@ -93,6 +94,92 @@ const actions = {
         context.commit("setValeThresholds", data);
       })
       .catch(err => console.log(err));
+  },
+
+  exportMeasuresToCSV: async context => {
+    let url = `${dymmerServer.getUrl()}/qualitymeasures/export-to-csv`;
+    const descriptionData = [
+      "initials",
+      "name",
+      "value",
+      "threshold_very_low",
+      "threshold_low",
+      "threshold_moderate",
+      "threshold_high",
+      "threshold_very_high"
+    ];
+    const data = state.groupedMeasuresThresholds.map(obj => [
+      obj["initials"],
+      obj["name"],
+      obj["value"],
+      obj["veryLow"],
+      obj["low"],
+      obj["moderate"],
+      obj["high"],
+      obj["veryHigh"]
+    ]);
+    const fModel = context.rootGetters["featureModel/getFeatureModel"];
+
+    await axios
+      .post(url, {
+        dataDescription: descriptionData,
+        data: data
+      })
+      .then(res => {
+        let blob = new Blob([res.data], { type: "text/csv" });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute(
+          "download",
+          `measures ${fModel["name"].toLowerCase()}.csv`
+        ); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      });
+  },
+
+  exportMeasuresToPDF: async context => {
+    let url = `${dymmerServer.getUrl()}/qualitymeasures/export-to-pdf`;
+    const descriptionData = [
+      "initials",
+      "name",
+      "value",
+      "threshold_very_low",
+      "threshold_low",
+      "threshold_moderate",
+      "threshold_high",
+      "threshold_very_high"
+    ];
+    const data = state.groupedMeasuresThresholds.map(obj => [
+      obj["initials"],
+      obj["name"],
+      obj["value"],
+      obj["veryLow"],
+      obj["low"],
+      obj["moderate"],
+      obj["high"],
+      obj["veryHigh"]
+    ]);
+    const fModel = context.rootGetters["featureModel/getFeatureModel"];
+
+    await axios
+      .post(url, {
+        dataDescription: descriptionData,
+        data: data
+      })
+      .then(res => {
+        let blob = new Blob([res.data], { type: "application/pdf" });
+        let url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute(
+          "download",
+          `measures ${fModel["name"].toLowerCase()}.pdf`
+        ); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+      });
   }
 };
 
