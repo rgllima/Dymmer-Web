@@ -19,22 +19,37 @@
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">Export to XML With Contexts</a>
-                  <a href="#" class="dropdown-item">Export to XML Without Contexts</a>
+                  <p
+                    v-if="dsplFeatureModel"
+                    class="dropdown-item"
+                    @click="exportFMToXMLWithContexts"
+                  >
+                    Export to XML With Contexts
+                  </p>
+                  <p
+                    class="dropdown-item"
+                    @click="exportFMToXMLWithoutContexts"
+                  >
+                    Export to XML Without Contexts
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div class="dropdown is-hoverable">
+            <div class="dropdown is-hoverable" v-if="computedMeasures.length">
               <div class="dropdown-trigger">
                 <a aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>MEASURES</span>
+                  <span>EXPORT MEASURES</span>
                 </a>
               </div>
               <div class="dropdown-menu" id="dropdown-menu" role="menu">
                 <div class="dropdown-content">
-                  <a href="#" class="dropdown-item">Export Result to XLS</a>
-                  <a href="#" class="dropdown-item">Export Result to PDF</a>
+                  <p class="dropdown-item" @click="exportMeasuresToCSV">
+                    Export Result to CSV
+                  </p>
+                  <p class="dropdown-item" @click="exportMeasuresToPDF">
+                    Export Result to PDF
+                  </p>
                 </div>
               </div>
             </div>
@@ -74,8 +89,12 @@ export default {
   computed: {
     ...mapGetters({
       featureModel: "featureModel/getFeatureModel",
-      featureModelChanged: "featureModel/getHasChanged"
-    })
+      featureModelChanged: "featureModel/getHasChanged",
+      computedMeasures: "qualityMeasures/getGroupedMeasuresThresholds"
+    }),
+    dsplFeatureModel() {
+      return this.featureModel?.type === 'DSPL'
+    }
   },
 
   methods: {
@@ -85,6 +104,30 @@ export default {
         await this.$store.dispatch("featureModel/updateFeatureModelOnDatabase");
         this.saving = false;
       }
+    },
+
+    async exportFMToXMLWithoutContexts() {
+      this.$emit("setLoading", true);
+      await this.$store.dispatch("featureModel/exportFMToXML", false);
+      this.$emit("setLoading", false);
+    },
+
+    async exportFMToXMLWithContexts() {
+      this.$emit("setLoading", true);
+      await this.$store.dispatch("featureModel/exportFMToXML", true);
+      this.$emit("setLoading", false);
+    },
+
+    async exportMeasuresToCSV() {
+      this.$emit("setLoading", true);
+      await this.$store.dispatch("qualityMeasures/exportMeasuresToCSV");
+      this.$emit("setLoading", false);
+    },
+
+    async exportMeasuresToPDF() {
+      this.$emit("setLoading", true);
+      await this.$store.dispatch("qualityMeasures/exportMeasuresToPDF");
+      this.$emit("setLoading", false);
     },
 
     back() {
@@ -110,6 +153,11 @@ export default {
     margin-top: 4px
     span
       font-size: .85rem
+    .dropdown-item
+      cursor: pointer
+      width: 250px
+      &:hover
+        background-color: #f5f5f5
   &--img
     margin-top: 7px
     margin-left: 2px
