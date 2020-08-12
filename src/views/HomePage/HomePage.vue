@@ -9,13 +9,15 @@
           <div class="tile is-parent">
             <div class="tile is-child">
               <h2 id="mytitle" class="title has-text-white">
-                The
-                <b-tooltip label="Dynamic feature Model tool based on Measures" dashed>DyMMer</b-tooltip> tool allows the extraction of quality measures from feature models.
+                <b-tooltip label="Dynamic feature Model tool based on Measures" dashed>DyMMer-web</b-tooltip> is a tool for modeling and evaluating SPLs and DSPLs feature models.
               </h2>
               <p
-                id="mysubtitle"
-                class="subtitle has-text-light"
-              >The tool collects a large number of quality measures to support the maintainability evaluation of the features model, 40 measurements in total, uses specific measures for DSPL feature models.</p>
+              <p id="mysubtitle" class="subtitle has-text-light">
+                The tool collects a large number of quality measures to support
+                the maintainability evaluation of the features model, 40
+                measurements in total, uses specific measures for DSPL feature
+                models.
+              </p>
               <div class="buttons">
                 <a class="button is-success" @click="openDashboard">GET STARTED</a>
               </div>
@@ -61,12 +63,12 @@
           <div class="tile is-parent">
             <div class="tile is-child">
               <h2
-                id="mytitle"
-                class="title has-text-white"
+                  id="mytitle"
+                  class="title has-text-white"
               >Export the values of the quality measures and analyze several feature models together.</h2>
               <p
-                id="mysubtitle"
-                class="subtitle has-text-light"
+                  id="mysubtitle"
+                  class="subtitle has-text-light"
               >This is a great advantage of the DyMMer tool, since it makes it possible to analyze several feature models together. DyMMer also allows the domain engineer to export only a subset of the 40 quality measures supported..</p>
               <a class="button is-light is-outlined">
                 <span>Learn more</span>

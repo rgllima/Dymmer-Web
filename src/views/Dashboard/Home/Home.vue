@@ -1,13 +1,25 @@
 <template>
   <div class="home">
-    <div class="notification" style="background-color: #8b88d6; color: white">
-      Primar lorem ipsum dolor sit amet, consectetur adipiscing elit lorem ipsum
-      dolor.
-      <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec
-      nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus
-      diam, et dictum
-      <a>felis venenatis</a> efficitur. Sit amet, consectetur
-      adipiscing elit
+    <div
+      class="notification"
+      style="background-color: #8b88d6; color: white; text-align: justify"
+    >
+      DyMMer-web tool is an extension of the DyMMer tool in web format to allow
+      the modeling, storage and evaluation of the SPLs and DSPLs features models
+      from the thresholds of the measures. The tool was developed in JavaScript
+      and the code is available on
+      <a
+        href="https://github.com/dymmerufc/Dymmer-Web"
+        target="_blank"
+        rel="noopener"
+        >GitHub</a
+      >. The license DyMMer-web tool is the
+      <a
+        href="https://opensource.org/licenses/mit-license.php"
+        target="_blank"
+        rel="noopener"
+        >MIT Open Source</a
+      >.
     </div>
 
     <nav class="level">
@@ -18,7 +30,12 @@
         </div>
         <div v-else>
           <b-loading :is-full-page="false" :active="true">
-            <b-icon pack="fas" icon="sync-alt" size="is-large" custom-class="fa-spin"></b-icon>
+            <b-icon
+              pack="fas"
+              icon="sync-alt"
+              size="is-large"
+              custom-class="fa-spin"
+            ></b-icon>
           </b-loading>
         </div>
       </div>
@@ -30,7 +47,12 @@
         </div>
         <div v-else>
           <b-loading :is-full-page="false" :active="true">
-            <b-icon pack="fas" icon="sync-alt" size="is-large" custom-class="fa-spin"></b-icon>
+            <b-icon
+              pack="fas"
+              icon="sync-alt"
+              size="is-large"
+              custom-class="fa-spin"
+            ></b-icon>
           </b-loading>
         </div>
       </div>
@@ -42,7 +64,12 @@
         </div>
         <div v-else>
           <b-loading :is-full-page="false" :active="true">
-            <b-icon pack="fas" icon="sync-alt" size="is-large" custom-class="fa-spin"></b-icon>
+            <b-icon
+              pack="fas"
+              icon="sync-alt"
+              size="is-large"
+              custom-class="fa-spin"
+            ></b-icon>
           </b-loading>
         </div>
       </div>
