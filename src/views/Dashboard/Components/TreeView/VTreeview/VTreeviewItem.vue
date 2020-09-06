@@ -1,14 +1,24 @@
 <template>
   <li class="tree-node">
-    <span class="toggle-icon" :class="{ 'empty-toggle': !isFolder }" :key="open">
-      <i v-if="isFolder" :class="{'fas fa-caret-down' : this.open, 'fas fa-caret-right' : !this.open}" ></i>
+    <span
+      class="toggle-icon"
+      :class="{ 'empty-toggle': !isFolder }"
+      :key="open"
+    >
+      <i
+        v-if="isFolder"
+        :class="{
+          'fas fa-caret-down': this.open,
+          'fas fa-caret-right': !this.open
+        }"
+      ></i>
     </span>
 
     <span class="tree-icon" :class="{ 'empty-toggle': !icon }" :key="icon">
-      <i v-if="icon" class="far" :class="icon" ></i>
+      <i v-if="icon" class="far" :class="icon"></i>
     </span>
 
-    <span >
+    <span>
       <span v-if="contextStatus === 'activeItem'" class="edit-icon green">
         <i class="fas fa-check"></i>
       </span>
@@ -18,18 +28,68 @@
       </span>
     </span>
 
-    <input type="radio" name="rad" v-model="checked" :id="model.id" :value="model.id">
-    <label v-if="!(model.type == 'g')" v-show="!edit" class="tree-text" :class="contextStatus" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{model.name}}</label>
-    <label v-else v-show="!edit" class="tree-text" :class="{ 'searched-text': isSearchText }" :for="model.id" @click="toggle" @contextmenu.prevent="showContextMenu" key="label">{{[new String(model.multiplicity)]}}</label>
-    <input v-show="edit" ref="title" class="tree-text" v-model="model.name" :placeholder="model.name" key="input" @blur="blur" @keyup.enter="blur">
+    <input
+      type="radio"
+      name="rad"
+      v-model="checked"
+      :id="model.id"
+      :value="model.id"
+    />
+    <label
+      v-if="!(model.type === 'g')"
+      v-show="!edit"
+      class="tree-text"
+      :class="contextStatus"
+      :for="model.id"
+      @click="toggle"
+      @contextmenu.prevent="showContextMenu"
+      @dblclick="editName"
+      key="label"
+      >{{ model.name }}</label
+    >
+    <label
+      v-else
+      v-show="!edit"
+      class="tree-text"
+      :class="{ 'searched-text': isSearchText }"
+      :for="model.id"
+      @click="toggle"
+      @contextmenu.prevent="showContextMenu"
+      key="label"
+      >{{ [new String(model.multiplicity)] }}</label
+    >
+    <input
+      v-show="edit"
+      ref="title"
+      class="tree-text"
+      v-model="model.name"
+      :placeholder="model.name"
+      key="input"
+      @blur="blur"
+      @keyup.enter="blur"
+      @focus="$event.target.select()"
+    />
 
     <div class="tree-children">
       <ul v-show="open" v-if="isFolder">
-        <v-treeview-item v-for="child in model.children" :key="child.id" :feature="child"
-        :father="{id: model.id, type: model.type, multiplicity: model.multiplicity}"
-        :treeRules="treeRules" :openAll="openAll" @emitAddNode="emitAddNode" @emitEditName="emitEditName"
-        @selected="selected" :searchText="searchText" :contextResolutions="contextResolutions"
-        @openTree="openTree">
+        <v-treeview-item
+          v-for="child in model.children"
+          :key="child.id"
+          :feature="child"
+          :father="{
+            id: model.id,
+            type: model.type,
+            multiplicity: model.multiplicity
+          }"
+          :treeRules="treeRules"
+          :openAll="openAll"
+          @emitAddNode="emitAddNode"
+          @emitEditName="emitEditName"
+          @selected="selected"
+          :searchText="searchText"
+          :contextResolutions="contextResolutions"
+          @openTree="openTree"
+        >
         </v-treeview-item>
       </ul>
     </div>
@@ -38,128 +98,149 @@
 
 <script>
 export default {
-  name: 'v-treeview-item',
-  props: ['feature', 'father', 'treeRules', 'openAll', 'searchText', 'contextResolutions'],
+  name: "v-treeview-item",
+  props: [
+    "feature",
+    "father",
+    "treeRules",
+    "openAll",
+    "searchText",
+    "contextResolutions"
+  ],
   data() {
     return {
       forbidenChangeTypes: ["r", "g", "m"],
       open: false,
       checked: null,
       edit: false,
-      model: null
-    }
+      model: null,
+      modelName: ""
+    };
   },
   computed: {
     isFolder() {
-      return this.model.children && this.model.children.length
+      return this.model.children && this.model.children.length;
     },
 
     icon() {
-      return this.getTypeRule(this.model.type).icon
+      return this.getTypeRule(this.model.type).icon;
     },
 
     isSearchText() {
-      if (this.searchText && this.searchText != '') {
+      if (this.searchText && this.searchText != "") {
         if (
           this.model.name
             .toLowerCase()
             .indexOf(this.searchText.toLowerCase()) !== -1
         ) {
-          this.openTree(this)
-          return true
-        } else return false
+          this.openTree(this);
+          return true;
+        }
       }
+      return false;
     },
 
     contextStatus() {
       if (!this.contextResolutions || this.contextResolutions.length === 0)
-        return ''
-      if (this.model.id === '_r')
-        return ''
-      let context = this.contextResolutions.filter(resolution => (resolution.feature_id === this.model.id))[0]
+        return "";
+      if (this.model.id === "_r") return "";
+      let context = this.contextResolutions.filter(
+        resolution => resolution.feature_id === this.model.id
+      )[0];
 
       if (context)
-        if (context.status) return 'activeItem'
-        else return 'desactiveItem'
-      return 'ignoredItem'
-    },
+        if (context.status) return "activeItem";
+        else return "desactiveItem";
+      return "ignoredItem";
+    }
   },
   methods: {
     getTypeRule(type) {
-      var typeRule = this.treeRules.filter(t => t.type == type)[0]
-      return typeRule
+      var typeRule = this.treeRules.filter(t => t.type == type)[0];
+      return typeRule;
     },
 
     blur(e) {
-      this.edit = false
+      if (!this.model.name.trim())this.model.name = this.modelName;
+
+      this.edit = false;
+
       if (!this.model.id)
-        this.$emit("emitAddNode", {parent: this.$parent.model, node: this.model})
-      else this.$emit("emitEditName", {id: this.model.id, name: this.model.name})
+        this.$emit("emitAddNode", {
+          parent: this.$parent.model,
+          node: this.model
+        });
+      else
+        this.$emit("emitEditName", {
+          id: this.model.id,
+          name: this.model.name
+        });
     },
 
     emitAddNode(data) {
-      this.$emit("emitAddNode", data)
+      this.$emit("emitAddNode", data);
     },
 
     emitEditName(data) {
-      this.$emit("emitEditName", data)
+      this.$emit("emitEditName", data);
     },
 
     selected(node) {
-      this.checked = null
-      this.checked = this.model.id
-      this.$emit('selected', node)
+      this.checked = null;
+      this.checked = this.model.id;
+      this.$emit("selected", node);
     },
 
     openTree(node) {
-      this.open = true
-      this.$emit('openTree', node)
+      this.open = true;
+      this.$emit("openTree", node);
     },
 
     addNode(newNode) {
-      var typeRule = this.getTypeRule(this.model.type)
+      var typeRule = this.getTypeRule(this.model.type);
 
       if (typeRule.valid_children.indexOf(newNode.type) > -1) {
-        this.model.children.push(newNode)
+        this.model.children.push(newNode);
       }
     },
     editName() {
-      this.edit = true
-      this.$nextTick(() => this.$refs.title.focus())
+      this.edit = true;
+      this.$nextTick(() => this.$refs.title.focus());
     },
 
     showContextMenu(e) {
-      e.preventDefault()
-      this.open = true
-      this.selected(this)
+      e.preventDefault();
+      this.open = true;
+      this.selected(this);
     },
     toggle() {
       if (this.isFolder) {
-        this.open = !this.open
+        this.open = !this.open;
       }
-      this.selected(this)
+      this.selected(this);
     }
   },
 
   created() {
     this.model = this.feature;
+    this.modelName = `${this.feature.name}`;
     if (!this.model.id) {
-      this.editName()
+      this.editName();
     }
-    this.open = this.openAll
+    this.open = this.openAll;
   },
 
   watch: {
     feature() {
-      this.model = this.feature
+      this.model = this.feature;
       // console.log("Feature Mudou")
     },
 
     openAll(openAll) {
-      this.open = openAll
-    },
-  },
-}
+      this.open = openAll;
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -182,10 +263,10 @@ ul .tree-node :hover:before {
   background: rgba(129, 100, 207, 0.1);
 }
 
-ul .tree-node input[type='radio'] {
+ul .tree-node input[type="radio"] {
   display: none;
 }
-ul .tree-node input[type='radio']:checked + label:before {
+ul .tree-node input[type="radio"]:checked + label:before {
   background: rgba(121, 87, 213, 0.25);
 }
 
@@ -199,7 +280,7 @@ ul label {
 ul label:before {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  content: '';
+  content: "";
   height: 21px;
   left: 0;
   position: absolute;
@@ -230,12 +311,12 @@ ul label:before {
 }
 
 .tree-icon {
-  font-size: .8em;
+  font-size: 0.8em;
   margin-right: 10px;
 }
 
 .edit-icon {
-  font-size: .8em;
+  font-size: 0.8em;
   margin-right: 10px;
 }
 
@@ -245,14 +326,14 @@ ul label:before {
 }
 
 .danger {
-  color: #ff4444
+  color: #ff4444;
 }
 
 .green {
-  color: #008000
+  color: #008000;
 }
 
 .blue {
-  color: #0099cc
+  color: #0099cc;
 }
 </style>

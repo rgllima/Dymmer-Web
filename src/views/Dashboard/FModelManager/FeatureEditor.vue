@@ -190,7 +190,6 @@ export default {
   },
 
   mounted() {
-    console.log("FeatureEditor");
     if (this.featureModel.feature_tree.length !== 0) {
       this.generateVisualConstraints();
       this.createFeatureList(this.featureModel.feature_tree[0]);

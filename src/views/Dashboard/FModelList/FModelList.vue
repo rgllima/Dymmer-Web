@@ -1,5 +1,16 @@
 <template>
   <div id="feature-model-list box" class="box" style>
+    <div v-if="!splList.length" class="loading">
+      <b-loading :is-full-page="false" :active="true">
+        <b-icon
+          pack="fas"
+          icon="sync-alt"
+          size="is-large"
+          custom-class="fa-spin"
+        ></b-icon>
+      </b-loading>
+    </div>
+
     <div class="notification">
       <h1 class="subtitle is-size-3 has-text-centered">Feature Models Repository</h1>
     </div>
@@ -7,13 +18,27 @@
     <div class="tile is-ancestor is-vertical">
       <div class="tile is-parent">
         <div class="tile is-child is-vertical">
-          <div class="field is-grouped is-grouped-right">
-            <div class="field has-addons">
-              <div class="control">
-                <a class="button is-static">Type to Search</a>
+
+          <div class="field is-horizontal">
+            <div class="field-body">
+
+              <div class="field">
+                <div class="select">
+                  <select v-model="type">
+                    <option value="">Filter by Types</option>
+                    <option value="SPL">SPL Feature Models</option>
+                    <option value="DSPL">DSPL Feature Models</option>
+                  </select>
+                </div>
               </div>
-              <div class="control">
-                <input class="input" v-model="search" type="text" placeholder="Find in the repository" />
+
+              <div class="field has-addons" style="flex-grow: unset">
+                <div class="control">
+                  <a class="button is-static">Type to Search</a>
+                </div>
+                <div class="control">
+                  <input class="input" v-model="search" type="text" placeholder="Find in the repository" />
+                </div>
               </div>
             </div>
           </div>
@@ -62,7 +87,8 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      search: ""
+      search: "",
+      type: ""
     };
   },
 
@@ -74,10 +100,9 @@ export default {
 
     data() {
       let fmodels = [];
-      let type = this.$route.query.type;
 
-      if (type)
-        type.toLocaleUpperCase() === "SPL"
+      if (this.type)
+        this.type.toLocaleUpperCase() === "SPL"
           ? (fmodels = this.splList)
           : (fmodels = this.dsplList);
       else fmodels = [].concat(this.splList, this.dsplList);
