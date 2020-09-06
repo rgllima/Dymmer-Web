@@ -6,10 +6,10 @@
           <h1 class="infobar-text has-text-centered is-size-5">DyMMer Web</h1>
         </div>
 
-        <div class="toggle-icon">
-          <i class="fas fa-chevron-circle-left"></i>
-          <i class="fas fas-hidden fa-chevron-circle-right"></i>
-        </div>
+<!--        <div class="toggle-icon">-->
+<!--          <i class="fas fa-chevron-circle-left"></i>-->
+<!--          <i class="fas fas-hidden fa-chevron-circle-right"></i>-->
+<!--        </div>-->
 
         <div class="menu-bars" @click="menu_bars=!menu_bars">
           <i class="fa" :class="(!menu_bars) ? 'fa-bars' : 'fa-times'" />
@@ -34,15 +34,15 @@
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('/feature-model-list',{type:'spl'})">
+              <a class="has-text-white" @click="pushRouter('/feature-model-list',{type:'public'})">
                 <i class="fas fa-table"></i>
-                SPL Repository
+                Public Repository
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('/feature-model-list', {type:'dspl'})">
+              <a class="has-text-white" @click="pushRouter('/feature-model-list', {type:'private'})">
                 <i class="fas fa-database"></i>
-                DSPL Repository
+                Private Repository
               </a>
             </li>
           </ul>

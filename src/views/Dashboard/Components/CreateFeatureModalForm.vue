@@ -11,7 +11,8 @@
           <label class="label">Feature Model Name</label>
           <p class="control is-expanded">
             <input
-              class="input is-danger"
+              class="input"
+              :class="[!fModel.name.trim().length ? 'is-danger' : 'is-success']"
               type="text"
               placeholder="Feature Model Name"
               v-model="fModel.name"
@@ -23,10 +24,12 @@
           <label class="label">Author</label>
           <p class="control is-expanded">
             <input
-              class="input is-danger"
+              class="input"
+              :class="[!fModel.creator.trim().length ? 'is-danger' : 'is-success']"
               type="text"
               placeholder="Author"
               v-model="fModel.creator"
+              required
             />
           </p>
         </div>
@@ -38,9 +41,13 @@
         <label class="label">Description</label>
         <p class="control is-expanded">
           <textarea
-            class="textarea is-danger"
+            class="textarea"
+            :class="[
+              !fModel.description.trim().length ? 'is-danger' : 'is-success'
+            ]"
             placeholder="Write a brief description of the Feature Model..."
             v-model="fModel.description"
+            required
           ></textarea>
         </p>
       </div>
@@ -51,7 +58,16 @@
         <div class="field">
           <label class="label">Email</label>
           <p class="control is-expanded">
-            <input class="input is-danger" type="email" placeholder="Email" v-model="fModel.email" />
+            <input
+              class="input "
+              :class="[
+                !validateEmail(fModel.email) ? 'is-danger' : 'is-success'
+              ]"
+              type="email"
+              placeholder="Email"
+              v-model="fModel.email"
+              required
+            />
           </p>
         </div>
         <div class="field">

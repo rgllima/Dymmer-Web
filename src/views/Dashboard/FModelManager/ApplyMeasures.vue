@@ -24,13 +24,6 @@
             <b-table-column field="status" label="Thresholds Status" centered>
               <div v-html="checkMeasureStatus(props.row)"></div>
             </b-table-column>
-            <b-table-column label="Details" centered>
-              <b-tooltip label="See Details">
-                <a class="tag is-medium" @click="openThresholdDetailsInModal(props.row)">
-                  <i class="fas fa-chart-area"></i>
-                </a>
-              </b-tooltip>
-            </b-table-column>
           </template>
         </b-table>
       </div>
@@ -40,7 +33,6 @@
 
 <script>
 import SelectMeasures from "./components/SelectMeasures";
-import ThresholdDetails from "./components/ThresholdDetails";
 import { mapGetters } from "vuex";
 
 export default {
@@ -71,17 +63,6 @@ export default {
         hasModalCard: true
       });
     },
-
-    openThresholdDetailsInModal(data) {
-      this.$modal.open({
-        parent: this,
-        component: ThresholdDetails,
-        props: {
-          data: data
-        },
-        hasModalCard: true
-      });
-    }
   },
 
   computed: {
