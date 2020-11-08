@@ -12,6 +12,11 @@ const router = new Router({
       component: () => import("@/views/HomePage/HomePage")
     },
     {
+      path: "/login",
+      name: "Login",
+      component: () => import("@/views/SignIn")
+    },
+    {
       path: "/",
       name: "HomePage",
       component: () => import("@/views/HomePage/HomePage")
@@ -35,6 +40,9 @@ const router = new Router({
       path: "/dashboard",
       name: "Dashboard",
       component: () => import("@/views/Dashboard/Dashboard"),
+      meta: {
+        requiresAuth: true
+      },
       children: [
         {
           path: "/home",
@@ -65,6 +73,14 @@ const router = new Router({
       ]
     }
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  const tokenExists = localStorage.getItem("@token");
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  if (requiresAuth && !tokenExists) next("/login");
+  else if (!requiresAuth) next();
+  else next();
 });
 
 export default router;

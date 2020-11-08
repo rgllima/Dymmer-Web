@@ -1,5 +1,4 @@
-import axios from "axios";
-import dymmerServer from "../../util/dymmer-server";
+import instance from "@/store/modules/axios.config";
 
 const state = {
   splList: [],
@@ -27,9 +26,9 @@ const actions = {
   fetchAllFeatureModelsOnDatabase: async context => {
     if (state.isUpdate) return;
 
-    let url = `${dymmerServer.getUrl()}/featuremodels/list`;
+    let url = `/featuremodels/list`;
 
-    await axios
+    await instance
       .get(url)
       .then(response => {
         let ftm = [];

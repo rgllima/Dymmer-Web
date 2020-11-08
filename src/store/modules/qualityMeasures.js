@@ -1,5 +1,4 @@
-import axios from "axios";
-import dymmerServer from "../../util/dymmer-server";
+import instance from "@/store/modules/axios.config";
 
 const state = {
   measures: [],
@@ -34,8 +33,8 @@ const actions = {
   fetchMeasuresOnDatabase: async context => {
     if (state.isUpdate) return;
 
-    let url = `${dymmerServer.getUrl()}/qualitymeasures/list`;
-    await axios
+    let url = `/qualitymeasures/list`;
+    await instance
       .get(url)
       .then(response => {
         context.commit("setMeasures", response.data.qualityMeasureList);
@@ -68,9 +67,9 @@ const actions = {
   },
 
   fetchComputedMeasures: async (context, obj) => {
-    let url = `${dymmerServer.getUrl()}/qualitymeasures/apply`;
+    let url = `/qualitymeasures/apply`;
 
-    await axios({
+    await instance({
       method: "post",
       url: url,
       data: {
@@ -86,8 +85,8 @@ const actions = {
   },
 
   async fetchValeThresholds(context) {
-    let url = `${dymmerServer.getUrl()}/valemethod/thresholds`;
-    await axios
+    let url = `/valemethod/thresholds`;
+    await instance
       .get(url)
       .then(response => {
         let data = response.data.returnedValeThresholds;
@@ -97,7 +96,7 @@ const actions = {
   },
 
   exportMeasuresToCSV: async context => {
-    let url = `${dymmerServer.getUrl()}/qualitymeasures/export-to-csv`;
+    let url = `/qualitymeasures/export-to-csv`;
     const descriptionData = [
       "initials",
       "name",
@@ -120,7 +119,7 @@ const actions = {
     ]);
     const fModel = context.rootGetters["featureModel/getFeatureModel"];
 
-    await axios
+    await instance
       .post(url, {
         dataDescription: descriptionData,
         data: data
@@ -140,7 +139,7 @@ const actions = {
   },
 
   exportMeasuresToPDF: async context => {
-    let url = `${dymmerServer.getUrl()}/qualitymeasures/export-to-pdf`;
+    let url = `/qualitymeasures/export-to-pdf`;
     const descriptionData = [
       "initials",
       "name",
@@ -163,7 +162,7 @@ const actions = {
     ]);
     const fModel = context.rootGetters["featureModel/getFeatureModel"];
 
-    await axios
+    await instance
       .post(url, {
         dataDescription: descriptionData,
         data: data

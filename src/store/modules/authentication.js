@@ -25,8 +25,9 @@ const actions = {
         email: user.email,
         password: user.password
       })
-      .then(() => {
-        router.push("/dashboard");
+      .then(({ data }) => {
+        localStorage.setItem("@token", data["token"]);
+        router.push("/home");
       })
       .catch(err => {
         console.log(err);
@@ -41,8 +42,9 @@ const actions = {
         password: user.password,
         name: user.name
       })
-      .then(() => {
-        router.push("/dashboard");
+      .then(({ data }) => {
+        localStorage.setItem("@token", data["token"]);
+        router.push("/home");
       })
       .catch(err => {
         console.log(err);
@@ -51,6 +53,7 @@ const actions = {
   },
 
   logout: () => {
+    localStorage.clear();
     router.push("/");
   }
 };
