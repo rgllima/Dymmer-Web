@@ -5,8 +5,7 @@ const state = {
   userData: {
     nome: "Usuário"
   },
-  // apiURL: `https://dymmer-web-backend.herokuapp.com`,
-  apiURL: `http://localhost:3000`,
+  apiURL: `https://dymmer-web-backend.herokuapp.com`,
   error: null
 };
 
