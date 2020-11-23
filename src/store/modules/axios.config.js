@@ -1,7 +1,7 @@
 import router from "@/router";
 import axios from "axios";
 
-const baseURL = `https://dymmer-web-backend.herokuapp.com`;
+const baseURL = `http://localhost:3000`; //`https://dymmer-web-backend.herokuapp.com`
 const instance = axios.create({ baseURL });
 
 instance.interceptors.request.use(

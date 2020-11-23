@@ -5,7 +5,8 @@ const state = {
   userData: {
     nome: "Usuário"
   },
-  apiURL: `https://dymmer-web-backend.herokuapp.com`,
+  // apiURL: `https://dymmer-web-backend.herokuapp.com`,
+  apiURL: `http://localhost:3000`,
   error: null
 };
 
@@ -30,8 +31,7 @@ const actions = {
         router.push("/home");
       })
       .catch(err => {
-        console.log(err);
-        context.commit("setError", err);
+        context.commit("setError", err.response.data.error);
       });
   },
 
@@ -47,8 +47,7 @@ const actions = {
         router.push("/home");
       })
       .catch(err => {
-        console.log(err);
-        context.commit("setError", err);
+        context.commit("setError", err.response.data.error);
       });
   },
 

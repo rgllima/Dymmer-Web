@@ -11,9 +11,9 @@
                   modern dashboard
                 </h1>
                 <img
-                  id="dymmer-rocket-img"
-                  src="../../assets/project.svg"
-                  alt="project"
+                    id="dymmer-rocket-img"
+                    src="../../assets/project.svg"
+                    alt="project"
                 />
               </div>
             </div>
@@ -21,27 +21,27 @@
           <div class="tile is-parent">
             <div id="dymmer-tile-right" class="tile is-child">
               <section
-                class="modal-card-body"
-                style="background-color: transparent"
+                  class="modal-card-body"
+                  style="background-color: transparent"
               >
                 <div>
                   <div class="field has-addons">
                     <p class="control">
                       <a
-                        id="dymmer-signin-button"
-                        class="button is-small"
-                        :class="[!show ? 'is-blackblue' : '', 'is-success']"
-                        @click="show = true"
-                        >Sign In</a
+                          id="dymmer-signin-button"
+                          class="button is-small"
+                          :class="[!show ? 'is-blackblue' : '', 'is-success']"
+                          @click="show = true"
+                      >Sign In</a
                       >
                     </p>
                     <p class="control">
                       <a
-                        id="dymmer-signup-button"
-                        class="button is-small"
-                        :class="[show ? 'is-blackblue' : '', 'is-success']"
-                        @click="show = false"
-                        >Sign Up</a
+                          id="dymmer-signup-button"
+                          class="button is-small"
+                          :class="[show ? 'is-blackblue' : '', 'is-success']"
+                          @click="show = false"
+                      >Sign Up</a
                       >
                     </p>
                   </div>
@@ -57,11 +57,11 @@
                       <div class="control has-text-white">
                         <label for="email">Email</label>
                         <input
-                          v-model="user.email"
-                          id="dymmer-input"
-                          class="input"
-                          type="text"
-                          placeholder="Your Email"
+                            v-model="user.email"
+                            id="dymmer-input"
+                            class="input"
+                            type="text"
+                            placeholder="Your Email"
                         />
                       </div>
                     </div>
@@ -69,26 +69,26 @@
                       <div class="control has-text-white">
                         <label for="password">Password</label>
                         <input
-                          v-model="user.password"
-                          id="dymmer-input"
-                          class="input"
-                          type="password"
-                          placeholder="Your Password"
+                            v-model="user.password"
+                            id="dymmer-input"
+                            class="input"
+                            type="password"
+                            placeholder="Your Password"
                         />
                       </div>
                     </div>
                     <div class="buttons" style="margin-top: 20px;">
                       <a
-                        ref="signinButton"
-                        class="button is-success is-rounded"
-                        style="font-size: 0.75rem"
-                        @click="signIn"
-                        >Sign In</a
+                          :class="loading ? 'is-loading' : ''"
+                          class="button is-success is-rounded"
+                          style="font-size: 0.75rem"
+                          @click="signIn"
+                      >Sign In</a
                       >
                       <a
-                        style="font-size: 0.75rem; color: #8e99a8;text-decoration: underline;"
-                        @click="show = false"
-                        >I'm not member</a
+                          style="font-size: 0.75rem; color: #8e99a8;text-decoration: underline;"
+                          @click="show = false"
+                      >I'm not member</a
                       >
                     </div>
                   </div>
@@ -102,11 +102,11 @@
                       <div class="control has-text-white">
                         <label for="name">Your Name</label>
                         <input
-                          v-model="user.name"
-                          id="dymmer-input"
-                          class="input"
-                          type="text"
-                          placeholder="Your Name"
+                            v-model="user.name"
+                            id="dymmer-input"
+                            class="input"
+                            type="text"
+                            placeholder="Your Name"
                         />
                       </div>
                     </div>
@@ -114,11 +114,11 @@
                       <div class="control has-text-white">
                         <label for="email">Email</label>
                         <input
-                          v-model="user.email"
-                          id="dymmer-input"
-                          class="input"
-                          type="text"
-                          placeholder="Your Email"
+                            v-model="user.email"
+                            id="dymmer-input"
+                            class="input"
+                            type="text"
+                            placeholder="Your Email"
                         />
                       </div>
                     </div>
@@ -126,11 +126,11 @@
                       <div class="control has-text-white">
                         <label for="password">Password</label>
                         <input
-                          v-model="user.password"
-                          id="dymmer-input"
-                          class="input"
-                          type="password"
-                          placeholder="Your Password"
+                            v-model="user.password"
+                            id="dymmer-input"
+                            class="input"
+                            type="password"
+                            placeholder="Your Password"
                         />
                       </div>
                     </div>
@@ -138,22 +138,22 @@
                       <b-checkbox size="is-small" type="is-success">
                         I agree to the
                         <a href="#" style="color: #23d160"
-                          >terms and conditions</a
+                        >terms and conditions</a
                         >
                       </b-checkbox>
                     </div>
                     <div class="buttons" style="margin-top: 20px;">
                       <a
-                        ref="signupButton"
-                        class="button is-success is-rounded"
-                        style="font-size: 0.75rem"
-                        @click="signUp"
-                        >Sign Up</a
+                          :class="loading ? 'is-loading' : ''"
+                          class="button is-success is-rounded"
+                          style="font-size: 0.75rem"
+                          @click="signUp"
+                      >Sign Up</a
                       >
                       <a
-                        style="font-size: 0.75rem; color: #8e99a8;text-decoration: underline;"
-                        @click="show = true"
-                        >I'm already member</a
+                          style="font-size: 0.75rem; color: #8e99a8;text-decoration: underline;"
+                          @click="show = true"
+                      >I'm already member</a
                       >
                     </div>
                   </div>
@@ -172,6 +172,7 @@ export default {
   data() {
     return {
       show: true,
+      loading: false,
       user: {
         name: "",
         email: "",
@@ -184,7 +185,7 @@ export default {
       if (!this.user.email) return;
       if (!this.user.password) return;
 
-      this.$refs.signinButton.classList.add("is-loading");
+      this.loading = true;
       await this.$store.dispatch("authentication/signIn", this.user);
 
       if (this.error) {
@@ -193,7 +194,7 @@ export default {
           type: "is-danger"
         });
         this.$store.commit("authentication/setError", null);
-        this.$refs.signinButton.classList.remove("is-loading");
+        this.loading = false;
       } else {
         this.$toast.open({
           message: `Success`,
@@ -206,7 +207,7 @@ export default {
       if (!this.user.email) return;
       if (!this.user.password) return;
 
-      this.$refs.signupButton.classList.add("is-loading");
+      this.loading = true;
       await this.$store.dispatch("authentication/signUp", this.user);
 
       if (this.error) {
@@ -215,7 +216,7 @@ export default {
           type: "is-danger"
         });
         this.$store.commit("authentication/setError", null);
-        this.$refs.signinButton.classList.remove("is-loading");
+        this.loading = false;
       } else {
         this.$toast.open({
           message: `Success`,

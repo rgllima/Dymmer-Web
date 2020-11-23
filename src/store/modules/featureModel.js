@@ -213,6 +213,7 @@ const actions = {
 
   createFeatureModelOnDatabase: async (context, payload) => {
     let url = `/featuremodels/create`;
+
     await instance
       .post(url, { featureModelJson: JSON.stringify(payload) })
       .then(res => {

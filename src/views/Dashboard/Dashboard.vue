@@ -29,13 +29,13 @@
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('/feature-model-list',{type:'public'})">
+              <a class="has-text-white" @click="pushRouter('/feature-model-list',{access:'public'})">
                 <i class="fas fa-table"></i>
                 Public Repository
               </a>
             </li>
             <li>
-              <a class="has-text-white" @click="pushRouter('/feature-model-list', {type:'private'})">
+              <a class="has-text-white" @click="pushRouter('/feature-model-list', {access:'private'})">
                 <i class="fas fa-database"></i>
                 Private Repository
               </a>
