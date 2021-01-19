@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@amcharts/amcharts4": "^4.5.3",
-    "axios": "^0.18.1",
+    "axios": "^0.21.1",
     "buefy": "^0.7.8",
     "bulma": "^0.7.4",
     "node-sass": "^4.11.0",
