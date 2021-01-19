@@ -25,12 +25,12 @@ const actions = {
         email: user.email,
         password: user.password
       })
-      .then(() => {
-        router.push("/dashboard");
+      .then(({ data }) => {
+        localStorage.setItem("@token", data["token"]);
+        router.push("/home");
       })
       .catch(err => {
-        console.log(err);
-        context.commit("setError", err);
+        context.commit("setError", err.response.data.error);
       });
   },
 
@@ -41,16 +41,17 @@ const actions = {
         password: user.password,
         name: user.name
       })
-      .then(() => {
-        router.push("/dashboard");
+      .then(({ data }) => {
+        localStorage.setItem("@token", data["token"]);
+        router.push("/home");
       })
       .catch(err => {
-        console.log(err);
-        context.commit("setError", err);
+        context.commit("setError", err.response.data.error);
       });
   },
 
   logout: () => {
+    localStorage.clear();
     router.push("/");
   }
 };

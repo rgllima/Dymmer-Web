@@ -86,7 +86,79 @@
       </div>
 
       <div class="tile is-parent">
-        <div class="tile is-child notification box"></div>
+        <div class="tile is-child notification box">
+          <p>
+            The Federal University of Ceará (Portuguese: Universidade Federal do
+            do Ceará, UFC) is a federal university with campuses in the cities
+            of Fortaleza, Sobral, Barbalha, Russas, Quixadá and Crateús, in the
+            state of Ceará, Brazil. UFC is a public and tuition-free university,
+            with several academic programs in most areas of knowledge.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tile is-ancestor architecture">
+      <div class="tile is-parent">
+        <div class="tile is-child notification box">
+          <div class="has-text-centered">
+            <p><strong>Figure 1 - An Dymmer Architecture overview</strong></p>
+            <img src="../../../assets/dymmer_architecture.png" alt="logo ufc" />
+          </div>
+        </div>
+      </div>
+
+      <div class="tile is-parent">
+        <div class="tile is-child notification box">
+          <p>
+            <strong>Figure 1</strong> illustrates the DyMMer-web architecture, which is based on
+            the Client-Server architectural pattern. The server module was
+            developed in JavaScript using the
+            <a href="https://nodejs.org/en/" target="_blank">
+              NodeJs framework</a
+            >
+            and the Rest API model for web services. The server is hosted in a
+            <a href="https://www.heroku.com/" target="_blank">
+              Heroku
+            </a>
+            and uses a non-relational database (noSQL), document oriented and
+            cross platform,
+            <a href="https://www.mongodb.com/" target="_blank">
+              MongoDB </a
+          >.
+          </p>
+
+          <p>
+            The server is responsible for receiving requests from the client
+            module and performing more complex computations such as: i)
+            importing and exporting feature models; ii) processing
+            maintainability measures; iii) derivation of thresholds from the
+            computed measures repository and feature models; and, iv)
+            persistence of feature models, maintainability measures and
+            thresholds.
+          </p>
+
+          <p>
+            The client module was implemented in
+            <a href="https://vuejs.org/" target="_blank">Vue.js</a>
+            , an open source JavaScript framework for the development of SPA
+            (Single Page Applications). Also, Bulma
+            <a href="https://bulma.io/" target="_blank">Bulma</a>
+            was used, an open source CSS framework that is widely compatible
+            with current browsers. The site is hosted on
+            <a href="https://github.com/dymmerufc/Dymmer-Web" target="_blank">
+              Github </a
+            >.
+          </p>
+
+          <p>
+            The client layer is responsible for: i) creating and editing feature
+            ii) importing feature models and sending them for processing and
+            persistence on the server; iii) creation and management of DSPL
+            feature model contexts; and, (iv) management of maintainability
+            measures.
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -160,4 +232,8 @@ export default {
     text-align: center
     img
       max-height: 60px
+  .architecture
+    p
+      margin-bottom: 10px
+      text-indent: 30px
 </style>

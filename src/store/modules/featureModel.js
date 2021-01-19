@@ -1,12 +1,12 @@
 import router from "@/router";
-import axios from "axios";
-import dymmerServer from "../../util/dymmer-server";
 import { runContextAnalysis } from "@/core/manageContextChanges.js";
 import {
   getFeatureReference,
   getFeatureParentReference,
   getLastFeatureId
 } from "@/core/featureModel.js";
+
+import instance from "@/store/modules/axios.config";
 
 const state = {
   hasChanged: false,
@@ -147,8 +147,8 @@ const mutations = {
 
 const actions = {
   convertXmlToJson: async (context, xmlString) => {
-    let url = `${dymmerServer.getUrl()}/xml/xml-to-json`;
-    await axios
+    let url = `/xml/xml-to-json`;
+    await instance
       .post(url, {
         xmlString: xmlString
       })
@@ -164,8 +164,8 @@ const actions = {
   },
 
   exportFMToXML: async (context, payload) => {
-    let url = `${dymmerServer.getUrl()}/featuremodels/export-to-xml`;
-    await axios
+    let url = `/featuremodels/export-to-xml`;
+    await instance
       .post(url, {
         featureModel: state.featureModel,
         withContexts: payload
@@ -212,8 +212,9 @@ const actions = {
   },
 
   createFeatureModelOnDatabase: async (context, payload) => {
-    let url = `${dymmerServer.getUrl()}/featuremodels/create`;
-    await axios
+    let url = `/featuremodels/create`;
+
+    await instance
       .post(url, { featureModelJson: JSON.stringify(payload) })
       .then(res => {
         let fModel = JSON.parse(res.data.newFeatureModel.featureModelJson);
@@ -241,10 +242,8 @@ const actions = {
         type: type
       });
     } else {
-      let url = `${dymmerServer.getUrl()}/featuremodels/update/${
-        fModel["_id"]
-      }`;
-      await axios
+      let url = `/featuremodels/update/${fModel["_id"]}`;
+      await instance
         .put(url, { featureModelJson: JSON.stringify(fModel) })
         .then(res => {
           let data = JSON.parse(res.data.updatedFeatureModel.featureModelJson);
@@ -255,8 +254,8 @@ const actions = {
   },
 
   fetchFeatureModelOnDatabase: async (context, payload) => {
-    let url = `${dymmerServer.getUrl()}/featuremodels/get/${payload}`;
-    await axios
+    let url = `/featuremodels/get/${payload}`;
+    await instance
       .get(url)
       .then(res => {
         let data = JSON.parse(res.data.returnedFeatureModel.featureModelJson);

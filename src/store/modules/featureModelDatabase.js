@@ -1,11 +1,12 @@
-import axios from "axios";
-import dymmerServer from "../../util/dymmer-server";
+import instance from "@/store/modules/axios.config";
 
 const state = {
   splList: [],
   dsplList: [],
+  privateList: [],
   isUpdate: false,
-  error: null
+  error: null,
+  loading: false
 };
 
 const mutations = {
@@ -15,27 +16,36 @@ const mutations = {
   setDsplList: (state, payload) => {
     state.dsplList = payload;
   },
+  setPrivateList: (state, payload) => {
+    state.privateList = payload;
+  },
   setIsUpdate(state, payload) {
     state.isUpdate = payload;
   },
   setError(state, payload) {
     state.error = payload;
+  },
+  setLoading(state, payload) {
+    state.loading = payload;
   }
 };
 
 const actions = {
   fetchAllFeatureModelsOnDatabase: async context => {
     if (state.isUpdate) return;
+    context.commit("setLoading", true);
 
-    let url = `${dymmerServer.getUrl()}/featuremodels/list`;
+    let url = `/featuremodels/list`;
 
-    await axios
+    await instance
       .get(url)
       .then(response => {
         let ftm = [];
         response.data.featureModelList.map(featureModel => {
           let fmodel = JSON.parse(featureModel.featureModelJson);
           fmodel["_id"] = featureModel._id;
+          fmodel["allowEdit"] = featureModel.allowEdit;
+          fmodel["public"] = featureModel.public;
           ftm.push(fmodel);
         });
 
@@ -45,6 +55,33 @@ const actions = {
         context.commit("setSplList", splList);
         context.commit("setDsplList", dsplList);
         context.commit("setIsUpdate", true);
+        context.commit("setLoading", false);
+      })
+      .catch(err => console.log(err));
+  },
+
+  fetchPrivateFeatureModelsOnDatabase: async context => {
+    if (state.isUpdate) return;
+    context.commit("setLoading", true);
+
+    let url = `/featuremodels/get-by-user`;
+
+    await instance
+      .get(url)
+      .then(response => {
+        let ftm = [];
+
+        response.data.returnedFeatureModel.map(featureModel => {
+          let fmodel = JSON.parse(featureModel.featureModelJson);
+          fmodel["_id"] = featureModel._id;
+          fmodel["allowEdit"] = featureModel.allowEdit;
+          fmodel["public"] = featureModel.public;
+          ftm.push(fmodel);
+        });
+
+        context.commit("setPrivateList", ftm);
+        context.commit("setIsUpdate", true);
+        context.commit("setLoading", false);
       })
       .catch(err => console.log(err));
   }
@@ -52,7 +89,9 @@ const actions = {
 
 const getters = {
   getSplList: state => state.splList,
-  getDsplList: state => state.dsplList
+  getDsplList: state => state.dsplList,
+  getPrivateList: state => state.privateList,
+  getLoading: state => state.loading
 };
 
 export default {
