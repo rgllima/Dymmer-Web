@@ -117,7 +117,7 @@ export default {
       featureList: [],
       constraints: [],
       constraintModalActive: false,
-      adaptationMechanismModal: true
+      adaptationMechanismModal: false
     };
   },
 

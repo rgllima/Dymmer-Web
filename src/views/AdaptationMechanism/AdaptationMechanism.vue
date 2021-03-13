@@ -21,26 +21,13 @@
           </b-loading>
           <p class="has-text-centered title">Convertendo Modelo de Features!</p>
           <p class="has-text-centered subtitle">Aguarde...</p>
-          {{ featureTree }}
         </div>
 
         <div v-else class="tile is-ancestor">
           <div class="tile is-parent">
             <div class="tile is-child is-vertical box modal-card__left">
               <p class="subtitle has-text-centered">Feature Model</p>
-
-              <!--              <article v-for="(feature, index) in featureList" :key="index">-->
-              <!--                <b-checkbox-->
-              <!--                  :id="`checkbox-${feature.id}`"-->
-              <!--                  :native-value="feature"-->
-              <!--                  v-model="selectedFeatures"-->
-              <!--                >-->
-              <!--                  <p>-->
-              <!--                    <i :class="getIcon(feature.type)"></i>-->
-              <!--                    {{ feature.name }}-->
-              <!--                  </p>-->
-              <!--                </b-checkbox>-->
-              <!--              </article>-->
+              <child-tree :tree="model.feature_tree" :level="1" />
             </div>
             <!--            <div class="modal-card__button-middle">-->
             <!--              <button class="button is-success">-->
@@ -48,7 +35,21 @@
             <!--              </button>-->
             <!--            </div>-->
             <div class="tile is-child is-vertical box modal-card__left">
-              <p class="subtitle has-text-centered">Cross-Tree Constraints</p>
+              <p class="subtitle has-text-centered">Context Agents</p>
+
+              <div class="contexts">
+                <div v-for="(agent, k) in model.context_agents" :key="k">
+                  <h4>Agent Name: {{ agent.name }}</h4>
+
+                  <div v-for="(context, i) in agent.contexts" :key="i">
+                    <h5>{{ context.name }} - {{ context.value }}</h5>
+                  </div>
+                </div>
+              </div>
+
+              <button class="button is-small is-primary is-rounded">
+                Add Context Agent
+              </button>
             </div>
           </div>
         </div>
@@ -66,8 +67,10 @@
 </template>
 
 <script>
+import ChildTree from "@/views/AdaptationMechanism/ChildTree";
 export default {
   name: "AdaptationMechanism",
+  components: { ChildTree },
   props: {
     modalActive: {
       type: Boolean,
@@ -84,18 +87,34 @@ export default {
   },
   data() {
     return {
-      converting: true
+      converting: true,
+      model: {
+        feature_tree: [],
+        context_agents: []
+      }
     };
+  },
+
+  watch: {
+    modalActive() {
+      if (this.modalActive) {
+        this.startConversion();
+      }
+    }
   },
 
   methods: {
     startConversion() {
+      const constraints = this.convertConstraints(this.constraints);
       let fModel = this.parseFeatureModel(this.featureTree[0]);
 
       fModel = this.mapGroupedConstraints(fModel);
+      fModel = this.pushConstrainsAsStates(fModel, constraints);
 
-      console.log(fModel);
+      console.log(fModel, constraints);
       // TODO, por fim, limpar depedências duplicadas nos estados
+
+      this.model.feature_tree = [fModel];
       this.converting = false;
     },
 
@@ -131,6 +150,32 @@ export default {
 
       for (let child of feature.children) {
         child = { ...child, ...this.mapGroupedConstraints(child) };
+      }
+
+      return feature;
+    },
+
+    // 3rd Phase - Push Constraints into fModel as States
+    pushConstrainsAsStates(feature, constraints = []) {
+      const hasRelatedConstraints = constraints.filter(
+        constraint => constraint.in === feature.id
+      );
+
+      if (hasRelatedConstraints.length) {
+        for (const constraint of hasRelatedConstraints) {
+          for (const state of feature.states) {
+            if (state.name === "On") {
+              state.requires.push(constraint.val);
+            }
+          }
+        }
+      }
+
+      for (let child of feature.children) {
+        child = {
+          ...child,
+          ...this.pushConstrainsAsStates(child, constraints)
+        };
       }
 
       return feature;
@@ -194,12 +239,40 @@ export default {
         ],
         children: []
       };
-    }
-  },
+    },
 
-  mounted() {
-    this.startConversion();
+    convertConstraints(constraints = []) {
+      let parsed = [];
+      constraints.map(constraint => {
+        const [ft1, ft2] = constraint.list;
+        if (!ft1.val && !ft2.val) {
+          parsed.push({
+            in: ft1.id,
+            val: { address: ft2.id, value: false }
+          });
+          parsed.push({
+            in: ft2.id,
+            val: { address: ft1.id, value: false }
+          });
+        } else if (!ft1.val) {
+          parsed.push({
+            in: ft1.id,
+            val: { address: ft2.id, value: true }
+          });
+        } else if (!ft2.val) {
+          parsed.push({
+            in: ft2.id,
+            val: { address: ft1.id, value: true }
+          });
+        }
+      });
+      return parsed;
+    }
   }
+
+  // mounted() {
+  //   this.startConversion();
+  // }
 };
 </script>
 
