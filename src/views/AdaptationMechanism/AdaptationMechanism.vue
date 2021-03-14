@@ -1,76 +1,155 @@
 <template>
-  <b-modal
-    :active.sync="modalActive"
-    has-modal-card
-    full-screen
-    :can-cancel="false"
-  >
-    <div class="modal-card" style="width: auto">
-      <header class="modal-card-head">
-        <p class="modal-card-title has-text-centered">Adaptation Mechanism</p>
-      </header>
-      <section class="modal-card-body">
-        <div v-if="converting">
-          <b-loading :is-full-page="false" :active="converting">
-            <b-icon
-              pack="fas"
-              icon="sync-alt"
-              size="is-large"
-              custom-class="fa-spin"
-            />
-          </b-loading>
-          <p class="has-text-centered title">Convertendo Modelo de Features!</p>
-          <p class="has-text-centered subtitle">Aguarde...</p>
-        </div>
+  <div class="adaptation-mechanism">
+    <b-modal
+      :active="modalActive"
+      has-modal-card
+      full-screen
+      :can-cancel="false"
+    >
+      <div class="modal-card" style="width: auto">
+        <input-modal
+          :active="showInputModal"
+          @close="closeInputModal"
+          @action="handleInputAction"
+        />
 
-        <div v-else class="tile is-ancestor">
-          <div class="tile is-parent">
-            <div class="tile is-child is-vertical box modal-card__left">
-              <p class="subtitle has-text-centered">Feature Model</p>
-              <child-tree :tree="model.feature_tree" :level="1" />
-            </div>
-            <!--            <div class="modal-card__button-middle">-->
-            <!--              <button class="button is-success">-->
-            <!--                <i class="fas fa-arrow-right"></i>-->
-            <!--              </button>-->
-            <!--            </div>-->
-            <div class="tile is-child is-vertical box modal-card__left">
-              <p class="subtitle has-text-centered">Context Agents</p>
+        <header class="modal-card-head">
+          <p class="modal-card-title has-text-centered">Adaptation Mechanism</p>
+        </header>
+        <section class="modal-card-body" style="overflow: hidden">
+          <div v-if="converting">
+            <b-loading :is-full-page="false" :active="converting">
+              <b-icon
+                pack="fas"
+                icon="sync-alt"
+                size="is-large"
+                custom-class="fa-spin"
+              />
+            </b-loading>
+            <p class="has-text-centered title">
+              Convertendo Modelo de Features!
+            </p>
+            <p class="has-text-centered subtitle">Aguarde...</p>
+          </div>
 
-              <div class="contexts">
-                <div v-for="(agent, k) in model.context_agents" :key="k">
-                  <h4>Agent Name: {{ agent.name }}</h4>
+          <div v-else class="tile is-ancestor">
+            <div class="tile is-parent">
+              <div class="tile is-child is-vertical box modal-card__left">
+                <p class="subtitle has-text-centered">Custom Feature Model</p>
+                <child-tree
+                  :simulating="simulating"
+                  :tree="model.feature_tree"
+                  @startLinking="startLinking"
+                  :level="1"
+                />
 
-                  <div v-for="(context, i) in agent.contexts" :key="i">
-                    <h5>{{ context.name }} - {{ context.value }}</h5>
+                <link-feature-modal
+                  :active="linkingFeature"
+                  :context-agents="model.context_agents"
+                  @action="linkFeature"
+                  @close="linkingFeature = false"
+                />
+              </div>
+
+              <div class="tile is-child is-vertical box modal-card__left">
+                <div
+                  class="tile"
+                  style="justify-content: space-between; padding: 10px"
+                >
+                  <p class="subtitle has-text-centered">Context Agents</p>
+
+                  <div class="tile is-3" style="justify-content: flex-end">
+                    <button
+                      v-if="!simulating"
+                      class="button is-small is-primary"
+                      style="margin-right: 10px"
+                      @click="openInputModal('addingAgent')"
+                    >
+                      Add Agent
+                    </button>
+
+                    <button
+                      v-if="!simulating"
+                      class="button is-small is-success"
+                      @click="startSimulation"
+                    >
+                      Simulate
+                    </button>
+                    <button
+                      v-else
+                      class="button is-small is-danger"
+                      @click="simulating = false"
+                    >
+                      End Simulation
+                    </button>
+                  </div>
+                </div>
+
+                <div class="contexts">
+                  <div
+                    class="box"
+                    v-for="(agent, k) in model.context_agents"
+                    :key="k"
+                  >
+                    <div class="tile" style="justify-content: space-between">
+                      <h4>{{ agent.name }}</h4>
+                      <button
+                        v-if="!simulating"
+                        class="button is-small is-primary"
+                        @click="openInputModal('addingContext', agent)"
+                      >
+                        Add Context
+                      </button>
+                    </div>
+                    <hr />
+                    <div
+                      class="tile"
+                      style="justify-content: space-between"
+                      v-for="(context, i) in agent.contexts"
+                      :key="i"
+                    >
+                      <h5>-----| {{ context.name }}</h5>
+                      <a @click="context.value = !context.value"
+                        ><b-icon
+                          v-if="simulating"
+                          class="pointer danger-color"
+                          :class="context.value ? 'active-btn' : ''"
+                          pack="fas"
+                          :icon="context.value ? 'toggle-on' : 'toggle-off'"
+                      /></a>
+                    </div>
                   </div>
                 </div>
               </div>
-
-              <button class="button is-small is-primary is-rounded">
-                Add Context Agent
-              </button>
             </div>
           </div>
-        </div>
-      </section>
-      <footer class="modal-card-foot">
-        <button class="button is-danger" type="button" @click="$emit('close')">
-          Cancel
-        </button>
-        <button class="button is-success">
-          Save and Close
-        </button>
-      </footer>
-    </div>
-  </b-modal>
+        </section>
+        <footer class="modal-card-foot">
+          <button
+            class="button is-danger"
+            type="button"
+            @click="$emit('close')"
+          >
+            Close
+          </button>
+          <!--          <button class="button is-success">-->
+          <!--            Save and Close-->
+          <!--          </button>-->
+        </footer>
+      </div>
+    </b-modal>
+  </div>
 </template>
 
 <script>
 import ChildTree from "@/views/AdaptationMechanism/ChildTree";
+import InputModal from "@/views/AdaptationMechanism/InputModal";
+import LinkFeatureModal from "@/views/AdaptationMechanism/LinkFeatureModal";
+import AdaptationMechanism from "@/util/adaptation-mechanism";
+
 export default {
   name: "AdaptationMechanism",
-  components: { ChildTree },
+  components: { LinkFeatureModal, InputModal, ChildTree },
   props: {
     modalActive: {
       type: Boolean,
@@ -88,6 +167,13 @@ export default {
   data() {
     return {
       converting: true,
+      simulating: false,
+      agent: null,
+      addingAgent: false,
+      addingContext: false,
+      showInputModal: false,
+      linkingFeature: false,
+      linkingFeatureId: "",
       model: {
         feature_tree: [],
         context_agents: []
@@ -100,10 +186,83 @@ export default {
       if (this.modalActive) {
         this.startConversion();
       }
+    },
+
+    "model.context_agents": {
+      deep: true,
+      handler() {
+        if (this.simulating) this.execMechanismSimulation();
+      }
     }
   },
 
   methods: {
+    execMechanismSimulation() {
+      const { feature_tree, context_agents } = this.model;
+      const fModel = AdaptationMechanism.start(feature_tree, context_agents);
+      console.log(fModel);
+    },
+
+    startSimulation() {
+      this.simulating = true;
+      this.execMechanismSimulation();
+    },
+
+    openInputModal(action, agent) {
+      this[action] = true;
+      this.showInputModal = true;
+      this.agent = agent;
+    },
+
+    closeInputModal() {
+      this.showInputModal = false;
+      this.addingAgent = false;
+      this.addingContext = false;
+    },
+
+    handleInputAction(name) {
+      if (this.addingAgent) return this.addAgent(name);
+      return this.addContext(name);
+    },
+
+    addAgent(name) {
+      this.model.context_agents.push({
+        id: `ca_${this.model.context_agents.length + 1}`,
+        name,
+        contexts: []
+      });
+    },
+
+    addContext(name) {
+      const { id } = this.agent;
+      const length = this.agent.contexts.length;
+      this.agent.contexts.push({
+        id: `${id}_${length + 1}`,
+        name,
+        value: false,
+        states: [
+          { name: "Off", value: false },
+          { name: "On", value: true }
+        ]
+      });
+    },
+
+    startLinking(featureId) {
+      this.linkingFeatureId = featureId;
+      this.linkingFeature = true;
+    },
+
+    linkFeature(payload) {
+      const fModel = this.pushConstrainsAsStates(this.model.feature_tree[0], [
+        {
+          in: this.linkingFeatureId,
+          val: payload
+        }
+      ]);
+
+      this.model.feature_tree = [fModel];
+    },
+
     startConversion() {
       const constraints = this.convertConstraints(this.constraints);
       let fModel = this.parseFeatureModel(this.featureTree[0]);
@@ -269,11 +428,36 @@ export default {
       return parsed;
     }
   }
-
-  // mounted() {
-  //   this.startConversion();
-  // }
 };
 </script>
 
-<style scoped></style>
+<style lang="scss" scoped>
+.adaptation-mechanism {
+  .contexts {
+    h4,
+    h5 {
+      margin: 0;
+    }
+
+    hr {
+      margin: 10px 0;
+    }
+
+    .box {
+      margin-bottom: 10px;
+    }
+
+    .danger-color {
+      color: #ff6666;
+    }
+
+    .pointer {
+      cursor: pointer;
+    }
+
+    .active-btn {
+      color: #008000;
+    }
+  }
+}
+</style>

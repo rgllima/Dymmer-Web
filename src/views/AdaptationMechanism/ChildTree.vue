@@ -9,11 +9,28 @@
           :class="{ active: feature.value }"
         >
           <h5>{{ feature.name }}</h5>
-          <b-icon pack="fas" icon="power-off" size="is-small" />
+          <b-icon
+            v-if="!feature.children.length && simulating"
+            pack="fas"
+            icon="power-off"
+            size="is-small"
+          />
+          <button
+            v-if="!feature.children.length && !simulating"
+            class="button is-small is-primary"
+            @click="linkAgent(feature.id)"
+          >
+            Link Agent
+          </button>
         </div>
       </div>
 
-      <ChildTree :tree="feature.children" :level="level + 1" />
+      <ChildTree
+        :simulating="simulating"
+        :tree="feature.children"
+        :level="level + 1"
+        @startLinking="startLinking"
+      />
     </div>
   </div>
 </template>
@@ -23,9 +40,18 @@ export default {
   name: "ChildTree",
   props: {
     tree: Array,
-    level: Number
+    level: Number,
+    simulating: Boolean
   },
   methods: {
+    linkAgent(featureId) {
+      this.$emit("startLinking", featureId);
+    },
+
+    startLinking(payload) {
+      this.$emit("startLinking", payload);
+    },
+
     generateSeparators() {
       if (this.level === 1) return "";
 
