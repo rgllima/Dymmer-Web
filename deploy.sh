@@ -1,6 +1,6 @@
 set -e
 
-eval `ssh-agent -s`
+eval 'ssh-agent -s'
 ssh-add github-dymmer #Add Private Key Every Build - It's a bug im my PC
 
 yarn build

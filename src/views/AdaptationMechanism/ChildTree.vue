@@ -1,6 +1,6 @@
 <template>
   <div class="child-tree">
-    <div v-for="(feature, i) in tree" :key="i">
+    <div class="box item-box" v-for="(feature, i) in tree" :key="i">
       <div class="is-flex w-100-p">
         <p class="separator">{{ generateSeparators() }}</p>
 
@@ -25,10 +25,40 @@
         </div>
       </div>
 
+      <div
+        class="dependencies"
+        v-for="state in feature.states.filter(e => e.name === 'On')"
+        :key="state.name"
+      >
+        <div v-if="state.requires.length">
+          <p>Dependency [Required Status]</p>
+
+          <div
+            class="dependency"
+            v-for="dependency in state.requires"
+            :key="dependency.address"
+          >
+            <p :class="getClassSatisfyingDependency(dependency)">
+              <span>{{ getNameFromDictionary(dependency.address) }}</span>
+              <span> [{{ dependency.value ? " ON " : "OFF" }}]</span>
+            </p>
+
+            <b-icon
+              v-if="!simulating && dependency.address.startsWith('ca')"
+              class="has-text-danger"
+              pack="fas"
+              icon="trash"
+              size="is-small"
+            />
+          </div>
+        </div>
+      </div>
+
       <ChildTree
         :simulating="simulating"
         :tree="feature.children"
         :level="level + 1"
+        :dictionary="dictionary"
         @startLinking="startLinking"
       />
     </div>
@@ -41,7 +71,8 @@ export default {
   props: {
     tree: Array,
     level: Number,
-    simulating: Boolean
+    simulating: Boolean,
+    dictionary: Object
   },
   methods: {
     linkAgent(featureId) {
@@ -50,6 +81,28 @@ export default {
 
     startLinking(payload) {
       this.$emit("startLinking", payload);
+    },
+
+    getNameFromDictionary(id = "") {
+      if (id.startsWith("ca")) return this.dictionary.context_agents[id].name;
+      return this.dictionary.features[id].name;
+    },
+
+    getClassSatisfyingDependency({ address, value }) {
+      let name = "";
+      const { features, context_agents } = this.dictionary;
+
+      if (this.simulating) name = "simulating";
+
+      if (address.startsWith("ca")) {
+        console.log(context_agents[address].ref.value);
+        name += context_agents[address].ref.value === value ? "__active" : "";
+      } else {
+        console.log(features[address].ref.value);
+        name += features[address].ref.value === value ? "__active" : "";
+      }
+
+      return name;
     },
 
     generateSeparators() {
@@ -73,6 +126,32 @@ export default {
   h5,
   p {
     margin: 0;
+  }
+
+  .item-box {
+    position: relative;
+  }
+
+  .dependencies {
+    text-align: right;
+    font-size: 0.8rem;
+  }
+
+  .dependency {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    p {
+      margin-right: 5px;
+    }
+
+    .simulating {
+      color: red;
+      &__active {
+        color: green;
+      }
+    }
   }
 
   .w-100-p {

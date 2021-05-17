@@ -39,6 +39,7 @@
                 <child-tree
                   :simulating="simulating"
                   :tree="model.feature_tree"
+                  :dictionary="dictionary"
                   @startLinking="startLinking"
                   :level="1"
                 />
@@ -132,9 +133,6 @@
           >
             Close
           </button>
-          <!--          <button class="button is-success">-->
-          <!--            Save and Close-->
-          <!--          </button>-->
         </footer>
       </div>
     </b-modal>
@@ -174,6 +172,11 @@ export default {
       showInputModal: false,
       linkingFeature: false,
       linkingFeatureId: "",
+      agentIndexNum: 1,
+      dictionary: {
+        context_agents: {},
+        features: {}
+      },
       model: {
         feature_tree: [],
         context_agents: []
@@ -199,8 +202,7 @@ export default {
   methods: {
     execMechanismSimulation() {
       const { feature_tree, context_agents } = this.model;
-      const fModel = AdaptationMechanism.start(feature_tree, context_agents);
-      console.log(fModel);
+      AdaptationMechanism.start(feature_tree, context_agents);
     },
 
     startSimulation() {
@@ -227,24 +229,49 @@ export default {
 
     addAgent(name) {
       this.model.context_agents.push({
-        id: `ca_${this.model.context_agents.length + 1}`,
+        id: `ca_${this.agentIndexNum}`,
         name,
+        ctxIndex: 1,
         contexts: []
       });
+
+      this.agentIndexNum++;
+    },
+
+    removeAgent(id) {
+      const agent = this.model.context_agents.find(ctx => ctx.id === id);
+      for (const context of agent.contexts) {
+        delete this.dictionary.context_agents[context.id];
+      }
+
+      this.model.context_agents = this.model.context_agents.filter(
+        obj => obj !== agent
+      );
+
+      // TODO remover referência na árvore
     },
 
     addContext(name) {
       const { id } = this.agent;
-      const length = this.agent.contexts.length;
-      this.agent.contexts.push({
-        id: `${id}_${length + 1}`,
+
+      const context = {
+        id: `${id}_${this.agent.ctxIndex}`,
         name,
         value: false,
         states: [
           { name: "Off", value: false },
           { name: "On", value: true }
         ]
-      });
+      };
+
+      this.agent.ctxIndex++;
+      this.agent.contexts.push(context);
+      this.dictionary.context_agents[
+        context.id
+      ] = {
+        name: `${this.agent.name}_${context.name}`,
+        ref: context
+      };
     },
 
     startLinking(featureId) {
@@ -270,11 +297,21 @@ export default {
       fModel = this.mapGroupedConstraints(fModel);
       fModel = this.pushConstrainsAsStates(fModel, constraints);
 
-      console.log(fModel, constraints);
-      // TODO, por fim, limpar depedências duplicadas nos estados
+      this.createFeatureDictionary(fModel);
 
       this.model.feature_tree = [fModel];
       this.converting = false;
+    },
+
+    createFeatureDictionary(feature) {
+      this.dictionary.features[feature.id] = {
+        name: feature.name,
+        ref: feature
+      };
+
+      for (const child of feature.children) {
+        this.createFeatureDictionary(child);
+      }
     },
 
     // 1st Phase - Parse Feature Model
@@ -324,7 +361,13 @@ export default {
         for (const constraint of hasRelatedConstraints) {
           for (const state of feature.states) {
             if (state.name === "On") {
-              state.requires.push(constraint.val);
+              const exists = state.requires.filter(
+                obj => obj.address === constraint.val.address
+              );
+
+              if (!exists.length) {
+                state.requires.push(constraint.val);
+              }
             }
           }
         }
@@ -357,10 +400,16 @@ export default {
         for (const req of filtered) {
           for (const state of feature.states) {
             if (state.name === "On") {
-              state.requires.push({
-                address: req.id,
-                value: false
-              });
+              const exists = state.requires.filter(
+                obj => obj.address === req.id
+              );
+
+              if (!exists.length) {
+                state.requires.push({
+                  address: req.id,
+                  value: false
+                });
+              }
             }
           }
         }
