@@ -55,7 +55,10 @@
             </div>
           </div>
         </div>
-        <div class="tile is-parent" v-if="featureModel.allowEdit">
+        <div
+          class="tile is-parent"
+          v-if="featureModel.feature_tree.length && featureModel.allowEdit"
+        >
           <div class="fmodel-status--changes" v-if="!featureModelChanged">
             <p class>All changes are saved</p>
             <button class="button is-primary" disabled>Saved</button>

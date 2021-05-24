@@ -17,6 +17,8 @@
       :modal-active="adaptationMechanismModal"
       :feature-tree="featureTree"
       :constraints="constraints"
+      :fMContextAgents="featureModel.fm_context_agents"
+      :agents="featureModel.agents"
       @close="adaptationMechanismModal = false"
     />
 
@@ -116,6 +118,8 @@ export default {
       featureTree: [],
       featureList: [],
       constraints: [],
+      parsingConstraints: false,
+      fm_context_agents: [],
       constraintModalActive: false,
       adaptationMechanismModal: false
     };
@@ -123,6 +127,11 @@ export default {
 
   methods: {
     async generateVisualConstraints() {
+      if (this.parsingConstraints) return;
+
+      this.parsingConstraints = true;
+      this.constraints = [];
+
       let conKeys;
       let conFeatures;
       let ftConstraints = this.featureModel.constraints;
@@ -157,6 +166,7 @@ export default {
           list: conFeatures
         });
       }
+      this.parsingConstraints = false;
     },
 
     async searchNameConstraint(feature_tree, element) {
@@ -220,11 +230,10 @@ export default {
 
   watch: {
     featureModel: {
-      handler: function(newValue) {
+      handler: function() {
         this.featureTree = JSON.parse(
           JSON.stringify(this.featureModel.feature_tree)
         );
-        this.constraints = [];
         this.featureList = [];
         this.generateVisualConstraints();
         this.createFeatureList(this.featureModel.feature_tree[0]);

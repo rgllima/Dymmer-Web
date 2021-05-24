@@ -15,7 +15,12 @@ const state = {
   featureModel: {
     feature_tree: [],
     constraints: [],
-    contexts: []
+    contexts: [],
+    fm_context_agents: [],
+    agents: {
+      list: [],
+      index: 0
+    }
   }
 };
 
@@ -31,6 +36,17 @@ const mutations = {
   setFeatureModel: (state, payload) => {
     state.featureModel = payload;
     state.nextId = getLastFeatureId(state.featureModel.feature_tree[0]);
+  },
+
+  setFmContextAgents: (state, payload) => {
+    state.featureModel.fm_context_agents = payload;
+    state.hasChanged = true;
+  },
+
+  setAgents: (state, { list, index }) => {
+    state.featureModel.agents.list = list;
+    state.featureModel.agents.index = index;
+    state.hasChanged = true;
   },
 
   addFeature(state, payload) {
@@ -258,7 +274,11 @@ const actions = {
     await instance
       .get(url)
       .then(res => {
-        let data = JSON.parse(res.data.returnedFeatureModel.featureModelJson);
+        const { returnedFeatureModel } = res.data;
+        let data = JSON.parse(returnedFeatureModel.featureModelJson);
+        data["_id"] = returnedFeatureModel._id;
+        data["allowEdit"] = returnedFeatureModel.allowEdit;
+        data["public"] = returnedFeatureModel.public;
         context.commit("setFeatureModel", data);
       })
       .catch(err => {

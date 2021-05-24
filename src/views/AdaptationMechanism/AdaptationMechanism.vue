@@ -14,7 +14,23 @@
         />
 
         <header class="modal-card-head">
-          <p class="modal-card-title has-text-centered">Adaptation Mechanism</p>
+          <div class="tile is-parent">
+            <div class="tile is-child">
+              <p class="modal-card-title has-text-centered">
+                Adaptation Mechanism
+              </p>
+            </div>
+
+            <div class="tile is-child is-1">
+              <button
+                class="button is-primary is-small"
+                type="button"
+                @click="startConversion"
+              >
+                Recompile Model
+              </button>
+            </div>
+          </div>
         </header>
         <section class="modal-card-body" style="overflow: hidden">
           <div v-if="converting">
@@ -129,7 +145,7 @@
           <button
             class="button is-danger"
             type="button"
-            @click="$emit('close')"
+            @click="handleCloseModal"
           >
             Close
           </button>
@@ -159,12 +175,20 @@ export default {
     },
     constraints: {
       type: Array,
-      default: Array.of([])
+      default: Array
+    },
+    fMContextAgents: {
+      type: Array,
+      default: Array
+    },
+    agents: {
+      type: Object,
+      default: Object
     }
   },
   data() {
     return {
-      converting: true,
+      converting: false,
       simulating: false,
       agent: null,
       addingAgent: false,
@@ -186,7 +210,7 @@ export default {
 
   watch: {
     modalActive() {
-      if (this.modalActive) {
+      if (this.modalActive && !this.fMContextAgents.length) {
         this.startConversion();
       }
     },
@@ -195,6 +219,24 @@ export default {
       deep: true,
       handler() {
         if (this.simulating) this.execMechanismSimulation();
+        else {
+          if (!this.model.context_agents.length) return;
+          this.$store.commit("featureModel/setAgents", {
+            list: this.model.context_agents,
+            index: this.agentIndexNum
+          });
+        }
+      }
+    },
+
+    "model.feature_tree": {
+      deep: true,
+      handler() {
+        if (!this.model.feature_tree.length) return;
+        this.$store.commit(
+          "featureModel/setFmContextAgents",
+          this.model.feature_tree
+        );
       }
     }
   },
@@ -266,9 +308,7 @@ export default {
 
       this.agent.ctxIndex++;
       this.agent.contexts.push(context);
-      this.dictionary.context_agents[
-        context.id
-      ] = {
+      this.dictionary.context_agents[context.id] = {
         name: `${this.agent.name}_${context.name}`,
         ref: context
       };
@@ -291,6 +331,7 @@ export default {
     },
 
     startConversion() {
+      this.converting = true;
       const constraints = this.convertConstraints(this.constraints);
       let fModel = this.parseFeatureModel(this.featureTree[0]);
 
@@ -311,6 +352,17 @@ export default {
 
       for (const child of feature.children) {
         this.createFeatureDictionary(child);
+      }
+    },
+
+    createContextDictionary() {
+      for (const agent of this.model.context_agents) {
+        for (const context of agent.contexts) {
+          this.dictionary.context_agents[context.id] = {
+            name: `${agent.name}_${context.name}`,
+            ref: context
+          };
+        }
       }
     },
 
@@ -475,7 +527,24 @@ export default {
         }
       });
       return parsed;
+    },
+
+    handleCloseModal() {
+      this.simulating = false;
+      this.$emit("close");
     }
+  },
+
+  mounted() {
+    const agents = JSON.parse(JSON.stringify(this.agents));
+
+    this.model.context_agents = agents.list;
+    this.agentIndexNum = agents.index;
+
+    this.model.feature_tree = JSON.parse(JSON.stringify(this.fMContextAgents));
+
+    this.createContextDictionary();
+    this.createFeatureDictionary(this.model.feature_tree[0]);
   }
 };
 </script>
