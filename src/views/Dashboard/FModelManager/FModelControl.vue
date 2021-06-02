@@ -57,7 +57,7 @@
         </div>
         <div
           class="tile is-parent"
-          v-if="featureModel.feature_tree.length && featureModel.allowEdit"
+          v-if="allowFeatureEdit"
         >
           <div class="fmodel-status--changes" v-if="!featureModelChanged">
             <p class>All changes are saved</p>
@@ -95,8 +95,22 @@ export default {
       featureModelChanged: "featureModel/getHasChanged",
       computedMeasures: "qualityMeasures/getGroupedMeasuresThresholds"
     }),
+
     dsplFeatureModel() {
       return this.featureModel?.type === 'DSPL'
+    },
+
+    allowFeatureEdit() {
+      const stringUser = localStorage.getItem("@user");
+      const loggedUser = JSON.parse(stringUser);
+      const { feature_tree, allowEdit, user } = this.featureModel;
+
+      if (!feature_tree.length) return false;
+      if (!allowEdit) return false;
+      if (!user) return false;
+      if (!loggedUser) return false;
+
+      return loggedUser._id === user;
     }
   },
 

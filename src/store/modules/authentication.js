@@ -27,6 +27,7 @@ const actions = {
       })
       .then(({ data }) => {
         localStorage.setItem("@token", data["token"]);
+        localStorage.setItem("@user", JSON.stringify(data["user"]));
         router.push("/home");
       })
       .catch(err => {
@@ -43,6 +44,7 @@ const actions = {
       })
       .then(({ data }) => {
         localStorage.setItem("@token", data["token"]);
+        localStorage.setItem("@user", JSON.stringify(data["user"]));
         router.push("/home");
       })
       .catch(err => {

@@ -46,6 +46,7 @@ const actions = {
           fmodel["_id"] = featureModel._id;
           fmodel["allowEdit"] = featureModel.allowEdit;
           fmodel["public"] = featureModel.public;
+          fmodel["user"] = featureModel.user;
           ftm.push(fmodel);
         });
 
@@ -76,6 +77,7 @@ const actions = {
           fmodel["_id"] = featureModel._id;
           fmodel["allowEdit"] = featureModel.allowEdit;
           fmodel["public"] = featureModel.public;
+          fmodel["user"] = featureModel.user;
           ftm.push(fmodel);
         });
 

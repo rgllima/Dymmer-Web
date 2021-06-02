@@ -57,6 +57,7 @@
                   :tree="model.feature_tree"
                   :dictionary="dictionary"
                   @startLinking="startLinking"
+                  @unlinkFeature="unlinkFeature"
                   :level="1"
                 />
 
@@ -110,13 +111,23 @@
                   >
                     <div class="tile" style="justify-content: space-between">
                       <h4>{{ agent.name }}</h4>
-                      <button
-                        v-if="!simulating"
-                        class="button is-small is-primary"
-                        @click="openInputModal('addingContext', agent)"
-                      >
-                        Add Context
-                      </button>
+                      <div class="tile is-4" style="justify-content: flex-end">
+                        <button
+                          v-if="!simulating"
+                          class="button is-small is-primary"
+                          @click="openInputModal('addingContext', agent)"
+                        >
+                          Add Context
+                        </button>
+                        <button
+                          v-if="!simulating"
+                          class="button is-small is-danger"
+                          style="margin-left: 5px;"
+                          @click="removeAgent(agent.id)"
+                        >
+                          Del Agent
+                        </button>
+                      </div>
                     </div>
                     <hr />
                     <div
@@ -126,13 +137,28 @@
                       :key="i"
                     >
                       <h5>-----| {{ context.name }}</h5>
-                      <a @click="context.value = !context.value"
+                      <a
+                        v-if="simulating"
+                        @click="context.value = !context.value"
                         ><b-icon
-                          v-if="simulating"
                           class="pointer danger-color"
                           :class="context.value ? 'active-btn' : ''"
                           pack="fas"
                           :icon="context.value ? 'toggle-on' : 'toggle-off'"
+                      /></a>
+                      <a
+                        v-else
+                        @click="
+                          removeContext({
+                            agent_id: agent.id,
+                            context_id: context.id
+                          })
+                        "
+                        ><b-icon
+                          class="pointer danger-color"
+                          size="is-small"
+                          pack="fas"
+                          icon="trash"
                       /></a>
                     </div>
                   </div>
@@ -284,13 +310,12 @@ export default {
       const agent = this.model.context_agents.find(ctx => ctx.id === id);
       for (const context of agent.contexts) {
         delete this.dictionary.context_agents[context.id];
+        this.unlinkFeature(context.id)
       }
 
       this.model.context_agents = this.model.context_agents.filter(
         obj => obj !== agent
       );
-
-      // TODO remover referência na árvore
     },
 
     addContext(name) {
@@ -314,18 +339,41 @@ export default {
       };
     },
 
+    removeContext({ agent_id, context_id }) {
+      for (const agent of this.model.context_agents) {
+        if (agent.id === agent_id) {
+          agent.contexts = agent.contexts.filter(({ id }) => id !== context_id);
+        }
+      }
+
+      delete this.dictionary.context_agents[context_id];
+      this.unlinkFeature(context_id);
+    },
+
     startLinking(featureId) {
       this.linkingFeatureId = featureId;
       this.linkingFeature = true;
     },
 
+    unlinkFeature(contextId) {
+      const fModel = this.popConstrainsAsStates(
+        JSON.parse(JSON.stringify(this.model.feature_tree[0])),
+        contextId
+      );
+
+      this.model.feature_tree = [fModel];
+    },
+
     linkFeature(payload) {
-      const fModel = this.pushConstrainsAsStates(this.model.feature_tree[0], [
-        {
-          in: this.linkingFeatureId,
-          val: payload
-        }
-      ]);
+      const fModel = this.pushConstrainsAsStates(
+        JSON.parse(JSON.stringify(this.model.feature_tree[0])),
+        [
+          {
+            in: this.linkingFeatureId,
+            val: payload
+          }
+        ]
+      );
 
       this.model.feature_tree = [fModel];
     },
@@ -435,6 +483,26 @@ export default {
       return feature;
     },
 
+    // remove contexts of feature tree
+    popConstrainsAsStates(feature, contextId) {
+      for (const state of feature.states) {
+        if (state.name === "On") {
+          state.requires = state.requires.filter(
+            ({ address }) => address !== contextId
+          );
+        }
+      }
+
+      for (let child of feature.children) {
+        child = {
+          ...child,
+          ...this.popConstrainsAsStates(child, contextId)
+        };
+      }
+
+      return feature;
+    },
+
     getLeaves(feature) {
       let leaves = [];
 
@@ -538,13 +606,16 @@ export default {
   mounted() {
     const agents = JSON.parse(JSON.stringify(this.agents));
 
-    this.model.context_agents = agents.list;
-    this.agentIndexNum = agents.index;
-
-    this.model.feature_tree = JSON.parse(JSON.stringify(this.fMContextAgents));
-
+    this.model.context_agents = agents.list || [];
+    this.agentIndexNum = agents.index || 1;
     this.createContextDictionary();
-    this.createFeatureDictionary(this.model.feature_tree[0]);
+
+    if (this.fMContextAgents.length) {
+      this.model.feature_tree = JSON.parse(
+        JSON.stringify(this.fMContextAgents)
+      );
+      this.createFeatureDictionary(this.model.feature_tree[0]);
+    }
   }
 };
 </script>

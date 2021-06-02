@@ -44,8 +44,7 @@ const mutations = {
   },
 
   setAgents: (state, { list, index }) => {
-    state.featureModel.agents.list = list;
-    state.featureModel.agents.index = index;
+    state.featureModel.agents = { list, index };
     state.hasChanged = true;
   },
 
@@ -169,7 +168,11 @@ const actions = {
         xmlString: xmlString
       })
       .then(res => {
-        context.commit("setFeatureModel", res.data);
+        let fModel = res.data;
+        fModel["allowEdit"] = true;
+        fModel["public"] = false;
+
+        context.commit("setFeatureModel", fModel);
         context.commit("setHasChanged", true);
         context.commit("qualityMeasures/resetGroupedMeasuresThresholds", null, {
           root: true
@@ -231,10 +234,17 @@ const actions = {
     let url = `/featuremodels/create`;
 
     await instance
-      .post(url, { featureModelJson: JSON.stringify(payload) })
+      .post(url, {
+        allowEdit: true,
+        public: false,
+        featureModelJson: JSON.stringify(payload)
+      })
       .then(res => {
         let fModel = JSON.parse(res.data.newFeatureModel.featureModelJson);
         fModel["_id"] = res.data.newFeatureModel["_id"];
+        fModel["allowEdit"] = res.data.newFeatureModel["allowEdit"];
+        fModel["public"] = res.data.newFeatureModel["public"];
+        fModel["user"] = res.data.newFeatureModel["user"];
 
         context.commit("setFeatureModel", fModel);
         context.commit("setHasChanged", false);
@@ -262,7 +272,11 @@ const actions = {
       await instance
         .put(url, { featureModelJson: JSON.stringify(fModel) })
         .then(res => {
+          const { updatedFeatureModel } = res.data;
           let data = JSON.parse(res.data.updatedFeatureModel.featureModelJson);
+          data["_id"] = updatedFeatureModel._id;
+          data["allowEdit"] = updatedFeatureModel.allowEdit;
+          data["public"] = updatedFeatureModel.public;
           context.commit("setFeatureModel", data);
           context.commit("setHasChanged", false);
         });
@@ -279,6 +293,7 @@ const actions = {
         data["_id"] = returnedFeatureModel._id;
         data["allowEdit"] = returnedFeatureModel.allowEdit;
         data["public"] = returnedFeatureModel.public;
+        data["user"] = returnedFeatureModel.user;
         context.commit("setFeatureModel", data);
       })
       .catch(err => {

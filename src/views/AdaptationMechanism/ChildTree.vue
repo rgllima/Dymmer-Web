@@ -43,13 +43,17 @@
               <span> [{{ dependency.value ? " ON " : "OFF" }}]</span>
             </p>
 
-            <b-icon
+            <a
               v-if="!simulating && dependency.address.startsWith('ca')"
-              class="has-text-danger"
-              pack="fas"
-              icon="trash"
-              size="is-small"
-            />
+              @click="$emit('unlinkFeature', dependency.address)"
+            >
+              <b-icon
+                class="has-text-danger"
+                pack="fas"
+                icon="trash"
+                size="is-small"
+              />
+            </a>
           </div>
         </div>
       </div>
@@ -60,6 +64,7 @@
         :level="level + 1"
         :dictionary="dictionary"
         @startLinking="startLinking"
+        @unlinkFeature="$emit('unlinkFeature', $event)"
       />
     </div>
   </div>
