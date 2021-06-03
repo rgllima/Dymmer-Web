@@ -1,12 +1,26 @@
 <template>
   <div class="feature-editor">
-    <b-modal :active.sync="constraintModalActive" has-modal-card full-screen :can-cancel="false">
+    <b-modal
+      :active.sync="constraintModalActive"
+      has-modal-card
+      full-screen
+      :can-cancel="false"
+    >
       <constraint-modal
         :featureList="featureList"
         :constraints="constraints"
         @saveConstraints="saveConstraints"
       />
     </b-modal>
+
+    <adaptation-mechanism
+      :modal-active="adaptationMechanismModal"
+      :feature-tree="featureTree"
+      :constraints="constraints"
+      :fMContextAgents="featureModel.fm_context_agents"
+      :agents="featureModel.agents"
+      @close="adaptationMechanismModal = false"
+    />
 
     <div class="tile is-ancestor">
       <div class="tile is-parent">
@@ -29,19 +43,48 @@
         <div class="tile is-child is-vertical" style="padding-left:10px">
           <div class="tile is-vertical">
             <div class="tile is-child">
+              <div class="card box">
+                <div class="has-text-centered">
+                  <button
+                    class="button is-small is-primary is-rounded"
+                    @click="adaptationMechanismModal = true"
+                  >
+                    <p>OPEN ADAPTATION MECHANISM</p>
+                  </button>
+                </div>
+              </div>
+
               <b-collapse class="card">
-                <div slot="trigger" slot-scope="props" class="card-header" style="width: 100%">
-                  <p class="card-header-title has-text-centered">Cross-Tree Constraints</p>
+                <div
+                  slot="trigger"
+                  slot-scope="props"
+                  class="card-header"
+                  style="width: 100%"
+                >
+                  <p class="card-header-title has-text-centered">
+                    Cross-Tree Constraints
+                  </p>
                   <a class="card-header-icon">
-                    <b-icon pack="fas" :icon="props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'"></b-icon>
+                    <b-icon
+                      pack="fas"
+                      :icon="
+                        props.open ? 'fas fa-angle-down' : 'fas fa-angle-up'
+                      "
+                    ></b-icon>
                   </a>
                 </div>
                 <div class="card__button">
-                  <button class="button is-small is-primary" @click="constraintModalActive=true">
+                  <button
+                    class="button is-small is-primary"
+                    @click="constraintModalActive = true"
+                  >
                     <p>Edit Constraints</p>
                   </button>
                 </div>
-                <constraint-card :isEditing="false" :constraints="constraints" />
+                <constraint-card
+                  :isEditing="false"
+                  :constraints="constraints"
+                />
               </b-collapse>
             </div>
             <div class="tile is-child">
@@ -59,9 +102,11 @@ import { mapGetters } from "vuex";
 import ConstraintCard from "./components/ConstraintCard";
 import FeatureInfoCard from "./components/FeatureInfoCard";
 import EditConstraintModal from "./components/editConstraintModal";
+import AdaptationMechanism from "@/views/AdaptationMechanism/AdaptationMechanism";
 
 export default {
   components: {
+    AdaptationMechanism,
     "constraint-card": ConstraintCard,
     "feature-info": FeatureInfoCard,
     "constraint-modal": EditConstraintModal
@@ -73,12 +118,20 @@ export default {
       featureTree: [],
       featureList: [],
       constraints: [],
-      constraintModalActive: false
+      parsingConstraints: false,
+      fm_context_agents: [],
+      constraintModalActive: false,
+      adaptationMechanismModal: false
     };
   },
 
   methods: {
     async generateVisualConstraints() {
+      if (this.parsingConstraints) return;
+
+      this.parsingConstraints = true;
+      this.constraints = [];
+
       let conKeys;
       let conFeatures;
       let ftConstraints = this.featureModel.constraints;
@@ -113,6 +166,7 @@ export default {
           list: conFeatures
         });
       }
+      this.parsingConstraints = false;
     },
 
     async searchNameConstraint(feature_tree, element) {
@@ -159,7 +213,7 @@ export default {
         for (const i in cts.list) {
           if (!cts.list[i].val) value += "~";
           value += cts.list[i].id;
-          if (i < cts.list.length-1) value += " or ";
+          if (i < cts.list.length - 1) value += " or ";
         }
 
         constraints.push({ name: cts.name, value: value });
@@ -176,11 +230,10 @@ export default {
 
   watch: {
     featureModel: {
-      handler: function(newValue) {
+      handler: function() {
         this.featureTree = JSON.parse(
           JSON.stringify(this.featureModel.feature_tree)
         );
-        this.constraints = [];
         this.featureList = [];
         this.generateVisualConstraints();
         this.createFeatureList(this.featureModel.feature_tree[0]);

@@ -15,7 +15,12 @@ const state = {
   featureModel: {
     feature_tree: [],
     constraints: [],
-    contexts: []
+    contexts: [],
+    fm_context_agents: [],
+    agents: {
+      list: [],
+      index: 0
+    }
   }
 };
 
@@ -31,6 +36,16 @@ const mutations = {
   setFeatureModel: (state, payload) => {
     state.featureModel = payload;
     state.nextId = getLastFeatureId(state.featureModel.feature_tree[0]);
+  },
+
+  setFmContextAgents: (state, payload) => {
+    state.featureModel.fm_context_agents = payload;
+    state.hasChanged = true;
+  },
+
+  setAgents: (state, { list, index }) => {
+    state.featureModel.agents = { list, index };
+    state.hasChanged = true;
   },
 
   addFeature(state, payload) {
@@ -153,7 +168,11 @@ const actions = {
         xmlString: xmlString
       })
       .then(res => {
-        context.commit("setFeatureModel", res.data);
+        let fModel = res.data;
+        fModel["allowEdit"] = true;
+        fModel["public"] = false;
+
+        context.commit("setFeatureModel", fModel);
         context.commit("setHasChanged", true);
         context.commit("qualityMeasures/resetGroupedMeasuresThresholds", null, {
           root: true
@@ -215,10 +234,17 @@ const actions = {
     let url = `/featuremodels/create`;
 
     await instance
-      .post(url, { featureModelJson: JSON.stringify(payload) })
+      .post(url, {
+        allowEdit: true,
+        public: false,
+        featureModelJson: JSON.stringify(payload)
+      })
       .then(res => {
         let fModel = JSON.parse(res.data.newFeatureModel.featureModelJson);
         fModel["_id"] = res.data.newFeatureModel["_id"];
+        fModel["allowEdit"] = res.data.newFeatureModel["allowEdit"];
+        fModel["public"] = res.data.newFeatureModel["public"];
+        fModel["user"] = res.data.newFeatureModel["user"];
 
         context.commit("setFeatureModel", fModel);
         context.commit("setHasChanged", false);
@@ -246,7 +272,11 @@ const actions = {
       await instance
         .put(url, { featureModelJson: JSON.stringify(fModel) })
         .then(res => {
+          const { updatedFeatureModel } = res.data;
           let data = JSON.parse(res.data.updatedFeatureModel.featureModelJson);
+          data["_id"] = updatedFeatureModel._id;
+          data["allowEdit"] = updatedFeatureModel.allowEdit;
+          data["public"] = updatedFeatureModel.public;
           context.commit("setFeatureModel", data);
           context.commit("setHasChanged", false);
         });
@@ -258,7 +288,12 @@ const actions = {
     await instance
       .get(url)
       .then(res => {
-        let data = JSON.parse(res.data.returnedFeatureModel.featureModelJson);
+        const { returnedFeatureModel } = res.data;
+        let data = JSON.parse(returnedFeatureModel.featureModelJson);
+        data["_id"] = returnedFeatureModel._id;
+        data["allowEdit"] = returnedFeatureModel.allowEdit;
+        data["public"] = returnedFeatureModel.public;
+        data["user"] = returnedFeatureModel.user;
         context.commit("setFeatureModel", data);
       })
       .catch(err => {
